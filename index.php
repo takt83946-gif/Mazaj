@@ -195,6 +195,14 @@ if (file_exists($file)) {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
+
+        /* تنسيق صورة المنتج داخل الكارد */
+        .card-img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
         
         .card-body { 
             padding: 10px 12px; 
@@ -448,8 +456,10 @@ if (file_exists($file)) {
                         $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
                         $hash_id = md5($p['name']);
                         $item_price = $p['price'] ?? 0;
+                        $item_image = !empty($p['image']) ? htmlspecialchars($p['image']) : 'uploads/default.jpg';
                         
                         echo '<div class="card">';
+                        echo '  <img src="' . $item_image . '" alt="' . $safe_name . '" class="card-img">';
                         echo '  <div class="card-body">';
                         echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
                         echo '      <div class="card-footer">';
