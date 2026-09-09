@@ -32,11 +32,10 @@ if (file_exists($file)) {
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
         
         body { 
-            /* خلفية الموقع الأساسية باستخدام Ali.jpg بحيث تظهر كاملة وواضحة */
             background-color: #0b0f19;
             background-image: linear-gradient(rgba(11, 15, 25, 0.88), rgba(17, 24, 39, 0.88)), url('uploads/Ali.jpg');
-            background-size: contain; /* تظهر الصورة كاملة */
-            background-repeat: repeat; /* تتكرر بشكل متناسق لملء الخلفية */
+            background-size: contain;
+            background-repeat: repeat;
             background-attachment: fixed;
             color: var(--text-main); 
             padding-bottom: 160px; 
@@ -56,12 +55,9 @@ if (file_exists($file)) {
             overflow: hidden;
         }
 
-        /* تصميم شريط اللمبات المضيئة في الأعلى */
         .fairy-lights {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 12px;
             display: flex;
             justify-content: space-around;
@@ -71,8 +67,7 @@ if (file_exists($file)) {
         }
 
         .light-bulb {
-            width: 8px;
-            height: 10px;
+            width: 8px; height: 10px;
             background-color: #fde047;
             border-radius: 50% 50% 40% 40%;
             box-shadow: 0 0 8px 3px #f59e0b, 0 0 15px 6px rgba(245, 158, 11, 0.6);
@@ -172,8 +167,7 @@ if (file_exists($file)) {
         }
         .section-title::before {
             content: '';
-            width: 4px;
-            height: 20px;
+            width: 4px; height: 20px;
             background: var(--accent);
             border-radius: 4px;
         }
@@ -181,103 +175,85 @@ if (file_exists($file)) {
         .menu-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
-            gap: 20px; 
+            gap: 15px; 
         }
         
         .card { 
             background: var(--bg-card); 
             backdrop-filter: blur(12px);
             border: 1px solid var(--border-color); 
-            border-radius: 20px; 
+            border-radius: 16px; 
             overflow: hidden; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
             transition: all 0.25s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: relative;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
         .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
         }
-
-        /* تم تصغير حاوية وصورة المنتج هنا لتصبح أصغر بكثير وأنيقة */
-        .card-img-container {
-            width: 100%;
-            height: 50px;
-            overflow: hidden;
-            background: #0f172a;
-            position: relative;
-        }
-        
-        .card-img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            transition: transform 0.4s ease;
-        }
-        .card:hover .card-img { transform: scale(1.05); }
         
         .card-body { 
-            padding: 16px; 
+            padding: 14px 16px; 
             flex-grow: 1; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
         }
-        .card h3 { font-size: 1.15rem; margin-bottom: 6px; color: #fff; font-weight: 800; }
-        .card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 14px; line-height: 1.5; }
+        .card h3 { font-size: 1.1rem; margin-bottom: 4px; color: #fff; font-weight: 800; }
+        .card p { color: var(--text-muted); font-size: 0.82rem; margin-bottom: 10px; line-height: 1.4; }
         
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: auto;
-            padding-top: 12px;
+            padding-top: 10px;
             border-top: 1px solid var(--border-color);
         }
         
-        .price { color: var(--accent); font-weight: 900; font-size: 1.2rem; }
+        .price { color: var(--accent); font-weight: 900; font-size: 1.15rem; }
 
         .action-btn { 
             background: var(--accent);
             color: #fff; 
             border: none; 
-            padding: 8px 18px; 
-            border-radius: 12px; 
+            padding: 6px 16px; 
+            border-radius: 10px; 
             cursor: pointer; 
             font-weight: 800; 
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             transition: all 0.25s ease;
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+            box-shadow: 0 3px 10px rgba(249, 115, 22, 0.25);
         }
         .action-btn:hover { background: var(--accent-hover); }
         
         .qty-control {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: rgba(11, 15, 25, 0.8);
-            border-radius: 12px;
-            padding: 4px 12px;
+            border-radius: 10px;
+            padding: 2px 10px;
             border: 1px solid var(--border-color);
         }
         .qty-btn {
             background: none;
             border: none;
             color: var(--accent);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 900;
             cursor: pointer;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .qty-num { font-weight: 800; font-size: 1rem; color: #fff; min-width: 16px; text-align: center; }
+        .qty-num { font-weight: 800; font-size: 0.95rem; color: #fff; min-width: 14px; text-align: center; }
 
         .checkout-section { 
             background: var(--bg-card); 
@@ -322,9 +298,7 @@ if (file_exists($file)) {
 
         .cart-bar { 
             position: fixed; 
-            bottom: 20px; 
-            left: 20px; 
-            right: 20px; 
+            bottom: 20px; left: 20px; right: 20px; 
             max-width: 860px;
             margin: 0 auto;
             background: rgba(17, 24, 39, 0.95); 
@@ -346,8 +320,7 @@ if (file_exists($file)) {
         .cart-icon-box {
             background: var(--accent);
             color: #fff;
-            width: 48px;
-            height: 48px;
+            width: 48px; height: 48px;
             border-radius: 14px;
             display: flex;
             align-items: center;
@@ -427,7 +400,6 @@ if (file_exists($file)) {
 <body>
 
     <header>
-        <!-- شريط اللمبات المضيئة في أعلى الهيدر -->
         <div class="fairy-lights">
             <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
             <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
@@ -473,13 +445,11 @@ if (file_exists($file)) {
                 echo '<div class="menu-grid">';
                 foreach ($products as $p) {
                     if (isset($p['category']) && $p['category'] === $cat) {
-                        $img_src = !empty($p['image']) ? htmlspecialchars($p['image']) : 'https://via.placeholder.com/300x190/1e293b/f97316?text=Mazaj';
                         $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
                         $hash_id = md5($p['name']);
                         $item_price = $p['price'] ?? 0;
                         
                         echo '<div class="card">';
-                        echo '  <div class="card-img-container"><img src="' . $img_src . '" class="card-img" alt="' . $safe_name . '"></div>';
                         echo '  <div class="card-body">';
                         echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
                         echo '      <div class="card-footer">';
@@ -495,7 +465,6 @@ if (file_exists($file)) {
         }
         ?>
 
-        <!-- قسم إدخال بيانات الزبون -->
         <div class="checkout-section">
             <h3><span>📍</span> تفاصيل الاستلام والتوصيل</h3>
             <div class="input-group">
@@ -632,7 +601,7 @@ if (file_exists($file)) {
                 time: new Date().toLocaleString()
             };
 
-        fetch('save_order.php', {
+            fetch('save_order.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
