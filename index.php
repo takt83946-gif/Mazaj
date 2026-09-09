@@ -174,86 +174,86 @@ if (file_exists($file)) {
 
         .menu-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
-            gap: 15px; 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 10px; 
         }
         
         .card { 
             background: var(--bg-card); 
             backdrop-filter: blur(12px);
             border: 1px solid var(--border-color); 
-            border-radius: 16px; 
+            border-radius: 12px; 
             overflow: hidden; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
             transition: all 0.25s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
         
         .card-body { 
-            padding: 14px 16px; 
+            padding: 10px 12px; 
             flex-grow: 1; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
         }
-        .card h3 { font-size: 1.1rem; margin-bottom: 4px; color: #fff; font-weight: 800; }
-        .card p { color: var(--text-muted); font-size: 0.82rem; margin-bottom: 10px; line-height: 1.4; }
+        .card h3 { font-size: 0.95rem; margin-bottom: 2px; color: #fff; font-weight: 800; }
+        .card p { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 6px; line-height: 1.3; }
         
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: auto;
-            padding-top: 10px;
+            padding-top: 6px;
             border-top: 1px solid var(--border-color);
         }
         
-        .price { color: var(--accent); font-weight: 900; font-size: 1.15rem; }
+        .price { color: var(--accent); font-weight: 900; font-size: 1rem; }
 
         .action-btn { 
             background: var(--accent);
             color: #fff; 
             border: none; 
-            padding: 6px 16px; 
-            border-radius: 10px; 
+            padding: 4px 12px; 
+            border-radius: 8px; 
             cursor: pointer; 
             font-weight: 800; 
-            font-size: 0.82rem;
+            font-size: 0.75rem;
             transition: all 0.25s ease;
-            box-shadow: 0 3px 10px rgba(249, 115, 22, 0.25);
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.25);
         }
         .action-btn:hover { background: var(--accent-hover); }
         
         .qty-control {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: rgba(11, 15, 25, 0.8);
-            border-radius: 10px;
-            padding: 2px 10px;
+            border-radius: 8px;
+            padding: 1px 6px;
             border: 1px solid var(--border-color);
         }
         .qty-btn {
             background: none;
             border: none;
             color: var(--accent);
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 900;
             cursor: pointer;
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .qty-num { font-weight: 800; font-size: 0.95rem; color: #fff; min-width: 14px; text-align: center; }
+        .qty-num { font-weight: 800; font-size: 0.85rem; color: #fff; min-width: 12px; text-align: center; }
 
         .checkout-section { 
             background: var(--bg-card); 
