@@ -203,10 +203,10 @@ if (file_exists($file)) {
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
         }
 
-        /* تم تصغير حاوية وصورة المنتج هنا لتصبح أصغر وأنيقة جداً */
+        /* تم تصغير حاوية وصورة المنتج هنا لتصبح أصغر بكثير وأنيقة */
         .card-img-container {
             width: 100%;
-            height: 75px;
+            height: 50px;
             overflow: hidden;
             background: #0f172a;
             position: relative;
@@ -632,7 +632,7 @@ if (file_exists($file)) {
                 time: new Date().toLocaleString()
             };
 
-            fetch('save_order.php', {
+        fetch('save_order.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
