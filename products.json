@@ -1,0 +1,23 @@
+[
+    {
+        "name": "بيبسي",
+        "price": 1,
+        "category": "مشروبات",
+        "desc_text": "",
+        "image": ""
+    },
+    {
+        "name": "Cafe",
+        "category": "قهوه",
+        "price": "0.5",
+        "desc_text": "Yi",
+        "image": "uploads\/1788944687_image.jpg"
+    },
+    {
+        "name": "Hh",
+        "category": "Hh",
+        "price": "6",
+        "desc_text": "",
+        "image": ""
+    }
+]
