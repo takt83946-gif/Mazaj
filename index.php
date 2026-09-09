@@ -203,10 +203,10 @@ if (file_exists($file)) {
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
         }
 
-        /* تم تصغير حاوية وصورة المنتج هنا لتصبح أصغر وأنيقة */
+        /* تم تصغير حاوية وصورة المنتج هنا لتصبح أصغر وأنيقة جداً */
         .card-img-container {
             width: 100%;
-            height: 110px;
+            height: 75px;
             overflow: hidden;
             background: #0f172a;
             position: relative;
