@@ -1,0 +1,276 @@
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+$products_file = 'products.json';
+$orders_file = 'orders.json';
+
+// 1. معالجة إضافة منتج جديد مع رفع الصورة من الهاتف
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
+    $name = $_POST['name'] ?? '';
+    $category = $_POST['category'] ?? '';
+    $price = $_POST['price'] ?? 0;
+    $desc_text = $_POST['desc_text'] ?? '';
+    
+    $image_path = '';
+    if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
+        $file_tmp = $_FILES['product_image']['tmp_name'];
+        $file_name = time() . '_' . basename($_FILES['product_image']['name']);
+        $upload_dir = 'uploads/';
+        
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true);
+        }
+        
+        $destination = $upload_dir . $file_name;
+        if (move_uploaded_file($file_tmp, $destination)) {
+            $image_path = $destination;
+        }
+    }
+
+    $products = file_exists($products_file) ? json_decode(file_get_contents($products_file), true) : [];
+    if (!is_array($products)) $products = [];
+
+    $products[] = [
+        'name' => $name,
+        'category' => $category,
+        'price' => $price,
+        'desc_text' => $desc_text,
+        'image' => $image_path
+    ];
+    file_put_contents($products_file, json_encode($products, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    header("Location: admin.php");
+    exit;
+}
+
+// 2. حذف منتج محدد
+if (isset($_GET['delete_product'])) {
+    $index = $_GET['delete_product'];
+    $products = file_exists($products_file) ? json_decode(file_get_contents($products_file), true) : [];
+    if (isset($products[$index])) {
+        if (!empty($products[$index]['image']) && file_exists($products[$index]['image'])) {
+            unlink($products[$index]['image']);
+        }
+        unset($products[$index]);
+        file_put_contents($products_file, json_encode(array_values($products), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    }
+    header("Location: admin.php");
+    exit;
+}
+
+// 3. تحديث حالة الطلب
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+    $order_index = $_POST['order_index'] ?? null;
+    $new_status = $_POST['new_status'] ?? '';
+    
+    $orders = file_exists($orders_file) ? json_decode(file_get_contents($orders_file), true) : [];
+    if (is_array($orders) && isset($orders[$order_index])) {
+        $orders[$order_index]['status'] = $new_status;
+        file_put_contents($orders_file, json_encode($orders, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    }
+    header("Location: admin.php");
+    exit;
+}
+
+// 4. مسح جميع الطلبات
+if (isset($_GET['clear_all_orders'])) {
+    file_put_contents($orders_file, json_encode([], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    header("Location: admin.php");
+    exit;
+}
+
+// قراءة البيانات من الملفات
+$products = file_exists($products_file) ? json_decode(file_get_contents($products_file), true) : [];
+$orders = file_exists($orders_file) ? json_decode(file_get_contents($orders_file), true) : [];
+
+if (!is_array($products)) $products = [];
+if (!is_array($orders)) $orders = [];
+?>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | لفة Mazaj</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #f97316;
+            --bg-dark: #0b0f19;
+            --bg-card: rgba(17, 24, 39, 0.9);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); padding: 12px; min-height: 100vh; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1, h2 { color: #fff; font-weight: 800; font-size: 1.25rem; }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(11, 15, 25, 0.9); border: 1px solid var(--border-color); border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none; }
+        input[type="file"] { padding: 8px; cursor: pointer; }
+        button, .btn { background: var(--accent); color: #fff; border: none; padding: 10px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; text-decoration: none; display: inline-block; font-size: 0.88rem; transition: 0.2s; }
+        button:hover { opacity: 0.9; }
+        
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 0.85rem; min-width: 550px; }
+        th, td { padding: 10px 8px; text-align: right; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        th { color: var(--accent); font-weight: 800; white-space: nowrap; }
+        
+        .wa-btn { background: #22c55e; color: #fff; padding: 6px 10px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+        .del-btn { background: #ef4444; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; }
+        .clear-all-btn { background: #ef4444; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; }
+        .status-form { display: flex; gap: 4px; align-items: center; }
+        .status-form select { margin-bottom: 0; padding: 5px; font-size: 0.78rem; min-width: 115px; }
+        .status-form button { padding: 5px 10px; font-size: 0.78rem; white-space: nowrap; }
+        .item-list { padding-right: 12px; font-size: 0.8rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="margin-bottom: 20px; font-size: 1.5rem;">لوحة تحكم لفة Mazaj 🍔</h1>
+
+        <!-- قسم الطلبات الواردة -->
+        <div class="card">
+            <div class="header-flex">
+                <h2>طلبات الزبائن الواردة 📦</h2>
+                <?php if (!empty($orders)): ?>
+                    <a href="admin.php?clear_all_orders=1" class="btn clear-all-btn" onclick="return confirm('⚠️ هل أنت متأكد من مسح جميع الطلبات بالكامل؟')">مسح الكل 🗑️</a>
+                <?php endif; ?>
+            </div>
+
+            <?php if (empty($orders)): ?>
+                <p style="color:var(--text-muted); font-size:0.9rem;">لا توجد طلبات حتى الآن.</p>
+            <?php else: ?>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الوقت</th>
+                                <th>الزبون والهاتف</th>
+                                <th>العنوان</th>
+                                <th>الأصناف</th>
+                                <th>الإجمالي</th>
+                                <th>الحالة</th>
+                                <th>إشعار واتساب</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($orders as $index => $order): 
+                                $c_name = !empty($order['customer_name']) ? $order['customer_name'] : 'بدون اسم';
+                                $c_phone = !empty($order['customer_phone']) ? $order['customer_phone'] : '';
+                                $c_address = !empty($order['customer_address']) ? $order['customer_address'] : '';
+                                $c_status = !empty($order['status']) ? $order['status'] : 'قيد التحضير 🔥';
+                                $c_time = !empty($order['time']) ? $order['time'] : '';
+                                $c_total = !empty($order['total']) ? $order['total'] : '$0.00';
+                                
+                                $clean_phone = preg_replace('/[^0-9]/', '', $c_phone);
+                                $wa_text = "مرحباً " . $c_name . "، نود إعلامك أن طلبك من *لفة Mazaj* أصبح حالياً: *" . $c_status . "*. شكراً لاختيارك لنا! 🌯";
+                                $wa_link = "https://wa.me/" . $clean_phone . "?text=" . urlencode($wa_text);
+                            ?>
+                            <tr>
+                                <td><small style="color:var(--text-muted);"><?= htmlspecialchars($c_time) ?></small></td>
+                                <td>
+                                    <strong><?= htmlspecialchars($c_name) ?></strong><br>
+                                    <small style="color:var(--accent);"><?= htmlspecialchars($c_phone) ?></small>
+                                </td>
+                                <td><?= htmlspecialchars($c_address) ?></td>
+                                <td>
+                                    <ul class="item-list">
+                                        <?php if (isset($order['items']) && is_array($order['items'])): ?>
+                                            <?php foreach ($order['items'] as $item_name => $item_data): ?>
+                                                <li><?= htmlspecialchars($item_name) ?> (<?= $item_data['qty'] ?? 1 ?>)</li>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </ul>
+                                </td>
+                                <td style="color:var(--accent); font-weight:900;"><?= htmlspecialchars($c_total) ?></td>
+                                <td>
+                                    <form action="admin.php" method="POST" class="status-form">
+                                        <input type="hidden" name="order_index" value="<?= $index ?>">
+                                        <select name="new_status">
+                                            <option value="قيد التحضير 🔥" <?= $c_status == 'قيد التحضير 🔥' ? 'selected' : '' ?>>قيد التحضير 🔥</option>
+                                            <option value="في الطريق 🛵" <?= $c_status == 'في الطريق 🛵' ? 'selected' : '' ?>>في الطريق 🛵</option>
+                                            <option value="تم التوصيل ✅" <?= $c_status == 'تم التوصيل ✅' ? 'selected' : '' ?>>تم التوصيل ✅</option>
+                                        </select>
+                                        <button type="submit" name="update_status">حفظ</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <?php if (!empty($clean_phone)): ?>
+                                        <a href="<?= $wa_link ?>" target="_blank" class="wa-btn">💬 إرسال</a>
+                                    <?php else: ?>
+                                        <small style="color:#ef4444;">لا رقم</small>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- قسم إضافة وجبة جديدة -->
+        <div class="card">
+            <h2>إضافة وجبة أو منتج جديد 📸</h2>
+            <form action="admin.php" method="POST" enctype="multipart/form-data" style="margin-top: 12px;">
+                <input type="text" name="name" placeholder="اسم الوجبة (مثلاً: لفة زنجر خارقة)" required>
+                <input type="text" name="category" placeholder="التصنيف (مثلاً: حمض، صاج، سندويش...)" required>
+                <input type="number" step="0.01" name="price" placeholder="السعر بالدولار ($)" required>
+                <textarea name="desc_text" placeholder="وصف مكونات الوجبة..."></textarea>
+                
+                <label style="display:block; margin-bottom:6px; font-size:0.85rem; color:var(--text-muted);">
+                    صورة الوجبة (من الكاميرا أو المعرض):
+                </label>
+                <input type="file" name="product_image" accept="image/*">
+                
+                <button type="submit" name="add_product" style="width:100%; margin-top:8px;">إضافة المنتج للمنيو</button>
+            </form>
+        </div>
+
+        <!-- قائمة المنتجات الحالية (مع زر حذف لكل منتج) -->
+        <div class="card">
+            <h2>المنتجات الحالية في المنيو</h2>
+            <?php if (empty($products)): ?>
+                <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px;">لا توجد منتجات حالياً.</p>
+            <?php else: ?>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الصورة</th>
+                                <th>الاسم والتصنيف</th>
+                                <th>السعر</th>
+                                <th>إجراء الحذف</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($products as $idx => $prod): ?>
+                            <tr>
+                                <td>
+                                    <?php if (!empty($prod['image'])): ?>
+                                        <img src="<?= htmlspecialchars($prod['image']) ?>" style="width:40px; height:40px; object-fit:cover; border-radius:8px;">
+                                    <?php else: ?>
+                                        <span style="font-size:0.75rem;">بدون</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <strong><?= htmlspecialchars($prod['name'] ?? '') ?></strong><br>
+                                    <small style="color:var(--text-muted);"><?= htmlspecialchars($prod['category'] ?? '') ?></small>
+                                </td>
+                                <td style="color:var(--accent); font-weight:800;">$<?= number_format($prod['price'] ?? 0, 2) ?></td>
+                                <td>
+                                    <a href="admin.php?delete_product=<?= $idx ?>" class="btn del-btn" onclick="return confirm('هل أنت متأكد من حذف هذا المنتج؟')">حذف</a>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</body>
+</html>
