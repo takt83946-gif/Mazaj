@@ -1,4 +1,4 @@
-<?php
+[source: 1]<?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -91,24 +91,29 @@ if (!is_array($orders)) $orders = [];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم | لفة Mazaj</title>
+    <title>Coffee Menu Hub - Mazaj Cafe</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --accent: #f97316;
-            --bg-dark: #0b0f19;
-            --bg-card: rgba(17, 24, 39, 0.9);
-            --border-color: rgba(255, 255, 255, 0.08);
+            --accent: #d97706;
+            --bg-card: rgba(28, 20, 15, 0.85);
+            --border-color: rgba(217, 119, 6, 0.2);
             --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
+            --text-muted: #d1d5db;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        body { background-color: var(--bg-dark); color: var(--text-main); padding: 12px; min-height: 100vh; }
+        body { 
+            background: linear-gradient(rgba(15, 10, 5, 0.85), rgba(15, 10, 5, 0.85)), url('Ali.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-main); 
+            padding: 12px; 
+            min-height: 100vh; 
+        }
         .container { max-width: 900px; margin: 0 auto; }
-        h1, h2 { color: #fff; font-weight: 800; font-size: 1.25rem; }
+        h1, h2 { color: #fef3c7; font-weight: 800; font-size: 1.25rem; }
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
-        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(11, 15, 25, 0.9); border: 1px solid var(--border-color); border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none; }
+        .card { background: var(--bg-card); backdrop-filter: blur(8px); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(20, 14, 10, 0.9); border: 1px solid var(--border-color); border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none; }
         input[type="file"] { padding: 8px; cursor: pointer; }
         button, .btn { background: var(--accent); color: #fff; border: none; padding: 10px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; text-decoration: none; display: inline-block; font-size: 0.88rem; transition: 0.2s; }
         button:hover { opacity: 0.9; }
@@ -120,7 +125,8 @@ if (!is_array($orders)) $orders = [];
         
         .wa-btn { background: #22c55e; color: #fff; padding: 6px 10px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
         .del-btn { background: #ef4444; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; }
-        .clear-all-btn { background: #ef4444; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; }
+        .clear-all-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; }
+        .clear-all-btn:hover { background: var(--accent); color: #fff; }
         .status-form { display: flex; gap: 4px; align-items: center; }
         .status-form select { margin-bottom: 0; padding: 5px; font-size: 0.78rem; min-width: 115px; }
         .status-form button { padding: 5px 10px; font-size: 0.78rem; white-space: nowrap; }
@@ -129,14 +135,14 @@ if (!is_array($orders)) $orders = [];
 </head>
 <body>
     <div class="container">
-        <h1 style="margin-bottom: 20px; font-size: 1.5rem;">لوحة تحكم لفة Mazaj 🍔</h1>
+        <h1 style="margin-bottom: 20px; font-size: 1.5rem; text-align: center; color: #fef3c7;">☕ Coffee Menu Hub - Mazaj Cafe</h1>
 
         <!-- قسم الطلبات الواردة -->
         <div class="card">
             <div class="header-flex">
-                <h2>طلبات الزبائن الواردة 📦</h2>
+                <h2>📦 Active Orders (Today)</h2>
                 <?php if (!empty($orders)): ?>
-                    <a href="admin.php?clear_all_orders=1" class="btn clear-all-btn" onclick="return confirm('⚠️ هل أنت متأكد من مسح جميع الطلبات بالكامل؟')">مسح الكل 🗑️</a>
+                    <a href="admin.php?clear_all_orders=1" class="btn clear-all-btn" onclick="return confirm('⚠️ هل أنت متأكد من مسح جميع الطلبات بالكامل؟')">🗑️ Clear All</a>
                 <?php endif; ?>
             </div>
 
@@ -166,7 +172,7 @@ if (!is_array($orders)) $orders = [];
                                 $c_total = !empty($order['total']) ? $order['total'] : '$0.00';
                                 
                                 $clean_phone = preg_replace('/[^0-9]/', '', $c_phone);
-                                $wa_text = "مرحباً " . $c_name . "، نود إعلامك أن طلبك من *لفة Mazaj* أصبح حالياً: *" . $c_status . "*. شكراً لاختيارك لنا! 🌯";
+                                $wa_text = "مرحباً " . $c_name . "، نود إعلامك أن طلبك من *Mazaj Cafe* أصبح حالياً: *" . $c_status . "*. شكراً لاختيارك لنا! ☕";
                                 $wa_link = "https://wa.me/" . $clean_phone . "?text=" . urlencode($wa_text);
                             ?>
                             <tr>
@@ -180,7 +186,7 @@ if (!is_array($orders)) $orders = [];
                                     <ul class="item-list">
                                         <?php if (isset($order['items']) && is_array($order['items'])): ?>
                                             <?php foreach ($order['items'] as $item_name => $item_data): ?>
-                                                <li><?= htmlspecialchars($item_name) ?> (<?= $item_data['qty'] ?? 1 ?>)</li>
+                                                <li>☕ <?= htmlspecialchars($item_name) ?> (<?= $item_data['qty'] ?? 1 ?>)</li>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </ul>
@@ -214,23 +220,23 @@ if (!is_array($orders)) $orders = [];
 
         <!-- قسم إضافة وجبة جديدة -->
         <div class="card">
-            <h2>إضافة وجبة أو منتج جديد 📸</h2>
+            <h2>✨ Add New Menu Item</h2>
             <form action="admin.php" method="POST" enctype="multipart/form-data" style="margin-top: 12px;">
-                <input type="text" name="name" placeholder="اسم الوجبة (مثلاً: لفة زنجر خارقة)" required>
-                <input type="text" name="category" placeholder="التصنيف (مثلاً: حمض، صاج، سندويش...)" required>
-                <input type="number" step="0.01" name="price" placeholder="السعر بالدولار ($)" required>
-                <textarea name="desc_text" placeholder="وصف مكونات الوجبة..."></textarea>
+                <input type="text" name="name" placeholder="Item Name (مثلاً: لفة زنجر خارقة)" required>
+                <input type="text" name="category" placeholder="Category (مثلاً: حمض، صاج، سندويش...)" required>
+                <input type="number" step="0.01" name="price" placeholder="Price ($)" required>
+                <textarea name="desc_text" placeholder="Description..."></textarea>
                 
                 <label style="display:block; margin-bottom:6px; font-size:0.85rem; color:var(--text-muted);">
-                    صورة الوجبة (من الكاميرا أو المعرض):
+                    📷 Choose Product Image:
                 </label>
                 <input type="file" name="product_image" accept="image/*">
                 
-                <button type="submit" name="add_product" style="width:100%; margin-top:8px;">إضافة المنتج للمنيو</button>
+                <button type="submit" name="add_product" style="width:100%; margin-top:8px;">☕ Add Item to Menu</button>
             </form>
         </div>
 
-        <!-- قائمة المنتجات الحالية (مع زر حذف لكل منتج) -->
+        <!-- قائمة المنتجات الحالية -->
         <div class="card">
             <h2>المنتجات الحالية في المنيو</h2>
             <?php if (empty($products)): ?>
