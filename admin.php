@@ -54,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_product'])) {
         $products[$index]['price'] = $_POST['price'] ?? $products[$index]['price'];
         $products[$index]['desc_text'] = $_POST['desc_text'] ?? $products[$index]['desc_text'];
         
-        // رفع صورة جديدة في حال تم اختيار صورة
         if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
             $file_tmp = $_FILES['product_image']['tmp_name'];
             $file_name = time() . '_' . basename($_FILES['product_image']['name']);
@@ -66,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_product'])) {
             
             $destination = $upload_dir . $file_name;
             if (move_uploaded_file($file_tmp, $destination)) {
-                // حذف الصورة القديمة إن وجدت وليست رابط خارجي
                 if (!empty($products[$index]['image']) && file_exists($products[$index]['image'])) {
                     @unlink($products[$index]['image']);
                 }
@@ -103,15 +101,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $orders = file_exists($orders_file) ? json_decode(file_get_contents($orders_file), true) : [];
     if (is_array($orders) && isset($orders[$order_index])) {
         $orders[$order_index]['status'] = $new_status;
-        file_put_contents($orders_file, json_encode($orders, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        file_put_contents($orders_file, json_encode(array_values($orders), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
     header("Location: admin.php");
     exit;
 }
 
-// 5. مسح جميع الطلبات
+// 5. مسح جميع الطلبات بشكل نهائي وجذري
 if (isset($_GET['clear_all_orders'])) {
-    file_put_contents($orders_file, json_encode([], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    if (file_exists($orders_file)) {
+        // كتابة مصفوفة فارغة وتفريغ الملف فوراً
+        file_put_contents($orders_file, json_encode([], JSON_UNESCAPED_UNICODE));
+        // أو حذف الملف نهائياً إذا أردت: @unlink($orders_file);
+    }
     header("Location: admin.php");
     exit;
 }
@@ -170,7 +172,6 @@ if (!is_array($orders)) $orders = [];
         .status-form button { padding: 5px 10px; font-size: 0.78rem; white-space: nowrap; }
         .item-list { padding-right: 12px; font-size: 0.8rem; color: var(--text-muted); }
 
-        /* نافذة التعديل المنبثقة Modal */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: #1c140f; border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         .close-modal { background: #ef4444; float: left; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; color: #fff; border: none; }
@@ -185,7 +186,7 @@ if (!is_array($orders)) $orders = [];
             <div class="header-flex">
                 <h2>📦 Active Orders (Today)</h2>
                 <?php if (!empty($orders)): ?>
-                    <a href="admin.php?clear_all_orders=1" class="btn clear-all-btn" onclick="return confirm('⚠️ هل أنت متأكد من مسح جميع الطلبات بالكامل؟')">🗑️ Clear All</a>
+                    <a href="admin.php?clear_all_orders=1" class="btn clear-all-btn" onclick="return confirm('⚠️ هل أنت متأكد من مسح جميع الطلبات بشكل نهائي؟')">🗑️ Clear All</a>
                 <?php endif; ?>
             </div>
 
@@ -265,8 +266,8 @@ if (!is_array($orders)) $orders = [];
         <div class="card">
             <h2>✨ Add New Menu Item</h2>
             <form action="admin.php" method="POST" enctype="multipart/form-data" style="margin-top: 12px;">
-                <input type="text" name="name" placeholder="Item Name (مثلاً: لفة زنجر خارقة)" required>
-                <input type="text" name="category" placeholder="Category (مثلاً: كريب حلو، كريب مالح...)" required>
+                <input type="text" name="name" placeholder="Item Name" required>
+                <input type="text" name="category" placeholder="Category" required>
                 <input type="number" step="0.01" name="price" placeholder="Price ($)" required>
                 <textarea name="desc_text" placeholder="Description..."></textarea>
                 
@@ -279,7 +280,7 @@ if (!is_array($orders)) $orders = [];
             </form>
         </div>
 
-        <!-- قائمة المنتجات الحالية مع أزرار التعديل والحذف -->
+        <!-- قائمة المنتجات الحالية -->
         <div class="card">
             <h2>المنتجات الحالية في المنيو (تعديل أو حذف)</h2>
             <?php if (empty($products)): ?>
