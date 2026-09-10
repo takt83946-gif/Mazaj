@@ -173,7 +173,7 @@ if (!is_array($orders)) $orders = [];
         /* نافذة التعديل المنبثقة Modal */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: #1c140f; border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-        .close-modal { background: #ef4444; float: left; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
+        .close-modal { background: #ef4444; float: left; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; color: #fff; border: none; }
     </style>
 </head>
 <body>
@@ -311,7 +311,7 @@ if (!is_array($orders)) $orders = [];
                                 </td>
                                 <td style="color:var(--accent); font-weight:800;">$<?= number_format($prod['price'] ?? 0, 2) ?></td>
                                 <td>
-                                    <button class="btn edit-btn" onclick="openEditModal(<?= $idx ?>, '<?= htmlspecialchars($prod['name'] ?? '', ENT_QUOTES) ?>', '<?= htmlspecialchars($prod['category'] ?? '', ENT_QUOTES) ?>', '<?= $prod['price'] ?? 0 ?>', '<?= htmlspecialchars($prod['desc_text'] ?? '', ENT_QUOTES) ?>')">تعديل</button>
+                                    <button type="button" class="btn edit-btn" onclick='openEditModal(<?= $idx ?>, <?= json_encode($prod['name'] ?? "") ?>, <?= json_encode($prod['category'] ?? "") ?>, <?= $prod['price'] ?? 0 ?>, <?= json_encode($prod['desc_text'] ?? "") ?>)'>تعديل</button>
                                     <a href="admin.php?delete_product=<?= $idx ?>" class="btn del-btn" onclick="return confirm('هل أنت متأكد من حذف هذا المنتج؟')">حذف</a>
                                 </td>
                             </tr>
@@ -326,8 +326,8 @@ if (!is_array($orders)) $orders = [];
     <!-- نافذة تعديل المنتج المنبثقة -->
     <div id="editModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeEditModal()">إغلاق X</span>
-            <h2 style="margin-bottom: 15px; color: #fef3c7;">✏️ تعديل المنتج</h2>
+            <button type="button" class="close-modal" onclick="closeEditModal()">إغلاق X</button>
+            <h2 style="margin-bottom: 15px; color: #fef3c7; clear: both;">✏️ تعديل المنتج</h2>
             <form action="admin.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="product_index" id="edit_index">
                 
@@ -360,7 +360,6 @@ if (!is_array($orders)) $orders = [];
             document.getElementById('edit_category').value = category;
             document.getElementById('edit_price').value = price;
             document.getElementById('edit_desc').value = desc;
-            document.getElementById('editIdModal').style.display = 'flex'; // Fix display selector
             document.getElementById('editModal').style.display = 'flex';
         }
 
