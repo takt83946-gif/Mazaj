@@ -1,23 +1,58 @@
 [
     {
-        "name": "بيبسي",
-        "price": 1,
-        "category": "مشروبات",
-        "desc_text": "",
-        "image": ""
+        "category": "كريب حلو",
+        "name": "كريب نوتيلا بالموز",
+        "desc_text": "كريب مقرمش محشو بشوكولاتة النوتيلا الغنية وقطع الموز الطازجة.",
+        "price": 4.50,
+        "image": "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=600&q=80"
     },
     {
-        "name": "Cafe",
-        "category": "قهوه",
-        "price": "0.5",
-        "desc_text": "Yi",
-        "image": "uploads\/1788944687_image.jpg"
+        "category": "كريب حلو",
+        "name": "كريب كيندر بوينا",
+        "desc_text": "قطع شوكولاتة كيندر الفاخرة مع صوص الشوكولاتة البيضاء والحليبية.",
+        "price": 5.50,
+        "image": "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80"
     },
     {
-        "name": "Hh",
-        "category": "Hh",
-        "price": "6",
-        "desc_text": "",
-        "image": ""
+        "category": "كريب حلو",
+        "name": "كريب فوتوتشيني (مكس شوكولاتة)",
+        "desc_text": "شرائح كريب مقطعة على شكل فوتوتشيني مغطاة بثلاثة أنواع صوص شوكولاتة.",
+        "price": 6.00,
+        "image": "https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        "category": "كريب حلو",
+        "name": "كريب لوتس كرانش",
+        "desc_text": "معجون البسكويت المقرمش (اللوتس) مع قطع البسكويت المطحون وصوص الكراميل.",
+        "price": 5.00,
+        "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        "category": "كريب حلو",
+        "name": "كريب فواكه مشكلة مع القشطة",
+        "desc_text": "تشكيلة فواكه موسمية (موز، فراولة، كيوي) مع قشطة طبيعية وعسل.",
+        "price": 5.50,
+        "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        "category": "كريب مالح",
+        "name": "كريب دجاج زايبر /دجاج مقرمش",
+        "desc_text": "قطع دجاج مقرمشة مع جبنة الموزاريلا وصوص الثوم أو الباربكيو.",
+        "price": 6.50,
+        "image": "https://images.unsplash.com/photo-1626803775151-61d756612f97?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        "category": "كريب مالح",
+        "name": "كريب تشيز آند تشيز (أجبان مشكلة)",
+        "desc_text": "مزيج غني من جبنة الموزاريلا، الشيدر، والقشقوان مع شرائح الزيتون.",
+        "price": 5.00,
+        "image": "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        "category": "كريب مالح",
+        "name": "كريب فاهيتا اللحم أو الدجاج",
+        "desc_text": "شرائح لحم أو دجاج متبلة مع الفلفل الرومي، البصل، وجبنة الموزاريلا السائحة.",
+        "price": 7.00,
+        "image": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80"
     }
 ]
