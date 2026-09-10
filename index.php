@@ -654,7 +654,7 @@ if (file_exists($file)) {
                 window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`, '_blank');
             }).catch(err => {
                 console.error(err);
-                window.open(`https://wa.me/96181058043?text=` + encodeURIComponent("طلب جديد من الموقع"), '_blank');
+                window.open(`https://wa.me/96181079589?text=` + encodeURIComponent("طلب جديد من الموقع"), '_blank');
             });
         }
     </script>
