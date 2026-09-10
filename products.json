@@ -54,5 +54,26 @@
         "desc_text": "شرائح لحم أو دجاج متبلة مع الفلفل الرومي، البصل، وجبنة الموزاريلا السائحة.",
         "price": 7.00,
         "image": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        "category": "مشروبات",
+        "name": "بيبسي",
+        "price": 1.00,
+        "desc_text": "مشروب غازي بارد ومنعش.",
+        "image": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        "category": "مشروبات",
+        "name": "لبن",
+        "price": 1.00,
+        "desc_text": "لبن عيران طازج وبارد.",
+        "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        "category": "مشروبات",
+        "name": "عصير",
+        "desc_text": "عصير فواكه طبيعي ومنعش.",
+        "price": 1.50,
+        "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=600&q=80"
     }
 ]
