@@ -636,7 +636,7 @@ if (file_exists($file)) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
             }).then(response => response.json()).then(data => {
-                let adminPhone = "96181058043"; 
+                let adminPhone = "96181079589"; 
                 let message = "مرحباً *لفة Mazaj* 🌯، أريد طلب الآتي:\n\n";
                 let index = 1, totalPrice = 0;
 
