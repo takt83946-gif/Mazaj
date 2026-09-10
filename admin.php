@@ -1,4 +1,4 @@
-[source: 1]<?php
+<?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -43,13 +43,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
     exit;
 }
 
-// 2. حذف منتج محدد
+// 2. معالجة تعديل منتج موجود
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_product'])) {
+    $index = $_POST['product_index'] ?? null;
+    $products = file_exists($products_file) ? json_decode(file_get_contents($products_file), true) : [];
+    
+    if ($index !== null && isset($products[$index])) {
+        $products[$index]['name'] = $_POST['name'] ?? $products[$index]['name'];
+        $products[$index]['category'] = $_POST['category'] ?? $products[$index]['category'];
+        $products[$index]['price'] = $_POST['price'] ?? $products[$index]['price'];
+        $products[$index]['desc_text'] = $_POST['desc_text'] ?? $products[$index]['desc_text'];
+        
+        // رفع صورة جديدة في حال تم اختيار صورة
+        if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
+            $file_tmp = $_FILES['product_image']['tmp_name'];
+            $file_name = time() . '_' . basename($_FILES['product_image']['name']);
+            $upload_dir = 'uploads/';
+            
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
+            
+            $destination = $upload_dir . $file_name;
+            if (move_uploaded_file($file_tmp, $destination)) {
+                // حذف الصورة القديمة إن وجدت وليست رابط خارجي
+                if (!empty($products[$index]['image']) && file_exists($products[$index]['image'])) {
+                    @unlink($products[$index]['image']);
+                }
+                $products[$index]['image'] = $destination;
+            }
+        }
+        
+        file_put_contents($products_file, json_encode($products, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    }
+    header("Location: admin.php");
+    exit;
+}
+
+// 3. حذف منتج محدد
 if (isset($_GET['delete_product'])) {
     $index = $_GET['delete_product'];
     $products = file_exists($products_file) ? json_decode(file_get_contents($products_file), true) : [];
     if (isset($products[$index])) {
         if (!empty($products[$index]['image']) && file_exists($products[$index]['image'])) {
-            unlink($products[$index]['image']);
+            @unlink($products[$index]['image']);
         }
         unset($products[$index]);
         file_put_contents($products_file, json_encode(array_values($products), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
@@ -58,7 +95,7 @@ if (isset($_GET['delete_product'])) {
     exit;
 }
 
-// 3. تحديث حالة الطلب
+// 4. تحديث حالة الطلب
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $order_index = $_POST['order_index'] ?? null;
     $new_status = $_POST['new_status'] ?? '';
@@ -72,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     exit;
 }
 
-// 4. مسح جميع الطلبات
+// 5. مسح جميع الطلبات
 if (isset($_GET['clear_all_orders'])) {
     file_put_contents($orders_file, json_encode([], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     header("Location: admin.php");
@@ -125,12 +162,18 @@ if (!is_array($orders)) $orders = [];
         
         .wa-btn { background: #22c55e; color: #fff; padding: 6px 10px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
         .del-btn { background: #ef4444; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; }
+        .edit-btn { background: #3b82f6; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; margin-left: 4px; }
         .clear-all-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; }
         .clear-all-btn:hover { background: var(--accent); color: #fff; }
         .status-form { display: flex; gap: 4px; align-items: center; }
         .status-form select { margin-bottom: 0; padding: 5px; font-size: 0.78rem; min-width: 115px; }
         .status-form button { padding: 5px 10px; font-size: 0.78rem; white-space: nowrap; }
         .item-list { padding-right: 12px; font-size: 0.8rem; color: var(--text-muted); }
+
+        /* نافذة التعديل المنبثقة Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background: #1c140f; border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .close-modal { background: #ef4444; float: left; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -223,7 +266,7 @@ if (!is_array($orders)) $orders = [];
             <h2>✨ Add New Menu Item</h2>
             <form action="admin.php" method="POST" enctype="multipart/form-data" style="margin-top: 12px;">
                 <input type="text" name="name" placeholder="Item Name (مثلاً: لفة زنجر خارقة)" required>
-                <input type="text" name="category" placeholder="Category (مثلاً: حمض، صاج، سندويش...)" required>
+                <input type="text" name="category" placeholder="Category (مثلاً: كريب حلو، كريب مالح...)" required>
                 <input type="number" step="0.01" name="price" placeholder="Price ($)" required>
                 <textarea name="desc_text" placeholder="Description..."></textarea>
                 
@@ -236,9 +279,9 @@ if (!is_array($orders)) $orders = [];
             </form>
         </div>
 
-        <!-- قائمة المنتجات الحالية -->
+        <!-- قائمة المنتجات الحالية مع أزرار التعديل والحذف -->
         <div class="card">
-            <h2>المنتجات الحالية في المنيو</h2>
+            <h2>المنتجات الحالية في المنيو (تعديل أو حذف)</h2>
             <?php if (empty($products)): ?>
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px;">لا توجد منتجات حالياً.</p>
             <?php else: ?>
@@ -249,7 +292,7 @@ if (!is_array($orders)) $orders = [];
                                 <th>الصورة</th>
                                 <th>الاسم والتصنيف</th>
                                 <th>السعر</th>
-                                <th>إجراء الحذف</th>
+                                <th>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -268,6 +311,7 @@ if (!is_array($orders)) $orders = [];
                                 </td>
                                 <td style="color:var(--accent); font-weight:800;">$<?= number_format($prod['price'] ?? 0, 2) ?></td>
                                 <td>
+                                    <button class="btn edit-btn" onclick="openEditModal(<?= $idx ?>, '<?= htmlspecialchars($prod['name'] ?? '', ENT_QUOTES) ?>', '<?= htmlspecialchars($prod['category'] ?? '', ENT_QUOTES) ?>', '<?= $prod['price'] ?? 0 ?>', '<?= htmlspecialchars($prod['desc_text'] ?? '', ENT_QUOTES) ?>')">تعديل</button>
                                     <a href="admin.php?delete_product=<?= $idx ?>" class="btn del-btn" onclick="return confirm('هل أنت متأكد من حذف هذا المنتج؟')">حذف</a>
                                 </td>
                             </tr>
@@ -278,5 +322,58 @@ if (!is_array($orders)) $orders = [];
             <?php endif; ?>
         </div>
     </div>
+
+    <!-- نافذة تعديل المنتج المنبثقة -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEditModal()">إغلاق X</span>
+            <h2 style="margin-bottom: 15px; color: #fef3c7;">✏️ تعديل المنتج</h2>
+            <form action="admin.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="product_index" id="edit_index">
+                
+                <label style="font-size: 0.8rem; color: var(--text-muted);">اسم المنتج:</label>
+                <input type="text" name="name" id="edit_name" required>
+                
+                <label style="font-size: 0.8rem; color: var(--text-muted);">التصنيف:</label>
+                <input type="text" name="category" id="edit_category" required>
+                
+                <label style="font-size: 0.8rem; color: var(--text-muted);">السعر ($):</label>
+                <input type="number" step="0.01" name="price" id="edit_price" required>
+                
+                <label style="font-size: 0.8rem; color: var(--text-muted);">الوصف:</label>
+                <textarea name="desc_text" id="edit_desc"></textarea>
+                
+                <label style="display:block; margin-bottom:6px; font-size:0.85rem; color:var(--text-muted);">
+                    📷 استبدال الصورة (اختياري):
+                </label>
+                <input type="file" name="product_image" accept="image/*">
+                
+                <button type="submit" name="edit_product" style="width:100%; margin-top:8px; background: #3b82f6;">حفظ التعديلات</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal(index, name, category, price, desc) {
+            document.getElementById('edit_index').value = index;
+            document.getElementById('edit_name').value = name;
+            document.getElementById('edit_category').value = category;
+            document.getElementById('edit_price').value = price;
+            document.getElementById('edit_desc').value = desc;
+            document.getElementById('editIdModal').style.display = 'flex'; // Fix display selector
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            let modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
