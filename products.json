@@ -56,6 +56,27 @@
         "image": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80"
     },
     {
+        "category": "موالح ومسلية",
+        "name": "فول",
+        "price": 2.00,
+        "desc_text": "فول متبل على الطريقة الشهية مع الزيت والليمون والكمون.",
+        "image": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        "category": "موالح ومسلية",
+        "name": "ذرة",
+        "price": 2.00,
+        "desc_text": "حبوب الذرة الطازجة الساخنة مع الزبدة والبهارات.",
+        "image": "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+        "category": "موالح ومسلية",
+        "name": "ترموس",
+        "price": 2.00,
+        "desc_text": "ترموس مسلوق ومتبل بالملح والكمون.",
+        "image": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80"
+    },
+    {
         "category": "مشروبات",
         "name": "بيبسي",
         "price": 1.00,
@@ -72,8 +93,8 @@
     {
         "category": "مشروبات",
         "name": "عصير",
-        "desc_text": "عصير فواكه طبيعي ومنعش.",
         "price": 1.50,
+        "desc_text": "عصير فواكه طبيعي ومنعش.",
         "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=600&q=80"
     }
 ]
