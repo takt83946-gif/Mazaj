@@ -461,7 +461,10 @@ if (file_exists($file)) {
                     if (isset($p['category']) && $p['category'] === $cat) {
                         $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
                         $hash_id = md5($p['name']);
-                        $item_price = $p['price'] ?? 0;
+                        
+                        // تنظيف وتحويل السعر إلى رقم عشري لتجنب أي خطأ في الـ number_format
+                        $raw_price = $p['price'] ?? 0;
+                        $item_price = floatval(preg_replace('/[^\d.]/', '', $raw_price));
                         
                         $item_image = '';
                         if (!empty($p['image'])) {
