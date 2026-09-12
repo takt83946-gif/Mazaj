@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // إخفاء الأخطاء من الشاشة نهائياً لمنع تشويه التصميم
+ini_set('display_errors', 0);
 
 $products_file = 'products.json';
 $orders_file = 'orders.json';
@@ -18,14 +18,14 @@ function save_data($file, $data) {
 $products = get_data($products_file);
 $orders = get_data($orders_file);
 
-// 1. إضافة منتج
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
+// 1. إضافة أو تعديل منتج
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['add_product']) || isset($_POST['update_product']))) {
     $name = trim($_POST['name'] ?? '');
     $price = $_POST['price'] ?? 0;
     $desc = $_POST['desc_text'] ?? '';
     $category = trim($_POST['category'] ?? '');
     
-    $image_path = '';
+    $image_path = $_POST['old_image'] ?? '';
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
         $file_tmp = $_FILES['product_image']['tmp_name'];
         $file_name = time() . '_' . basename($_FILES['product_image']['name']);
@@ -33,17 +33,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
         if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
         $destination = $upload_dir . $file_name;
         if (move_uploaded_file($file_tmp, $destination)) {
+            if (!empty($_POST['old_image']) && file_exists($_POST['old_image'])) {
+                @unlink($_POST['old_image']);
+            }
             $image_path = $destination;
         }
     }
 
-    $products[] = [
+    $product_data = [
         'name' => $name,
         'price' => $price,
         'desc_text' => $desc,
         'category' => $category,
         'image' => $image_path
     ];
+
+    if (isset($_POST['update_product']) && isset($_POST['edit_index'])) {
+        $edit_index = $_POST['edit_index'];
+        if (isset($products[$edit_index])) {
+            $products[$edit_index] = $product_data;
+        }
+    } else {
+        $products[] = $product_data;
+    }
 
     save_data($products_file, $products);
     header("Location: admin.php");
@@ -83,6 +95,41 @@ if (isset($_GET['clear_all_orders'])) {
     header("Location: admin.php");
     exit;
 }
+
+// حساب المبيعات اليومية والشهرية
+$daily_sales = 0;
+$monthly_sales = 0;
+$current_date = date('d/m/Y'); // تنسيق التاريخ المفترض في الطلبات (مثال: 09/09/2026 أو حسب تنسيقك)
+$current_month = date('m/Y');   // الشهر والسنة
+
+foreach ($orders as $order) {
+    $order_time = isset($order['time']) ? $order['time'] : '';
+    // استخراج التاريخ من حقل الوقت (بافتراض أن الوقت يحتوي على التاريخ مثل 09/09/2026 16:56:35)
+    $raw_total = isset($order['total']) ? $order['total'] : '$0';
+    $amount = floatval(preg_replace('/[^\d.]/', '', $raw_total));
+    
+    // مطابقة اليوم والشهر بناءً على نص التاريخ
+    if (!empty($order_time)) {
+        if (strpos($order_time, date('d/m/Y')) !== false) {
+            $daily_sales += $amount;
+        }
+        if (strpos($order_time, date('/m/Y')) !== false || strpos($order_time, date('m/Y')) !== false) {
+            $monthly_sales += $amount;
+        }
+    }
+}
+
+// وضع التعديل
+$edit_mode = false;
+$edit_data = [];
+$edit_index = null;
+if (isset($_GET['edit'])) {
+    $edit_index = $_GET['edit'];
+    if (isset($products[$edit_index])) {
+        $edit_mode = true;
+        $edit_data = $products[$edit_index];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -111,6 +158,12 @@ if (isset($_GET['clear_all_orders'])) {
         h1, h2 { color: #fef3c7; font-weight: 800; font-size: 1.25rem; }
         .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         .card { background: var(--bg-card); backdrop-filter: blur(8px); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { background: rgba(20, 14, 10, 0.9); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; text-align: center; }
+        .stat-box h3 { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px; }
+        .stat-box .amount { font-size: 1.4rem; font-weight: 900; color: var(--accent); }
+
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(20, 14, 10, 0.9); border: 1px solid var(--border-color); border-radius: 10px; color: #fff; font-size: 0.9rem; outline: none; }
         input[type="file"] { padding: 8px; cursor: pointer; }
         button, .btn { background: var(--accent); color: #fff; border: none; padding: 10px 16px; border-radius: 10px; font-weight: 800; cursor: pointer; text-decoration: none; display: inline-block; font-size: 0.88rem; transition: 0.2s; }
@@ -123,6 +176,7 @@ if (isset($_GET['clear_all_orders'])) {
         
         .wa-btn { background: #22c55e; color: #fff; padding: 6px 10px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
         .del-btn { background: #ef4444; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; }
+        .edit-btn { background: #3b82f6; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; margin-left: 5px; }
         .clear-all-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; }
         .clear-all-btn:hover { background: var(--accent); color: #fff; }
         .status-form { display: flex; gap: 4px; align-items: center; }
@@ -134,6 +188,18 @@ if (isset($_GET['clear_all_orders'])) {
 <body>
     <div class="container">
         <h1 style="margin-bottom: 20px; font-size: 1.5rem; text-align: center; color: #fef3c7;">☕ إدارة المنيو والطلبات - Mazaj Cafe</h1>
+
+        <!-- إحصائيات المبيعات اليومية والشهرية -->
+        <div class="stats-grid">
+            <div class="stat-box">
+                <h3>📈 مبيعات اليوم</h3>
+                <div class="amount">$<?= number_format($daily_sales, 2) ?></div>
+            </div>
+            <div class="stat-box">
+                <h3>📊 مبيعات الشهر</h3>
+                <div class="amount">$<?= number_format($monthly_sales, 2) ?></div>
+            </div>
+        </div>
 
         <div class="card">
             <div class="header-flex">
@@ -212,15 +278,35 @@ if (isset($_GET['clear_all_orders'])) {
             <?php endif; ?>
         </div>
 
-        <div class="card">
-            <h2>✨ إضافة منتج جديد</h2>
+        <div class="card" id="product-form-card">
+            <h2><?= $edit_mode ? '✏️ تعديل المنتج: ' . htmlspecialchars($edit_data['name'] ?? '') : '✨ إضافة منتج جديد' ?></h2>
             <form action="admin.php" method="POST" enctype="multipart/form-data" style="margin-top: 12px;">
-                <input type="text" name="name" placeholder="اسم المنتج (مثال: كريب نوتيلا)" required>
-                <input type="text" name="category" placeholder="التصنيف / القسم">
-                <input type="number" step="0.01" name="price" placeholder="السعر ($)" required>
-                <textarea name="desc_text" placeholder="وصف المنتج..."></textarea>
+                <?php if ($edit_mode): ?>
+                    <input type="hidden" name="edit_index" value="<?= $edit_index ?>">
+                    <input type="hidden" name="old_image" value="<?= htmlspecialchars($edit_data['image'] ?? '') ?>">
+                <?php endif; ?>
+                
+                <input type="text" name="name" placeholder="اسم المنتج (مثال: كريب نوتيلا)" value="<?= htmlspecialchars($edit_data['name'] ?? '') ?>" required>
+                <input type="text" name="category" placeholder="التصنيف / القسم" value="<?= htmlspecialchars($edit_data['category'] ?? '') ?>">
+                <input type="number" step="0.01" name="price" placeholder="السعر ($)" value="<?= htmlspecialchars($edit_data['price'] ?? '') ?>" required>
+                <textarea name="desc_text" placeholder="وصف المنتج..."><?= htmlspecialchars($edit_data['desc_text'] ?? '') ?></textarea>
+                
+                <?php if ($edit_mode && !empty($edit_data['image'])): ?>
+                    <div style="margin-bottom: 10px; font-size: 0.85rem; color: var(--text-muted);">
+                        الصورة الحالية: <img src="<?= htmlspecialchars($edit_data['image']) ?>" style="width: 30px; height: 30px; object-fit: cover; vertical-align: middle; border-radius: 4px;">
+                    </div>
+                <?php endif; ?>
+                
                 <input type="file" name="product_image" accept="image/*">
-                <button type="submit" name="add_product" style="width:100%; margin-top:8px;">☕ حفظ وإضافة المنتج</button>
+                
+                <?php if ($edit_mode): ?>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="submit" name="update_product" style="flex: 1; background: #3b82f6; margin-top:8px;">💾 حفظ التعديلات</button>
+                        <a href="admin.php" class="btn" style="background: #6b7280; text-align: center; margin-top:8px; text-decoration:none;">إلغاء</a>
+                    </div>
+                <?php else: ?>
+                    <button type="submit" name="add_product" style="width:100%; margin-top:8px;">☕ حفظ وإضافة المنتج</button>
+                <?php endif; ?>
             </form>
         </div>
 
@@ -261,6 +347,7 @@ if (isset($_GET['clear_all_orders'])) {
                                 </td>
                                 <td style="color:var(--accent); font-weight:800;">$<?= number_format($p_price, 2) ?></td>
                                 <td>
+                                    <a href="admin.php?edit=<?= $index ?>#product-form-card" class="btn edit-btn">تعديل</a>
                                     <a href="admin.php?delete=<?= $index ?>" class="btn del-btn" onclick="return confirm('هل أنت متأكد من الحذف؟')">حذف</a>
                                 </td>
                             </tr>
