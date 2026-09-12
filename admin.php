@@ -5,26 +5,25 @@ ini_set('display_errors', 1);
 $products_file = 'products.json';
 $orders_file = 'orders.json';
 
-function get_products_data($file) {
+function get_data($file) {
     if (!file_exists($file)) return [];
     $data = json_decode(file_get_contents($file), true);
     return is_array($data) ? $data : [];
 }
 
-function save_products_data($file, $data) {
+function save_data($file, $data) {
     file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
 }
 
-$products_by_cat = get_products_data($products_file);
-$orders = file_exists($orders_file) ? json_decode(file_get_contents($orders_file), true) : [];
-if (!is_array($orders)) $orders = [];
+$products = get_data($products_file);
+$orders = get_data($orders_file);
 
-// 1. إضافة منتج جديد
+// 1. إضافة منتج
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
-    $category = trim($_POST['category'] ?? 'عام');
     $name = trim($_POST['name'] ?? '');
-    $price = floatval(preg_replace('/[^\d.]/', '', $_POST['price'] ?? 0));
-    $desc_text = $_POST['desc_text'] ?? '';
+    $price = $_POST['price'] ?? 0;
+    $desc = $_POST['desc_text'] ?? '';
+    $category = trim($_POST['category'] ?? '');
     
     $image_path = '';
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
@@ -38,104 +37,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
         }
     }
 
-    if (!isset($products_by_cat[$category])) {
-        $products_by_cat[$category] = [];
-    }
-
-    $products_by_cat[$category][] = [
+    $products[] = [
         'name' => $name,
         'price' => $price,
-        'desc_text' => $desc_text,
+        'desc_text' => $desc,
+        'category' => $category,
         'image' => $image_path
     ];
 
-    save_products_data($products_file, $products_by_cat);
+    save_data($products_file, $products);
     header("Location: admin.php");
     exit;
 }
 
-// 2. تعديل منتج موجود
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_product'])) {
-    $old_cat = $_POST['old_category'] ?? '';
-    $index = $_POST['product_index'] ?? null;
-    
-    $new_cat = trim($_POST['category'] ?? 'عام');
-    $name = trim($_POST['name'] ?? '');
-    $price = floatval(preg_replace('/[^\d.]/', '', $_POST['price'] ?? 0));
-    $desc_text = $_POST['desc_text'] ?? '';
-
-    if ($old_cat !== '' && $index !== null && isset($products_by_cat[$old_cat][$index])) {
-        $product = $products_by_cat[$old_cat][$index];
-        $product['name'] = $name;
-        $product['price'] = $price;
-        $product['desc_text'] = $desc_text;
-
-        if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
-            $file_tmp = $_FILES['product_image']['tmp_name'];
-            $file_name = time() . '_' . basename($_FILES['product_image']['name']);
-            $upload_dir = 'uploads/';
-            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-            $destination = $upload_dir . $file_name;
-            if (move_uploaded_file($file_tmp, $destination)) {
-                if (!empty($product['image']) && file_exists($product['image'])) {
-                    @unlink($product['image']);
-                }
-                $product['image'] = $destination;
-            }
+// 2. حذف منتج
+if (isset($_GET['delete'])) {
+    $index = $_GET['delete'];
+    if (isset($products[$index])) {
+        if (!empty($products[$index]['image']) && file_exists($products[$index]['image'])) {
+            @unlink($products[$index]['image']);
         }
-
-        unset($products_by_cat[$old_cat][$index]);
-        $products_by_cat[$old_cat] = array_values($products_by_cat[$old_cat]);
-        if (empty($products_by_cat[$old_cat])) {
-            unset($products_by_cat[$old_cat]);
-        }
-
-        if (!isset($products_by_cat[$new_cat])) {
-            $products_by_cat[$new_cat] = [];
-        }
-        $products_by_cat[$new_cat][] = $product;
-
-        save_products_data($products_file, $products_by_cat);
+        unset($products[$index]);
+        $products = array_values($products);
+        save_data($products_file, $products);
     }
     header("Location: admin.php");
     exit;
 }
 
-// 3. حذف منتج
-if (isset($_GET['delete_cat']) && isset($_GET['delete_idx'])) {
-    $del_cat = $_GET['delete_cat'];
-    $del_idx = $_GET['delete_idx'];
-
-    if (isset($products_by_cat[$del_cat][$del_idx])) {
-        if (!empty($products_by_cat[$del_cat][$del_idx]['image']) && file_exists($products_by_cat[$del_cat][$del_idx]['image'])) {
-            @unlink($products_by_cat[$del_cat][$del_idx]['image']);
-        }
-        unset($products_by_cat[$del_cat][$del_idx]);
-        $products_by_cat[$del_cat] = array_values($products_by_cat[$del_cat]);
-        if (empty($products_by_cat[$del_cat])) {
-            unset($products_by_cat[$del_cat]);
-        }
-        save_products_data($products_file, $products_by_cat);
-    }
-    header("Location: admin.php");
-    exit;
-}
-
-// 4. تحديث حالة الطلب
+// 3. تحديث حالة الطلب
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $order_index = $_POST['order_index'] ?? null;
     $new_status = $_POST['new_status'] ?? '';
-    if (is_array($orders) && isset($orders[$order_index])) {
+    if (isset($orders[$order_index])) {
         $orders[$order_index]['status'] = $new_status;
-        file_put_contents($orders_file, json_encode(array_values($orders), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        save_data($orders_file, $orders);
     }
     header("Location: admin.php");
     exit;
 }
 
-// 5. مسح الطلبات
+// 4. مسح الطلبات
 if (isset($_GET['clear_all_orders'])) {
-    file_put_contents($orders_file, json_encode([], JSON_UNESCAPED_UNICODE));
+    save_data($orders_file, []);
     header("Location: admin.php");
     exit;
 }
@@ -179,17 +123,12 @@ if (isset($_GET['clear_all_orders'])) {
         
         .wa-btn { background: #22c55e; color: #fff; padding: 6px 10px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
         .del-btn { background: #ef4444; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; }
-        .edit-btn { background: #3b82f6; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; margin-left: 4px; }
         .clear-all-btn { background: transparent; border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; }
         .clear-all-btn:hover { background: var(--accent); color: #fff; }
         .status-form { display: flex; gap: 4px; align-items: center; }
         .status-form select { margin-bottom: 0; padding: 5px; font-size: 0.78rem; min-width: 115px; }
         .status-form button { padding: 5px 10px; font-size: 0.78rem; white-space: nowrap; }
         .item-list { padding-right: 12px; font-size: 0.8rem; color: var(--text-muted); }
-
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 15px; }
-        .modal-content { background: #1c140f; border: 1px solid var(--border-color); padding: 20px; border-radius: 16px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-        .close-modal { background: #ef4444; float: left; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; color: #fff; border: none; }
     </style>
 </head>
 <body>
@@ -269,10 +208,10 @@ if (isset($_GET['clear_all_orders'])) {
         </div>
 
         <div class="card">
-            <h2>✨ إضافة منتج جديد ضمن الأقسام</h2>
+            <h2>✨ إضافة منتج جديد</h2>
             <form action="admin.php" method="POST" enctype="multipart/form-data" style="margin-top: 12px;">
-                <input type="text" name="category" placeholder="اسم القسم (مثال: الكريب، العصائر)" required>
                 <input type="text" name="name" placeholder="اسم المنتج (مثال: كريب نوتيلا)" required>
+                <input type="text" name="category" placeholder="التصنيف / القسم">
                 <input type="number" step="0.01" name="price" placeholder="السعر ($)" required>
                 <textarea name="desc_text" placeholder="وصف المنتج..."></textarea>
                 <input type="file" name="product_image" accept="image/*">
@@ -281,98 +220,47 @@ if (isset($_GET['clear_all_orders'])) {
         </div>
 
         <div class="card">
-            <h2>📋 المنتجات الحالية مقسمة حسب الفئات</h2>
-            <?php if (empty($products_by_cat)): ?>
+            <h2>📋 المنتجات الحالية في المنيو</h2>
+            <?php if (empty($products)): ?>
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-top:10px;">لا توجد منتجات مضافة حالياً.</p>
             <?php else: ?>
-                <?php foreach ($products_by_cat as $category_name => $items): ?>
-                    <h3 style="color:var(--accent); margin-top:15px; border-bottom:1px solid var(--border-color); padding-bottom:5px;">📁 <?= htmlspecialchars($category_name) ?></h3>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>الصورة</th>
-                                    <th>اسم المنتج</th>
-                                    <th>السعر</th>
-                                    <th>الإجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($items as $idx => $prod): 
-                                    $raw_price = $prod['price'] ?? 0;
-                                    $safe_price = floatval(preg_replace('/[^\d.]/', '', $raw_price));
-                                ?>
-                                <tr>
-                                    <td>
-                                        <?php if (!empty($prod['image'])): ?>
-                                            <img src="<?= htmlspecialchars($prod['image']) ?>" style="width:40px; height:40px; object-fit:cover; border-radius:8px;">
-                                        <?php else: ?>
-                                            <span style="font-size:0.75rem;">بدون</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><strong><?= htmlspecialchars($prod['name'] ?? '') ?></strong></td>
-                                    <td style="color:var(--accent); font-weight:800;">$<?= number_format($safe_price, 2) ?></td>
-                                    <td>
-                                        <button type="button" class="btn edit-btn" onclick='openEditModal(<?= json_encode($category_name) ?>, <?= $idx ?>, <?= json_encode($prod['name'] ?? "") ?>, <?= json_encode($category_name) ?>, <?= $safe_price ?>, <?= json_encode($prod['desc_text'] ?? "") ?>)'>تعديل</button>
-                                        <a href="admin.php?delete_cat=<?= urlencode($category_name) ?>&delete_idx=<?= $idx ?>" class="btn del-btn" onclick="return confirm('هل أنت متأكد من الحذف؟')">حذف</a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php endforeach; ?>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الصورة</th>
+                                <th>الاسم والتصنيف</th>
+                                <th>السعر</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($products as $index => $prod): 
+                                $p_price = floatval(preg_replace('/[^\d.]/', '', $prod['price'] ?? 0));
+                            ?>
+                            <tr>
+                                <td>
+                                    <?php if (!empty($prod['image'])): ?>
+                                        <img src="<?= htmlspecialchars($prod['image']) ?>" style="width:40px; height:40px; object-fit:cover; border-radius:8px;">
+                                    <?php else: ?>
+                                        <span style="font-size:0.75rem; color:var(--text-muted);">بدون</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <strong><?= htmlspecialchars($prod['name'] ?? '') ?></strong><br>
+                                    <small style="color:var(--accent);"><?= htmlspecialchars($prod['category'] ?? 'عام') ?></small>
+                                </td>
+                                <td style="color:var(--accent); font-weight:800;">$<?= number_format($p_price, 2) ?></td>
+                                <td>
+                                    <a href="admin.php?delete=<?= $index ?>" class="btn del-btn" onclick="return confirm('هل أنت متأكد من الحذف؟')">حذف</a>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php endif; ?>
         </div>
     </div>
-
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <button type="button" class="close-modal" onclick="closeEditModal()">إغلاق X</button>
-            <h2 style="margin-bottom: 15px; color: #fef3c7; clear: both;">✏️ تعديل المنتج</h2>
-            <form action="admin.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="old_category" id="edit_old_category">
-                <input type="hidden" name="product_index" id="edit_index">
-                
-                <label style="font-size: 0.8rem; color: var(--text-muted);">اسم القسم:</label>
-                <input type="text" name="category" id="edit_category" required>
-                
-                <label style="font-size: 0.8rem; color: var(--text-muted);">اسم المنتج:</label>
-                <input type="text" name="name" id="edit_name" required>
-                
-                <label style="font-size: 0.8rem; color: var(--text-muted);">السعر ($):</label>
-                <input type="number" step="0.01" name="price" id="edit_price" required>
-                
-                <label style="font-size: 0.8rem; color: var(--text-muted);">الوصف:</label>
-                <textarea name="desc_text" id="edit_desc"></textarea>
-                
-                <label style="display:block; margin-bottom:6px; font-size:0.85rem; color:var(--text-muted);">استبدال الصورة:</label>
-                <input type="file" name="product_image" accept="image/*">
-                
-                <button type="submit" name="edit_product" style="width:100%; margin-top:8px; background: #3b82f6;">حفظ التعديلات</button>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        function openEditModal(oldCat, index, name, category, price, desc) {
-            document.getElementById('edit_old_category').value = oldCat;
-            document.getElementById('edit_index').value = index;
-            document.getElementById('edit_category').value = category;
-            document.getElementById('edit_name').value = name;
-            document.getElementById('edit_price').value = price;
-            document.getElementById('edit_desc').value = desc;
-            document.getElementById('editModal').style.display = 'flex';
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            let modal = document.getElementById('editModal');
-            if (event.target === modal) modal.style.display = 'none';
-        }
-    </script>
 </body>
 </html>
