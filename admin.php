@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0); // إخفاء الأخطاء من الشاشة نهائياً لمنع تشويه التصميم
 
 $products_file = 'products.json';
 $orders_file = 'orders.json';
@@ -160,27 +160,32 @@ if (isset($_GET['clear_all_orders'])) {
                         </thead>
                         <tbody>
                             <?php foreach ($orders as $index => $order): 
-                                $c_name = $order['customer_name'] ?? 'بدون اسم';
-                                $c_phone = $order['customer_phone'] ?? '';
-                                $c_address = $order['customer_address'] ?? '';
-                                $c_status = $order['status'] ?? 'قيد التحضير 🔥';
+                                $c_name = isset($order['customer_name']) ? $order['customer_name'] : 'بدون اسم';
+                                $c_phone = isset($order['customer_phone']) ? $order['customer_phone'] : '';
+                                $c_address = isset($order['customer_address']) ? $order['customer_address'] : '';
+                                $c_status = isset($order['status']) ? $order['status'] : 'قيد التحضير 🔥';
+                                $order_time = isset($order['time']) ? $order['time'] : '';
+                                $order_total = isset($order['total']) ? $order['total'] : '$0.00';
+                                
                                 $clean_phone = preg_replace('/[^0-9]/', '', $c_phone);
                                 $wa_text = "مرحباً $c_name، طلبك من *Mazaj Cafe* أصبح: *$c_status*. شكراً لاختيارك لنا! ☕";
                             ?>
                             <tr>
-                                <td><small style="color:var(--text-muted);"><?= htmlspecialchars($order['time'] ?? '') ?></small></td>
+                                <td><small style="color:var(--text-muted);"><?= htmlspecialchars($order_time) ?></small></td>
                                 <td><strong><?= htmlspecialchars($c_name) ?></strong><br><small style="color:var(--accent);"><?= htmlspecialchars($c_phone) ?></small></td>
                                 <td><?= htmlspecialchars($c_address) ?></td>
                                 <td>
                                     <ul class="item-list">
                                         <?php if (isset($order['items']) && is_array($order['items'])): ?>
-                                            <?php foreach ($order['items'] as $item_name => $item_data): ?>
-                                                <li>☕ <?= htmlspecialchars($item_name) ?> (<?= $item_data['qty'] ?? 1 ?>)</li>
+                                            <?php foreach ($order['items'] as $item_name => $item_data): 
+                                                $qty = isset($item_data['qty']) ? $item_data['qty'] : 1;
+                                            ?>
+                                                <li>☕ <?= htmlspecialchars($item_name) ?> (<?= $qty ?>)</li>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </ul>
                                 </td>
-                                <td style="color:var(--accent); font-weight:900;"><?= htmlspecialchars($order['total'] ?? '$0.00') ?></td>
+                                <td style="color:var(--accent); font-weight:900;"><?= htmlspecialchars($order_total) ?></td>
                                 <td>
                                     <form action="admin.php" method="POST" class="status-form">
                                         <input type="hidden" name="order_index" value="<?= $index ?>">
@@ -236,19 +241,23 @@ if (isset($_GET['clear_all_orders'])) {
                         </thead>
                         <tbody>
                             <?php foreach ($products as $index => $prod): 
-                                $p_price = floatval(preg_replace('/[^\d.]/', '', $prod['price'] ?? 0));
+                                $p_name = isset($prod['name']) ? $prod['name'] : '';
+                                $p_cat = isset($prod['category']) ? $prod['category'] : 'عام';
+                                $p_img = isset($prod['image']) ? $prod['image'] : '';
+                                $raw_price = isset($prod['price']) ? $prod['price'] : 0;
+                                $p_price = floatval(preg_replace('/[^\d.]/', '', $raw_price));
                             ?>
                             <tr>
                                 <td>
-                                    <?php if (!empty($prod['image'])): ?>
-                                        <img src="<?= htmlspecialchars($prod['image']) ?>" style="width:40px; height:40px; object-fit:cover; border-radius:8px;">
+                                    <?php if (!empty($p_img)): ?>
+                                        <img src="<?= htmlspecialchars($p_img) ?>" style="width:40px; height:40px; object-fit:cover; border-radius:8px;">
                                     <?php else: ?>
                                         <span style="font-size:0.75rem; color:var(--text-muted);">بدون</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <strong><?= htmlspecialchars($prod['name'] ?? '') ?></strong><br>
-                                    <small style="color:var(--accent);"><?= htmlspecialchars($prod['category'] ?? 'عام') ?></small>
+                                    <strong><?= htmlspecialchars($p_name) ?></strong><br>
+                                    <small style="color:var(--accent);"><?= htmlspecialchars($p_cat) ?></small>
                                 </td>
                                 <td style="color:var(--accent); font-weight:800;">$<?= number_format($p_price, 2) ?></td>
                                 <td>
