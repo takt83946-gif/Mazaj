@@ -1,100 +1,41 @@
 [
-    {
-        "category": "كريب حلو",
-        "name": "كريب نوتيلا بالموز",
-        "desc_text": "كريب مقرمش محشو بشوكولاتة النوتيلا الغنية وقطع الموز الطازجة.",
-        "price": 4.50,
-        "image": "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "كريب حلو",
-        "name": "كريب كيندر بوينا",
-        "desc_text": "قطع شوكولاتة كيندر الفاخرة مع صوص الشوكولاتة البيضاء والحليبية.",
-        "price": 5.50,
-        "image": "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "كريب حلو",
-        "name": "كريب فوتوتشيني (مكس شوكولاتة)",
-        "desc_text": "شرائح كريب مقطعة على شكل فوتوتشيني مغطاة بثلاثة أنواع صوص شوكولاتة.",
-        "price": 6.00,
-        "image": "https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "كريب حلو",
-        "name": "كريب لوتس كرانش",
-        "desc_text": "معجون البسكويت المقرمش (اللوتس) مع قطع البسكويت المطحون وصوص الكراميل.",
-        "price": 5.00,
-        "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "كريب حلو",
-        "name": "كريب فواكه مشكلة مع القشطة",
-        "desc_text": "تشكيلة فواكه موسمية (موز، فراولة، كيوي) مع قشطة طبيعية وعسل.",
-        "price": 5.50,
-        "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "كريب مالح",
-        "name": "كريب دجاج زايبر /دجاج مقرمش",
-        "desc_text": "قطع دجاج مقرمشة مع جبنة الموزاريلا وصوص الثوم أو الباربكيو.",
-        "price": 6.50,
-        "image": "https://images.unsplash.com/photo-1626803775151-61d756612f97?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "كريب مالح",
-        "name": "كريب تشيز آند تشيز (أجبان مشكلة)",
-        "desc_text": "مزيج غني من جبنة الموزاريلا، الشيدر، والقشقوان مع شرائح الزيتون.",
-        "price": 5.00,
-        "image": "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "كريب مالح",
-        "name": "كريب فاهيتا اللحم أو الدجاج",
-        "desc_text": "شرائح لحم أو دجاج متبلة مع الفلفل الرومي، البصل، وجبنة الموزاريلا السائحة.",
-        "price": 7.00,
-        "image": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "موالح ومسلية",
-        "name": "فول",
-        "price": 2.00,
-        "desc_text": "فول متبل على الطريقة الشهية مع الزيت والليمون والكمون.",
-        "image": "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "موالح ومسلية",
-        "name": "ذرة",
-        "price": 2.00,
-        "desc_text": "حبوب الذرة الطازجة الساخنة مع الزبدة والبهارات.",
-        "image": "https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "موالح ومسلية",
-        "name": "ترموس",
-        "price": 2.00,
-        "desc_text": "ترموس مسلوق ومتبل بالملح والكمون.",
-        "image": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "مشروبات",
-        "name": "بيبسي",
-        "price": 1.00,
-        "desc_text": "مشروب غازي بارد ومنعش.",
-        "image": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "مشروبات",
-        "name": "لبن",
-        "price": 1.00,
-        "desc_text": "لبن عيران طازج وبارد.",
-        "image": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80"
-    },
-    {
-        "category": "مشروبات",
-        "name": "عصير",
-        "price": 1.50,
-        "desc_text": "عصير فواكه طبيعي ومنعش.",
-        "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?auto=format&fit=crop&w=600&q=80"
-    }
+    {"id": 1, "category": "الكريب", "name": "كريب نوتيلا", "price": "200 ألف"},
+    {"id": 2, "category": "الكريب", "name": "كريب نوتيلا ولوتس", "price": "250 ألف"},
+    {"id": 3, "category": "الكريب", "name": "كريب كندر ونوتيلا", "price": "250 ألف"},
+    {"id": 4, "category": "الكريب", "name": "كريب أوريو", "price": "250 ألف"},
+    {"id": 5, "category": "الكريب", "name": "كريب براوني", "price": "300 ألف"},
+    {"id": 6, "category": "الكريب", "name": "كريب براوني وكندر", "price": "350 ألف"},
+    {"id": 7, "category": "الكريب", "name": "كريب براوني وأوريو", "price": "350 ألف"},
+    {"id": 8, "category": "الكريب", "name": "كريب أوريو وكندر", "price": "350 ألف"},
+    {"id": 9, "category": "الكريب", "name": "كريب فوتوتشيني", "price": "300 ألف"},
+    
+    {"id": 10, "category": "العصائر", "name": "كوكتيل شقف", "price": "صغير 200 / وسط 250 / كبير 300 ألف"},
+    {"id": 11, "category": "العصائر", "name": "كوكتيل عصير", "price": "صغير 200 / وسط 250 / كبير 300 ألف"},
+    {"id": 12, "category": "العصائر", "name": "أفوكا", "price": "صغير 200 / وسط 250 / كبير 300 ألف"},
+    {"id": 13, "category": "العصائر", "name": "فريز وموز", "price": "صغير 100 / وسط 150 / كبير 200 ألف"},
+    {"id": 14, "category": "العصائر", "name": "عصير ليمون", "price": "صغير 100 / وسط 150 / كبير 200 ألف"},
+    {"id": 15, "category": "العصائر", "name": "عصير جزر", "price": "صغير 100 / وسط 150 / كبير 200 ألف"},
+
+    {"id": 16, "category": "الكعك", "name": "كعك جبنة", "price": "100 ألف"},
+    {"id": 17, "category": "الكعك", "name": "كعك سادة", "price": "100 ألف"},
+    {"id": 18, "category": "الكعك", "name": "كعك جبنة وزيتون", "price": "150 ألف"},
+    {"id": 19, "category": "الكعك", "name": "كعك سجق وجبنة", "price": "200 ألف"},
+    {"id": 20, "category": "الكعك", "name": "كعك مرتديلا وجبنة", "price": "200 ألف"},
+    {"id": 21, "category": "الكعك", "name": "كعك شوكولا", "price": "100 ألف"},
+    {"id": 22, "category": "الكعك", "name": "كعك شوكولا ولوتس", "price": "150 ألف"},
+
+    {"id": 23, "category": "فول وعرانيس وترمس", "name": "فول", "price": "صغير 100 / وسط 200 / كبير 300 ألف"},
+    {"id": 24, "category": "فول وعرانيس وترمس", "name": "ذرة وفول", "price": "صغير 150 / وسط 250 ألف"},
+    {"id": 25, "category": "فول وعرانيس وترمس", "name": "عرانيس", "price": "وسط 100 / كبير 200 ألف"},
+    {"id": 26, "category": "فول وعرانيس وترمس", "name": "شمندر", "price": "صغير 100 / وسط 200 ألف"},
+    {"id": 27, "category": "فول وعرانيس وترمس", "name": "شمندر وعرانيس", "price": "وسط 250 / كبير 300 ألف"},
+    {"id": 28, "category": "فول وعرانيس وترمس", "name": "ترمس", "price": "وسط 100 / كبير 200 ألف"},
+    {"id": 29, "category": "فول وعرانيس وترمس", "name": "جزر", "price": "وسط 100 / كبير 200 ألف"},
+    {"id": 30, "category": "فول وعرانيس وترمس", "name": "ذرة", "price": "وسط 150 / كبير 200 ألف"},
+
+    {"id": 31, "category": "أشتة بلدية", "name": "أشتة مع مكسرات", "price": "صغير 250 / وسط 300 / كبير 400 ألف"},
+    {"id": 32, "category": "أشتة بلدية", "name": "أشتة مع فواكه", "price": "صغير 300 / وسط 400 / كبير 500 ألف"},
+
+    {"id": 33, "category": "ميني بان كيك & أخرى", "name": "30 حبة بان كيك مع نوتيلا", "price": "300 ألف"},
+    {"id": 34, "category": "ميني بان كيك & أخرى", "name": "لفة مزاج (كوب)", "price": "250 ألف"}
 ]
