@@ -23,7 +23,6 @@ if (!is_array($orders)) $orders = [];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
     $category = trim($_POST['category'] ?? 'عام');
     $name = trim($_POST['name'] ?? '');
-    // تنظيف السعر ليكون رقماً عشرياً سليماً
     $price = floatval(preg_replace('/[^\d.]/', '', $_POST['price'] ?? 0));
     $desc_text = $_POST['desc_text'] ?? '';
     
@@ -300,7 +299,6 @@ if (isset($_GET['clear_all_orders'])) {
                             </thead>
                             <tbody>
                                 <?php foreach ($items as $idx => $prod): 
-                                    // تنظيف السعر قبل عرضه لمنع ظهور أي خطأ
                                     $raw_price = $prod['price'] ?? 0;
                                     $safe_price = floatval(preg_replace('/[^\d.]/', '', $raw_price));
                                 ?>
