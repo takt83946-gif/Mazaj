@@ -50,7 +50,7 @@ if (file_exists($file)) {
             --cart-bg: rgba(255, 255, 255, 0.95);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
         
         body { 
             background-color: var(--bg-body);
@@ -144,30 +144,6 @@ if (file_exists($file)) {
             transform: translateY(-50%);
             color: var(--text-muted);
             font-size: 1rem;
-        }
-
-        .view-switch-selector {
-            display: flex;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 4px;
-            gap: 3px;
-        }
-        .view-switch-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 8px 14px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            border-radius: 10px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .view-switch-btn.active {
-            background: var(--accent);
-            color: #fff;
         }
 
         .mood-btn {
@@ -267,23 +243,12 @@ if (file_exists($file)) {
         .category-content-body {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+            transition: max-height 0.3s ease;
             padding: 0 14px;
         }
         .category-accordion-card.open .category-content-body {
-            max-height: 2500px;
+            max-height: 3000px;
             padding: 4px 14px 16px 14px;
-            transition: max-height 0.6s ease-in-out;
-        }
-
-        .unified-grid-container {
-            display: none;
-            margin-top: 12px;
-        }
-        .unified-grid-container.active {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 10px;
         }
 
         .menu-grid { 
@@ -316,9 +281,7 @@ if (file_exists($file)) {
             height: 100%;
             object-fit: cover;
             display: block;
-            transition: transform 0.4s ease;
         }
-        .card:hover .card-img { transform: scale(1.05); }
         
         .card-body { 
             padding: 8px 10px; 
@@ -524,10 +487,6 @@ if (file_exists($file)) {
                 <span class="search-icon">🔍</span>
                 <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك المفضلة..." oninput="filterProducts()">
             </div>
-            <div class="view-switch-selector">
-                <button class="view-switch-btn active" id="btn-mode-accordion" onclick="switchViewMode('accordion')">أقسام 📂</button>
-                <button class="view-switch-btn" id="btn-mode-grid" onclick="switchViewMode('grid')">الكل ⚡</button>
-            </div>
             <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
         </div>
 
@@ -563,14 +522,14 @@ if (file_exists($file)) {
                     $item_price = $p['price'] ?? 0;
                     $item_image = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : 'uploads/default.jpg'));
                     
-                    echo '<div class="card product-card" data-category="' . htmlspecialchars($cat) . '" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
+                    echo '<div class="card product-card" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
                     echo '  <div class="card-img-container">';
-                    echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
+                    echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" loading="lazy" onerror="this.src=\'uploads/default.jpg\'">';
                     echo '  </div>';
                     echo '  <div class="card-body">';
                     echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
                     echo '      <div class="card-footer">';
-                    echo '          <span class="price" id="price-' . $hash_id . '">$' . number_format($item_price, 2) . '</span>';
+                    echo '          <span class="price" id="price-' . $hash_id . '" data-base-price="' . $item_price . '">$' . number_format($item_price, 2) . '</span>';
                     echo '          <div id="btn-container-' . $hash_id . '"><button class="action-btn" onclick="changeQty(\'' . $safe_name . '\', ' . $item_price . ', 1, \'' . $hash_id . '\')">إضافة +</button></div>';
                     echo '      </div>';
                     echo '  </div>';
@@ -582,29 +541,6 @@ if (file_exists($file)) {
                 echo '</div>';
 
                 $index_cat++;
-            }
-            echo '</div>';
-
-            echo '<div class="unified-grid-container" id="unified-grid-wrapper">';
-            foreach ($products as $p) {
-                $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
-                $hash_id = md5($p['name']);
-                $item_price = $p['price'] ?? 0;
-                $item_image = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : 'uploads/default.jpg'));
-                $cat_name = $p['category'] ?? 'عام';
-                
-                echo '<div class="card product-card-grid" data-category="' . htmlspecialchars($cat_name) . '" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
-                echo '  <div class="card-img-container">';
-                echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
-                echo '  </div>';
-                echo '  <div class="card-body">';
-                echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
-                echo '      <div class="card-footer">';
-                echo '          <span class="price" id="grid-price-' . $hash_id . '">$' . number_format($item_price, 2) . '</span>';
-                echo '          <div id="grid-btn-container-' . $hash_id . '"><button class="action-btn" onclick="changeQty(\'' . $safe_name . '\', ' . $item_price . ', 1, \'' . $hash_id . '\')">إضافة +</button></div>';
-                echo '      </div>';
-                echo '  </div>';
-                echo '</div>';
             }
             echo '</div>';
         }
@@ -661,34 +597,6 @@ if (file_exists($file)) {
 
     <script>
         let cart = {};
-        let audioCtx = null;
-
-        // مولد صوت النقرة الاحترافي
-        function playClickSound() {
-            try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-                let osc = audioCtx.createOscillator();
-                let gain = audioCtx.createGain();
-                
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(580, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.05);
-
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
-            } catch(e) {}
-        }
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
@@ -703,7 +611,6 @@ if (file_exists($file)) {
         });
 
         function toggleTheme() {
-            playClickSound();
             let currentTheme = document.documentElement.getAttribute('data-theme');
             let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', newTheme);
@@ -714,29 +621,13 @@ if (file_exists($file)) {
         function updateThemeUI(theme) {
             let iconSpan = document.getElementById('theme-icon');
             let textSpan = document.getElementById('theme-text');
-            if (theme === 'dark') { iconSpan.innerText = '🌙'; textSpan.innerText = 'ليلي'; }
-            else { iconSpan.innerText = '☀️'; textSpan.innerText = 'مضيء'; }
-        }
-
-        function switchViewMode(mode) {
-            playClickSound();
-            document.getElementById('btn-mode-accordion').classList.toggle('active', mode === 'accordion');
-            document.getElementById('btn-mode-grid').classList.toggle('active', mode === 'grid');
-
-            let accordionWrapper = document.getElementById('categories-wrapper');
-            let gridWrapper = document.getElementById('unified-grid-wrapper');
-
-            if (mode === 'accordion') {
-                accordionWrapper.style.display = 'flex';
-                gridWrapper.classList.remove('active');
-            } else {
-                accordionWrapper.style.display = 'none';
-                gridWrapper.classList.add('active');
+            if (iconSpan && textSpan) {
+                if (theme === 'dark') { iconSpan.innerText = '🌙'; textSpan.innerText = 'ليلي'; }
+                else { iconSpan.innerText = '☀️'; textSpan.innerText = 'مضيء'; }
             }
         }
 
         function toggleCategory(headerElement) {
-            playClickSound();
             let card = headerElement.parentElement;
             card.classList.toggle('open');
         }
@@ -748,8 +639,7 @@ if (file_exists($file)) {
         }
 
         function suggestRandomProduct() {
-            playClickSound();
-            let cards = document.querySelectorAll('.product-card, .product-card-grid');
+            let cards = document.querySelectorAll('.product-card');
             let visibleCards = Array.from(cards).filter(c => c.style.display !== 'none');
             if (visibleCards.length === 0) return alert('لا توجد منتجات متاحة!');
             let randomIndex = Math.floor(Math.random() * visibleCards.length);
@@ -782,7 +672,6 @@ if (file_exists($file)) {
         }
 
         function repeatLastOrder() {
-            playClickSound();
             let lastOrder = localStorage.getItem('mazaj_last_order');
             if (!lastOrder) return;
             try {
@@ -795,8 +684,8 @@ if (file_exists($file)) {
 
         function filterProducts() {
             let query = document.getElementById('search-input').value.trim().toLowerCase();
-            
             let catCards = document.querySelectorAll('.category-accordion-card');
+            
             catCards.forEach(catCard => {
                 let cards = catCard.querySelectorAll('.product-card');
                 let hasMatch = false;
@@ -812,22 +701,14 @@ if (file_exists($file)) {
                     catCard.style.display = 'block';
                 } else if (query !== '' && !hasMatch) {
                     catCard.style.display = 'none';
+                } else {
+                    catCard.style.display = 'block';
                 }
-            });
-
-            let gridCards = document.querySelectorAll('.product-card-grid');
-            gridCards.forEach(card => {
-                let name = card.getAttribute('data-name');
-                let desc = card.getAttribute('data-desc');
-                let match = name.includes(query) || desc.includes(query);
-                card.style.display = match ? 'flex' : 'none';
             });
         }
 
         function changeQty(name, price, change, hashId) {
-            playClickSound();
             price = parseFloat(price);
-
             if (!cart[name]) {
                 if (change > 0) cart[name] = { price: price, qty: 1, hashId: hashId };
             } else {
@@ -839,42 +720,29 @@ if (file_exists($file)) {
         }
 
         function clearCart() {
-            playClickSound();
             if (confirm('تفريغ السلة؟')) { cart = {}; location.reload(); }
         }
 
         function updateUI(name, hashId) {
-            let containers = [
-                document.getElementById('btn-container-' + hashId),
-                document.getElementById('grid-btn-container-' + hashId)
-            ];
-            let priceElements = [
-                document.getElementById('price-' + hashId),
-                document.getElementById('grid-price-' + hashId)
-            ];
+            let container = document.getElementById('btn-container-' + hashId);
+            let priceElement = document.getElementById('price-' + hashId);
+            if (!container || !priceElement) return;
 
-            containers.forEach((container, idx) => {
-                let priceElement = priceElements[idx];
-                if (!container || !priceElement) return;
+            let unitPrice = parseFloat(priceElement.getAttribute('data-base-price'));
 
-                let unitPrice = cart[name] ? cart[name].price : parseFloat(priceElement.getAttribute('data-base-price') || priceElement.innerText.replace('$', ''));
-                if (!priceElement.hasAttribute('data-base-price')) priceElement.setAttribute('data-base-price', unitPrice);
-
-                if (cart[name] && cart[name].qty > 0) {
-                    let qty = cart[name].qty;
-                    priceElement.innerText = '$' + (unitPrice * qty).toFixed(2);
-                    container.innerHTML = `
-                        <div class="qty-control">
-                            <button class="qty-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${unitPrice}, -1, '${hashId}')">-</button>
-                            <span class="qty-num">${qty}</span>
-                            <button class="qty-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${unitPrice}, 1, '${hashId}')">+</button>
-                        </div>`;
-                } else {
-                    let basePrice = parseFloat(priceElement.getAttribute('data-base-price'));
-                    priceElement.innerText = '$' + basePrice.toFixed(2);
-                    container.innerHTML = `<button class="action-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${basePrice}, 1, '${hashId}')">إضافة +</button>`;
-                }
-            });
+            if (cart[name] && cart[name].qty > 0) {
+                let qty = cart[name].qty;
+                priceElement.innerText = '$' + (unitPrice * qty).toFixed(2);
+                container.innerHTML = `
+                    <div class="qty-control">
+                        <button class="qty-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${unitPrice}, -1, '${hashId}')">-</button>
+                        <span class="qty-num">${qty}</span>
+                        <button class="qty-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${unitPrice}, 1, '${hashId}')">+</button>
+                    </div>`;
+            } else {
+                priceElement.innerText = '$' + unitPrice.toFixed(2);
+                container.innerHTML = `<button class="action-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${unitPrice}, 1, '${hashId}')">إضافة +</button>`;
+            }
         }
 
         function updateCartBar() {
@@ -904,12 +772,10 @@ if (file_exists($file)) {
         }
 
         function toggleCartModal() { 
-            playClickSound();
             document.getElementById('cart-modal').classList.toggle('open'); 
         }
 
         function sendOrder() {
-            playClickSound();
             let totalCount = 0;
             for (let item in cart) totalCount += cart[item].qty;
             if (totalCount === 0) return alert('السلة فارغة!');
@@ -918,12 +784,10 @@ if (file_exists($file)) {
             let phone = document.getElementById('cust-phone').value.trim();
             let address = document.getElementById('cust-address').value.trim();
             
-            // التحقق من تعبئة الحقول والنزول التلقائي وإغلاق نافذة السلة المعلقة إن كانت مفتوحة
             if (!name || !phone || !address) {
                 document.getElementById('cart-modal').classList.remove('open');
                 document.getElementById('checkout-section-box').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 
-                // تحديد الحقل الناقص لإعطائه تركيزاً بصرياً
                 if (!name) document.getElementById('cust-name').focus();
                 else if (!phone) document.getElementById('cust-phone').focus();
                 else if (!address) document.getElementById('cust-address').focus();
