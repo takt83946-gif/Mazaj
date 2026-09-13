@@ -118,68 +118,11 @@ if (file_exists($file)) {
         .top-tools {
             display: flex;
             gap: 8px;
-            margin: 12px 0 10px 0;
+            margin: 12px 0 8px 0;
             align-items: center;
             flex-wrap: wrap;
         }
-
-        /* الشكل الأول: زر التصنيفات الشامل الرئيسي */
-        .categories-master-btn {
-            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-            color: #fff;
-            border: none;
-            padding: 0 14px;
-            height: 36px;
-            border-radius: 10px;
-            font-weight: 900;
-            font-size: 0.75rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
-        }
-
-        /* الشكل الثاني: شريط الأقسام الأفقية المتحركة (Scrollable Pills) */
-        .categories-scroll-wrapper {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 4px 0 10px 0;
-            margin-bottom: 12px;
-            scrollbar-width: none; /* إخفاء الشريط بالمتصفحات */
-        }
-        .categories-scroll-wrapper::-webkit-scrollbar { display: none; }
-
-        .cat-pill {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 5px 12px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: 800;
-            color: var(--text-main);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
-        .cat-pill.active {
-            background: rgba(249, 115, 22, 0.15);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-        .cat-pill-img {
-            width: 24px; height: 24px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid var(--border-color);
-        }
-
-        .search-box-container { position: relative; flex-grow: 1; min-width: 140px; }
+        .search-box-container { position: relative; flex-grow: 1; min-width: 180px; }
         .search-input {
             width: 100%;
             padding: 8px 34px 8px 12px;
@@ -201,6 +144,31 @@ if (file_exists($file)) {
             font-size: 0.9rem;
         }
 
+        .view-mode-selector {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 3px;
+            gap: 2px;
+            overflow-x: auto;
+        }
+        .view-mode-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 5px 10px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            border-radius: 7px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .view-mode-btn.active {
+            background: var(--accent);
+            color: #fff;
+        }
+
         .mood-btn {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: #fff;
@@ -214,110 +182,173 @@ if (file_exists($file)) {
             white-space: nowrap;
         }
 
-        /* نافذة اختيار التصنيفات المنبثقة (التابعة للشكل الأول) */
-        .categories-modal {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.65);
-            z-index: 300;
+        /* شريط تنبيه الزبون للأقسام (فوق الأقسام تماماً، قابل للإخفاء وبألوان أوضح) */
+        .category-alert-banner {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(139, 92, 246, 0.2));
+            border: 2px solid var(--accent);
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin: 12px 0 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(249, 115, 22, 0.15);
+            transition: all 0.4s ease;
+        }
+        .category-alert-banner.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin: 0;
+            border-width: 0;
+            overflow: hidden;
+        }
+        .cat-alert-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .cat-alert-icon { font-size: 1.5rem; animation: bounceIcon 1.5s infinite; }
+        @keyframes bounceIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .cat-alert-text h4 { color: #fb923c; font-size: 0.85rem; font-weight: 900; margin-bottom: 3px; }
+        .cat-alert-text p { color: var(--text-main); font-size: 0.72rem; font-weight: 600; line-height: 1.4; }
+        .cat-alert-dismiss {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 1rem;
+            cursor: pointer;
+            width: 26px; height: 26px;
+            border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            padding: 15px;
-            opacity: 0; pointer-events: none;
-            transition: opacity 0.25s ease;
-            backdrop-filter: blur(5px);
+            flex-shrink: 0;
+            transition: 0.2s;
         }
-        .categories-modal.open { opacity: 1; pointer-events: auto; }
-        
-        .categories-modal-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border-hover);
-            width: 100%; max-width: 400px;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transform: scale(0.9);
-            transition: transform 0.25s ease;
-        }
-        .categories-modal.open .categories-modal-content { transform: scale(1); }
+        .cat-alert-dismiss:hover { background: var(--accent); color: #fff; }
 
-        .cat-modal-header {
+        .reorder-banner {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid #22c55e;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
+            display: none;
         }
-        .cat-modal-header h3 { font-size: 0.95rem; font-weight: 900; color: var(--text-main); }
-        .close-cat-modal { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
-
-        .cat-popup-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .cat-popup-item {
-            background: var(--bg-body);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 10px;
-            text-align: center;
+        .reorder-info h4 { color: #22c55e; font-size: 0.8rem; font-weight: 800; }
+        .reorder-info p { color: var(--text-muted); font-size: 0.65rem; }
+        .reorder-action-btn {
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.7rem;
             cursor: pointer;
+        }
+
+        .filter-tabs-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 4px 0 8px 0;
+            scrollbar-width: none;
+            display: none;
+        }
+        .filter-tabs-bar::-webkit-scrollbar { display: none; }
+        .filter-tab-chip {
+            background: var(--chip-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .filter-tab-chip.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .categories-container {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s ease;
+            gap: 10px;
+            margin-top: 10px;
         }
-        .cat-popup-item:hover, .cat-popup-item.active {
-            border-color: var(--accent);
-            background: rgba(249, 115, 22, 0.08);
-        }
-        .cat-popup-img {
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border-color);
-        }
-        .cat-popup-item.active .cat-popup-img { border-color: var(--accent); }
-        .cat-popup-name { font-size: 0.75rem; font-weight: 900; color: var(--text-main); }
 
-        /* حاوية الأقسام */
-        .category-section-block {
+        .category-accordion-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 16px;
+            border-radius: 12px;
+            overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        .category-header-title {
+        .category-header {
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: var(--bg-card);
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .category-header:hover { background: rgba(249, 115, 22, 0.05); }
+
+        .category-title-area {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 8px;
-            margin-bottom: 12px;
+            gap: 8px;
         }
-
-        .category-header-title h2 {
-            font-size: 1.05rem;
+        .category-title-area h2 {
+            font-size: 0.95rem;
             font-weight: 900;
             color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        }
+        .category-badge-count {
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 1px 6px;
+            border-radius: 6px;
         }
 
-        .category-badge-count {
-            background: rgba(249, 115, 22, 0.15);
+        .category-arrow {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+        .category-accordion-card.open .category-arrow {
+            transform: rotate(180deg);
             color: var(--accent);
-            font-size: 0.7rem;
-            font-weight: 900;
-            padding: 2px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .category-content-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+            padding: 0 12px;
+            background: rgba(0,0,0,0.02);
+        }
+        .category-accordion-card.open .category-content-body {
+            max-height: 2000px;
+            padding: 10px 12px 14px 12px;
+            transition: max-height 0.6s ease-in-out;
         }
 
         .menu-grid { 
@@ -530,67 +561,81 @@ if (file_exists($file)) {
         </button>
         <div class="logo-badge">🔥 نكهات استثنائية وعصرية</div>
         <h1>لفة <span>Mazaj</span> 🌯</h1>
-        <p>تصفح المنيو المفتوح بكل سهولة وراحة</p>
+        <p>اختر نمط الأقسام المفضل لديك وتصفح المنيو بكل راحة</p>
     </header>
 
     <div class="container">
 
+        <div class="reorder-banner" id="reorder-banner">
+            <div class="reorder-info">
+                <h4>🔄 طلبت مسبقاً؟</h4>
+                <p id="reorder-desc">اضغط لتكرار آخر طلب سريعاً</p>
+            </div>
+            <button class="reorder-action-btn" onclick="repeatLastOrder()">اطلبها ⚡</button>
+        </div>
+
         <div class="top-tools">
-            <!-- الشكل الأول: زر رئيسي يفتح نافذة التصنيفات -->
-            <button class="categories-master-btn" onclick="toggleCategoriesModal()">
-                <span>🗂️</span> اختر التصنيف
-            </button>
             <div class="search-box-container">
                 <span class="search-icon">🔍</span>
                 <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك..." oninput="filterProducts()">
             </div>
+            <div class="view-mode-selector">
+                <button class="view-mode-btn active" id="mode-accordion" onclick="setViewMode('accordion')">أقسام 📂</button>
+                <button class="view-mode-btn" id="mode-tabs" onclick="setViewMode('tabs')">فلاتر ⚡</button>
+                <button class="view-mode-btn" id="mode-single" onclick="setViewMode('single')">تبويبات 🎯</button>
+            </div>
             <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
+        </div>
+
+        <div class="filter-tabs-bar" id="filter-tabs-bar">
+            <div class="filter-tab-chip active" onclick="filterByTab('all', this)">الكل 🔥</div>
+            <?php
+            if (!empty($products)) {
+                $categories = array_unique(array_column($products, 'category'));
+                foreach ($categories as $cat) {
+                    echo '<div class="filter-tab-chip" onclick="filterByTab(\'' . htmlspecialchars($cat) . '\', this)">' . htmlspecialchars($cat) . '</div>';
+                }
+            }
+            ?>
+        </div>
+
+        <!-- شريط التنبيه الواضح (يظهر فوق الأقسام مباشرة ويختفي بانيميشن سلس) -->
+        <div class="category-alert-banner" id="category-alert-banner">
+            <div class="cat-alert-content">
+                <div class="cat-alert-icon">💡</div>
+                <div class="cat-alert-text">
+                    <h4>دليل التصفح السريع للأقسام</h4>
+                    <p>بإمكانك التحكم بطريقة عرض الأقسام من الأعلى (أكورديون، فلاتر، أو تبويبات منفصلة) لتسهيل اختيار وجبتك!</p>
+                </div>
+            </div>
+            <button class="cat-alert-dismiss" onclick="dismissCategoryAlert()" title="إخفاء">&times;</button>
         </div>
 
         <?php
         if (empty($products)) {
             echo '<p style="text-align:center; padding:40px; color:var(--text-muted);">لا توجد منتجات مضافة حالياً.</p>';
         } else {
-            $categories = array_unique(array_column($products, 'category'));
-            
-            // الشكل الثاني: شريط الأقسام الأفقية المتحركة فوق المنيو مباشرة
-            echo '<div class="categories-scroll-wrapper" id="scroll-pills-container">';
-            echo '  <div class="cat-pill active" onclick="filterByCategory(\'all\', null, this)">';
-            echo '      <img src="uploads/Ali.jpg" class="cat-pill-img" onerror="this.src=\'uploads/default.jpg\'">';
-            echo '      <span>الكل 🔥</span>';
-            echo '  </div>';
-            
-            foreach ($categories as $cat) {
-                $cat_first_img = 'uploads/default.jpg';
-                foreach ($products as $p) {
-                    if (isset($p['category']) && $p['category'] === $cat) {
-                        $img = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : ''));
-                        if (!empty($img)) { $cat_first_img = $img; break; }
-                    }
-                }
-                echo '  <div class="cat-pill" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', null, this)">';
-                echo '      <img src="' . htmlspecialchars($cat_first_img) . '" class="cat-pill-img" onerror="this.src=\'uploads/default.jpg\'">';
-                echo '      <span>' . htmlspecialchars($cat) . '</span>';
-                echo '  </div>';
-            }
-            echo '</div>';
-
-            // حاوية الأقسام الرئيسية والمنتجات
             echo '<div class="categories-container" id="categories-wrapper">';
 
+            $index_cat = 0;
             foreach ($categories as $cat) {
                 $cat_products = array_filter($products, function($p) use ($cat) {
                     return isset($p['category']) && $p['category'] === $cat;
                 });
                 $cat_count = count($cat_products);
+                $is_open_class = ($index_cat === 0) ? 'open' : '';
 
-                echo '<div class="category-section-block" data-category-name="' . htmlspecialchars($cat) . '">';
-                echo '  <div class="category-header-title">';
-                echo '      <h2>🌯 ' . htmlspecialchars($cat) . '</h2>';
-                echo '      <span class="category-badge-count">' . $cat_count . ' أصناف</span>';
+                echo '<div class="category-accordion-card ' . $is_open_class . '" data-category-name="' . htmlspecialchars($cat) . '">';
+                echo '  <div class="category-header" onclick="toggleCategory(this)">';
+                echo '      <div class="category-title-area">';
+                echo '          <h2>🌯 ' . htmlspecialchars($cat) . '</h2>';
+                echo '          <span class="category-badge-count">' . $cat_count . '</span>';
+                echo '      </div>';
+                echo '      <span class="category-arrow">▼</span>';
                 echo '  </div>';
                 
-                echo '  <div class="menu-grid">';
+                echo '  <div class="category-content-body">';
+                echo '      <div class="menu-grid">';
                 
                 foreach ($cat_products as $p) {
                     $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
@@ -612,45 +657,15 @@ if (file_exists($file)) {
                     echo '</div>';
                 }
                 
+                echo '      </div>';
                 echo '  </div>';
                 echo '</div>';
+
+                $index_cat++;
             }
             echo '</div>';
         }
         ?>
-
-        <!-- نافذة منبثقة (الشكل الأول) -->
-        <div class="categories-modal" id="categories-modal" onclick="if(event.target === this) toggleCategoriesModal()">
-            <div class="categories-modal-content">
-                <div class="cat-modal-header">
-                    <h3>🗂️ اختر القسم المطلوب</h3>
-                    <button class="close-cat-modal" onclick="toggleCategoriesModal()">&times;</button>
-                </div>
-                <div class="cat-popup-grid">
-                    <div class="cat-popup-item active" onclick="filterByCategory('all', this, null)">
-                        <img src="uploads/Ali.jpg" class="cat-popup-img" onerror="this.src='uploads/default.jpg'">
-                        <span class="cat-popup-name">الكل 🔥</span>
-                    </div>
-                    <?php
-                    if (!empty($products)) {
-                        foreach ($categories as $cat) {
-                            $cat_first_img = 'uploads/default.jpg';
-                            foreach ($products as $p) {
-                                if (isset($p['category']) && $p['category'] === $cat) {
-                                    $img = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : ''));
-                                    if (!empty($img)) { $cat_first_img = $img; break; }
-                                }
-                            }
-                            echo '<div class="cat-popup-item" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', this, null)">';
-                            echo '  <img src="' . htmlspecialchars($cat_first_img) . '" class="cat-popup-img" onerror="this.src=\'uploads/default.jpg\'">';
-                            echo '  <span class="cat-popup-name">' . htmlspecialchars($cat) . '</span>';
-                            echo '</div>';
-                        }
-                    }
-                    ?>
-                </div>
-            </div>
-        </div>
 
         <div class="checkout-section">
             <h3>📍 بيانات الاستلام والتوصيل</h3>
@@ -703,6 +718,7 @@ if (file_exists($file)) {
 
     <script>
         let cart = {};
+        let currentViewMode = 'accordion';
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
@@ -712,7 +728,22 @@ if (file_exists($file)) {
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
             if(localStorage.getItem('mazaj_address')) document.getElementById('cust-address').value = localStorage.getItem('mazaj_address');
+            
+            checkLastOrderBanner();
+
+            // إخفاء شريط التنبيه تلقائياً بعد 8 ثوانٍ إن لم يغلقه الزبون بنفسه
+            setTimeout(() => {
+                let banner = document.getElementById('category-alert-banner');
+                if (banner && !banner.classList.contains('fade-out')) {
+                    banner.classList.add('fade-out');
+                }
+            }, 8000);
         });
+
+        function dismissCategoryAlert() {
+            let banner = document.getElementById('category-alert-banner');
+            banner.classList.add('fade-out');
+        }
 
         function toggleTheme() {
             let currentTheme = document.documentElement.getAttribute('data-theme');
@@ -729,14 +760,65 @@ if (file_exists($file)) {
             else { iconSpan.innerText = '☀️'; textSpan.innerText = 'مضيء'; }
         }
 
+        function setViewMode(mode) {
+            currentViewMode = mode;
+            document.getElementById('mode-accordion').classList.toggle('active', mode === 'accordion');
+            document.getElementById('mode-tabs').classList.toggle('active', mode === 'tabs');
+            document.getElementById('mode-single').classList.toggle('active', mode === 'single');
+
+            let filterBar = document.getElementById('filter-tabs-bar');
+            let catCards = document.querySelectorAll('.category-accordion-card');
+
+            filterBar.style.display = 'none';
+
+            if (mode === 'accordion') {
+                catCards.forEach((card, index) => {
+                    card.style.display = 'block';
+                    if(index === 0) card.classList.add('open');
+                    else card.classList.remove('open');
+                });
+            } else if (mode === 'tabs') {
+                filterBar.style.display = 'flex';
+                catCards.forEach(card => {
+                    card.style.display = 'block';
+                    card.classList.add('open');
+                });
+            } else if (mode === 'single') {
+                filterBar.style.display = 'flex';
+                if(catCards.length > 0) {
+                    let firstCatName = catCards[0].getAttribute('data-category-name');
+                    let firstChip = document.querySelector('.filter-tab-chip');
+                    filterByTab(firstCatName, firstChip);
+                }
+            }
+        }
+
+        function filterByTab(categoryName, chipElement) {
+            document.querySelectorAll('.filter-tab-chip').forEach(c => c.classList.remove('active'));
+            if(chipElement) chipElement.classList.add('active');
+
+            let catCards = document.querySelectorAll('.category-accordion-card');
+            catCards.forEach(catCard => {
+                let catName = catCard.getAttribute('data-category-name');
+                if (categoryName === 'all' || catName === categoryName) {
+                    catCard.style.display = 'block';
+                    catCard.classList.add('open');
+                } else {
+                    catCard.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleCategory(headerElement) {
+            if (currentViewMode === 'tabs' || currentViewMode === 'single') return;
+            let card = headerElement.parentElement;
+            card.classList.toggle('open');
+        }
+
         function saveCustomerData() {
             localStorage.setItem('mazaj_name', document.getElementById('cust-name').value);
             localStorage.setItem('mazaj_phone', document.getElementById('cust-phone').value);
             localStorage.setItem('mazaj_address', document.getElementById('cust-address').value);
-        }
-
-        function toggleCategoriesModal() {
-            document.getElementById('categories-modal').classList.toggle('open');
         }
 
         function suggestRandomProduct() {
@@ -745,6 +827,12 @@ if (file_exists($file)) {
             if (visibleCards.length === 0) return alert('لا توجد منتجات متاحة!');
             let randomIndex = Math.floor(Math.random() * visibleCards.length);
             let selectedCard = visibleCards[randomIndex];
+            
+            let parentCard = selectedCard.closest('.category-accordion-card');
+            if(parentCard) {
+                parentCard.style.display = 'block';
+                parentCard.classList.add('open');
+            }
 
             selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             selectedCard.style.transition = '0.3s';
@@ -752,49 +840,37 @@ if (file_exists($file)) {
             setTimeout(() => selectedCard.style.borderColor = '', 1500);
         }
 
-        function filterByCategory(categoryName, popupElement, pillElement) {
-            // تحديث التحديد في النافذة المنبثقة والشريط الأفقي
-            if (popupElement) {
-                document.querySelectorAll('.cat-popup-item').forEach(el => el.classList.remove('active'));
-                popupElement.classList.add('active');
-            }
-            if (pillElement) {
-                document.querySelectorAll('.cat-pill').forEach(el => el.classList.remove('active'));
-                pillElement.classList.add('active');
-            } else {
-                // مزامنة الشريط الأفقي إذا تم الاختيار من النافذة
-                document.querySelectorAll('.cat-pill').forEach(el => {
-                    if (categoryName === 'all' && el.innerText.includes('الكل')) {
-                        el.classList.add('active');
-                    } else if (el.innerText.includes(categoryName)) {
-                        el.classList.add('active');
-                    } else {
-                        el.classList.remove('active');
+        function checkLastOrderBanner() {
+            let lastOrder = localStorage.getItem('mazaj_last_order');
+            if (lastOrder) {
+                try {
+                    let parsed = JSON.parse(lastOrder);
+                    let names = Object.keys(parsed);
+                    if (names.length > 0) {
+                        document.getElementById('reorder-desc').innerText = `تضمن: ${names.join(', ')}`;
+                        document.getElementById('reorder-banner').style.display = 'flex';
                     }
-                });
+                } catch(e) {}
             }
+        }
 
-            let catSections = document.querySelectorAll('.category-section-block');
-            catSections.forEach(section => {
-                let sectionCat = section.getAttribute('data-category-name');
-                if (categoryName === 'all' || sectionCat === categoryName) {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
-            document.getElementById('search-input').value = '';
-            
-            // إغلاق النافذة المنبثقة في حال كانت مفتوحة
-            document.getElementById('categories-modal').classList.remove('open');
+        function repeatLastOrder() {
+            let lastOrder = localStorage.getItem('mazaj_last_order');
+            if (!lastOrder) return;
+            try {
+                cart = JSON.parse(lastOrder);
+                for (let itemName in cart) updateUI(itemName, cart[itemName].hashId);
+                updateCartBar();
+                alert('تمت إضافة طلبك السابق للسلة! 🚀');
+            } catch(e) {}
         }
 
         function filterProducts() {
             let query = document.getElementById('search-input').value.trim().toLowerCase();
-            let catSections = document.querySelectorAll('.category-section-block');
+            let catCards = document.querySelectorAll('.category-accordion-card');
 
-            catSections.forEach(section => {
-                let cards = section.querySelectorAll('.product-card');
+            catCards.forEach(catCard => {
+                let cards = catCard.querySelectorAll('.product-card');
                 let hasMatch = false;
 
                 cards.forEach(card => {
@@ -805,7 +881,12 @@ if (file_exists($file)) {
                     if (match) hasMatch = true;
                 });
 
-                section.style.display = (query === '' || hasMatch) ? 'block' : 'none';
+                if (query !== '' && hasMatch) {
+                    catCard.classList.add('open');
+                    catCard.style.display = 'block';
+                } else if (query !== '' && !hasMatch) {
+                    catCard.style.display = 'none';
+                }
             });
         }
 
@@ -886,10 +967,11 @@ if (file_exists($file)) {
             let phone = document.getElementById('cust-phone').value.trim();
             let address = document.getElementById('cust-address').value.trim();
             
-            if (!name) return alert('رجاءً أدخل اسمك!');
-            if (!phone) return alert('رجاءً أدخل رقم الهاتف!');
-            if (!address) return alert('رجاءً أدخل العنوان!');
+            if (!name) return alert('الرجاء إدخال اسمك!');
+            if (!phone) return alert('الرجاء إدخال رقم الهاتف!');
+            if (!address) return alert('الرجاء إدخال العنوان!');
 
+            localStorage.setItem('mazaj_last_order', JSON.stringify(cart));
             let subtotal = 0;
             for (let item in cart) subtotal += cart[item].price * cart[item].qty;
 
