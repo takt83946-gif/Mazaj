@@ -17,21 +17,21 @@ if (file_exists($file)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لفة Mazaj | المنيو العصري المتطور</title>
+    <title>لفة Mazaj | المنيو الفاخر</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         [data-theme="dark"] {
             --accent: #f97316;
             --accent-hover: #ea580c;
             --bg-body: #0b0f19;
-            --bg-header: rgba(17, 24, 39, 0.95);
-            --bg-card: rgba(17, 24, 39, 0.85);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(249, 115, 22, 0.4);
+            --bg-header: rgba(17, 24, 39, 0.9);
+            --bg-card: rgba(17, 24, 39, 0.75);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(249, 115, 22, 0.3);
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
-            --input-bg: rgba(11, 15, 25, 0.7);
-            --chip-bg: rgba(30, 41, 59, 0.85);
+            --input-bg: rgba(11, 15, 25, 0.8);
+            --chip-bg: rgba(30, 41, 59, 0.7);
             --cart-bg: rgba(17, 24, 39, 0.95);
         }
 
@@ -39,14 +39,14 @@ if (file_exists($file)) {
             --accent: #f97316;
             --accent-hover: #ea580c;
             --bg-body: #f8fafc;
-            --bg-header: rgba(255, 255, 255, 0.95);
-            --bg-card: rgba(255, 255, 255, 0.9);
-            --border-color: rgba(0, 0, 0, 0.08);
-            --border-hover: rgba(249, 115, 22, 0.4);
+            --bg-header: rgba(255, 255, 255, 0.9);
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --border-color: rgba(0, 0, 0, 0.06);
+            --border-hover: rgba(249, 115, 22, 0.3);
             --text-main: #1e293b;
             --text-muted: #64748b;
             --input-bg: rgba(241, 245, 249, 0.9);
-            --chip-bg: rgba(226, 232, 240, 0.9);
+            --chip-bg: rgba(226, 232, 240, 0.8);
             --cart-bg: rgba(255, 255, 255, 0.95);
         }
 
@@ -66,297 +66,172 @@ if (file_exists($file)) {
 
         header { 
             background: var(--bg-header);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             text-align: center; 
-            padding: 20px 20px 12px 20px; 
+            padding: 24px 20px 16px 20px; 
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             z-index: 90;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
         }
 
         .theme-toggle-btn {
             position: absolute;
-            top: 15px;
-            left: 15px;
+            top: 18px;
+            left: 18px;
             background: var(--chip-bg);
-            border: 1px solid var(--border-hover);
+            border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 30px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             cursor: pointer;
             font-size: 0.7rem;
             font-weight: 800;
             z-index: 10;
         }
+        .theme-toggle-btn:hover { border-color: var(--accent); }
 
         .logo-badge {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
             background: rgba(249, 115, 22, 0.1);
             color: #fb923c;
-            padding: 2px 10px;
+            padding: 3px 12px;
             border-radius: 30px;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            margin-bottom: 3px;
+            margin-bottom: 6px;
             border: 1px solid rgba(249, 115, 22, 0.2);
         }
 
-        header h1 { font-size: 1.4rem; color: var(--text-main); margin-bottom: 2px; font-weight: 900; }
+        header h1 { font-size: 1.5rem; color: var(--text-main); margin-bottom: 2px; font-weight: 900; letter-spacing: -0.5px; }
         header h1 span { color: var(--accent); }
-        header p { color: var(--text-muted); font-size: 0.7rem; }
+        header p { color: var(--text-muted); font-size: 0.75rem; }
 
-        .container { max-width: 800px; margin: 0 auto; padding: 0 12px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 16px; }
 
         .top-tools {
             display: flex;
-            gap: 8px;
-            margin: 12px 0 8px 0;
+            gap: 10px;
+            margin: 16px 0 12px 0;
             align-items: center;
-            flex-wrap: wrap;
         }
-        .search-box-container { position: relative; flex-grow: 1; min-width: 180px; }
+        .search-box-container { position: relative; flex-grow: 1; }
         .search-input {
             width: 100%;
-            padding: 8px 34px 8px 12px;
+            padding: 10px 40px 10px 16px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 14px;
             color: var(--text-main);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             outline: none;
+            backdrop-filter: blur(10px);
         }
         .search-input::placeholder { color: var(--text-muted); }
-        .search-input:focus { border-color: var(--accent); }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(249, 115, 22, 0.15); }
         .search-icon {
             position: absolute;
-            right: 10px;
+            right: 14px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* شريط التحكم بطرق عرض الأقسام الثلاثة للزبون */
-        .view-mode-selector {
-            display: flex;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 3px;
-            gap: 2px;
-            overflow-x: auto;
-        }
-        .view-mode-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 5px 10px;
-            font-size: 0.65rem;
-            font-weight: 800;
-            border-radius: 7px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .view-mode-btn.active {
-            background: var(--accent);
-            color: #fff;
+            font-size: 1rem;
         }
 
         .mood-btn {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: #fff;
             border: none;
-            padding: 0 12px;
-            height: 36px;
-            border-radius: 10px;
+            padding: 0 16px;
+            height: 42px;
+            border-radius: 14px;
             font-weight: 800;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             cursor: pointer;
             white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         }
-
-        /* نافذة التنبيه المنبثقة للزبون (Popup Alert Modal) */
-        .category-alert-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            z-index: 600;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            animation: fadeInOverlay 0.3s ease;
-        }
-        @keyframes fadeInOverlay {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .category-alert-box {
-            background: var(--bg-card);
-            border: 2px solid var(--accent);
-            width: 100%;
-            max-width: 360px;
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
-            position: relative;
-            animation: scalePopup 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes scalePopup {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .category-alert-close {
-            position: absolute;
-            top: 10px;
-            left: 12px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.4rem;
-            cursor: pointer;
-        }
-        .category-alert-close:hover { color: var(--accent); }
-        .cat-alert-icon-large {
-            font-size: 2.5rem;
-            margin-bottom: 8px;
-        }
-        .category-alert-box h3 {
-            color: var(--accent);
-            font-size: 1rem;
-            font-weight: 900;
-            margin-bottom: 6px;
-        }
-        .category-alert-box p {
-            color: var(--text-muted);
-            font-size: 0.75rem;
-            line-height: 1.5;
-            margin-bottom: 16px;
-        }
-        .cat-alert-btn {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            width: 100%;
-            padding: 9px;
-            border-radius: 8px;
-            font-weight: 900;
-            font-size: 0.85rem;
-            cursor: pointer;
-        }
-        .cat-alert-btn:hover { background: var(--accent-hover); }
+        .mood-btn:hover { opacity: 0.9; }
 
         .reorder-banner {
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid #22c55e;
-            padding: 8px 12px;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 10px 14px;
+            border-radius: 14px;
+            margin-bottom: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             display: none;
         }
-        .reorder-info h4 { color: #22c55e; font-size: 0.8rem; font-weight: 800; }
-        .reorder-info p { color: var(--text-muted); font-size: 0.65rem; }
+        .reorder-info h4 { color: #22c55e; font-size: 0.85rem; font-weight: 800; }
+        .reorder-info p { color: var(--text-muted); font-size: 0.7rem; }
         .reorder-action-btn {
             background: #22c55e;
             color: #fff;
             border: none;
-            padding: 5px 10px;
-            border-radius: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
             font-weight: 800;
-            font-size: 0.7rem;
-            cursor: pointer;
-        }
-
-        /* أزرار الفلتر الأفقي السريع (وضع الـ Tabs) */
-        .filter-tabs-bar {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            padding: 4px 0 8px 0;
-            scrollbar-width: none;
-            display: none;
-        }
-        .filter-tabs-bar::-webkit-scrollbar { display: none; }
-        .filter-tab-chip {
-            background: var(--chip-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 5px 12px;
-            border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: 800;
             cursor: pointer;
-            white-space: nowrap;
-        }
-        .filter-tab-chip.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
         }
 
-        /* نظام الأقسام (أكورديون) الأساسي */
+        /* الأقسام الأنيقة النظيفة (أكورديون فاخر) */
         .categories-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 12px;
         }
 
         .category-accordion-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            backdrop-filter: blur(10px);
         }
 
         .category-header {
-            padding: 12px 16px;
+            padding: 14px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            background: var(--bg-card);
             user-select: none;
-            transition: background 0.2s;
         }
-        .category-header:hover { background: rgba(249, 115, 22, 0.05); }
+        .category-header:hover { background: rgba(249, 115, 22, 0.04); }
 
         .category-title-area {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .category-title-area h2 {
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 900;
             color: var(--text-main);
         }
         .category-badge-count {
             background: var(--accent);
             color: #fff;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 800;
-            padding: 1px 6px;
-            border-radius: 6px;
+            padding: 2px 8px;
+            border-radius: 8px;
         }
 
         .category-arrow {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             transition: transform 0.3s ease;
         }
@@ -369,34 +244,35 @@ if (file_exists($file)) {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
-            padding: 0 12px;
-            background: rgba(0,0,0,0.02);
+            padding: 0 14px;
         }
         .category-accordion-card.open .category-content-body {
-            max-height: 2000px;
-            padding: 10px 12px 14px 12px;
+            max-height: 2500px;
+            padding: 4px 14px 16px 14px;
             transition: max-height 0.6s ease-in-out;
         }
 
         .menu-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
-            gap: 8px; 
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 10px; 
         }
         
         .card { 
             background: var(--bg-body); 
             border: 1px solid var(--border-color); 
-            border-radius: 10px; 
+            border-radius: 12px; 
             overflow: hidden; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
+        .card:hover { border-color: var(--border-hover); }
 
         .card-img-container {
             width: 100%;
-            height: 90px;
+            height: 105px;
             overflow: hidden;
             background: #000;
         }
@@ -406,132 +282,138 @@ if (file_exists($file)) {
             height: 100%;
             object-fit: cover;
             display: block;
+            transition: transform 0.4s ease;
         }
+        .card:hover .card-img { transform: scale(1.05); }
         
         .card-body { 
-            padding: 6px 8px; 
+            padding: 8px 10px; 
             flex-grow: 1; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
         }
-        .card h3 { font-size: 0.75rem; margin-bottom: 2px; color: var(--text-main); font-weight: 800; }
-        .card p { color: var(--text-muted); font-size: 0.65rem; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card h3 { font-size: 0.8rem; margin-bottom: 3px; color: var(--text-main); font-weight: 800; }
+        .card p { color: var(--text-muted); font-size: 0.7rem; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; }
         
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-top: 1px solid var(--border-color);
-            padding-top: 4px;
+            padding-top: 6px;
         }
         
-        .price { color: #fb923c; font-weight: 900; font-size: 0.8rem; }
+        .price { color: #fb923c; font-weight: 900; font-size: 0.85rem; }
 
         .action-btn { 
             background: var(--accent);
             color: #fff; 
             border: none; 
-            padding: 3px 8px; 
-            border-radius: 5px; 
+            padding: 4px 10px; 
+            border-radius: 6px; 
             cursor: pointer; 
             font-weight: 800; 
-            font-size: 0.65rem;
+            font-size: 0.7rem;
         }
+        .action-btn:hover { background: var(--accent-hover); }
         
         .qty-control {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             background: var(--input-bg);
-            border-radius: 5px;
-            padding: 1px 4px;
+            border-radius: 6px;
+            padding: 2px 6px;
             border: 1px solid var(--border-hover);
         }
         .qty-btn {
             background: none;
             border: none;
             color: var(--accent);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 900;
             cursor: pointer;
-            width: 14px; height: 14px;
+            width: 16px; height: 16px;
             display: flex; align-items: center; justify-content: center;
         }
-        .qty-num { font-weight: 900; font-size: 0.7rem; color: var(--text-main); min-width: 10px; text-align: center; }
+        .qty-num { font-weight: 900; font-size: 0.75rem; color: var(--text-main); min-width: 12px; text-align: center; }
 
         .checkout-section { 
             background: var(--bg-card); 
             border: 1px solid var(--border-color); 
-            padding: 12px; 
-            border-radius: 12px; 
-            margin-top: 20px; 
+            padding: 16px; 
+            border-radius: 16px; 
+            margin-top: 24px; 
+            backdrop-filter: blur(10px);
         }
-        .checkout-section h3 { color: var(--text-main); margin-bottom: 8px; font-size: 0.9rem; font-weight: 800; }
-        .input-group { display: flex; gap: 6px; flex-wrap: wrap; }
+        .checkout-section h3 { color: var(--text-main); margin-bottom: 10px; font-size: 0.95rem; font-weight: 800; }
+        .input-group { display: flex; gap: 8px; flex-wrap: wrap; }
         .input-group input { 
             flex: 1; 
-            min-width: 150px; 
-            padding: 8px 10px; 
+            min-width: 160px; 
+            padding: 10px 12px; 
             background: var(--input-bg); 
             border: 1px solid var(--border-color); 
-            border-radius: 6px; 
+            border-radius: 10px; 
             color: var(--text-main); 
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             outline: none;
         }
         .input-group input:focus { border-color: var(--accent); }
 
         .developer-footer {
             text-align: center;
-            margin-top: 20px;
-            padding: 10px;
+            margin-top: 24px;
+            padding: 14px;
             border-top: 1px solid var(--border-color);
             color: var(--text-muted);
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             background: var(--bg-card);
-            border-radius: 10px 10px 0 0;
+            border-radius: 14px 14px 0 0;
         }
-        .developer-footer .dev-name { color: var(--text-main); font-weight: 800; font-size: 0.75rem; }
+        .developer-footer .dev-name { color: var(--text-main); font-weight: 800; }
         .developer-footer a { color: var(--accent); text-decoration: none; font-weight: 800; }
 
         .cart-bar { 
             position: fixed; 
-            bottom: 10px; left: 12px; right: 12px; 
-            max-width: 780px;
+            bottom: 12px; left: 16px; right: 16px; 
+            max-width: 768px;
             margin: 0 auto;
             background: var(--cart-bg); 
             border: 2px solid var(--accent); 
-            border-radius: 12px;
-            padding: 8px 14px; 
+            border-radius: 16px;
+            padding: 10px 18px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            box-shadow: 0 6px 25px rgba(249, 115, 22, 0.25); 
+            box-shadow: 0 8px 30px rgba(249, 115, 22, 0.25); 
             z-index: 100; 
             transform: translateY(150%);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(15px);
         }
         .cart-bar.show { transform: translateY(0); }
         
-        .cart-info { display: flex; align-items: center; gap: 8px; cursor: pointer; flex-grow: 1; }
-        .cart-icon-box { background: var(--accent); color: #fff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .cart-info { display: flex; align-items: center; gap: 10px; cursor: pointer; flex-grow: 1; }
+        .cart-icon-box { background: var(--accent); color: #fff; width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
         .cart-details-text { display: flex; flex-direction: column; }
-        .cart-title { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; }
-        .cart-total-val { color: var(--text-main); font-weight: 900; font-size: 1rem; }
+        .cart-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
+        .cart-total-val { color: var(--text-main); font-weight: 900; font-size: 1.05rem; }
         .cart-total-val span { color: var(--accent); }
         
         .send-btn { 
             background: #22c55e; 
             color: white; 
             border: none; 
-            padding: 7px 14px; 
-            border-radius: 8px; 
+            padding: 8px 16px; 
+            border-radius: 10px; 
             font-weight: 900; 
             cursor: pointer; 
-            font-size: 0.8rem;
-            display: flex; align-items: center; gap: 4px;
+            font-size: 0.85rem;
+            display: flex; align-items: center; gap: 6px;
         }
+        .send-btn:hover { background: #16a34a; }
 
         .cart-modal {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -540,58 +422,49 @@ if (file_exists($file)) {
             display: flex; align-items: flex-end;
             opacity: 0; pointer-events: none;
             transition: opacity 0.25s ease;
+            backdrop-filter: blur(5px);
         }
         .cart-modal.open { opacity: 1; pointer-events: auto; }
         .cart-modal-content {
             background: var(--bg-card);
             width: 100%; max-height: 75vh;
-            border-radius: 16px 16px 0 0;
-            padding: 14px;
+            border-radius: 20px 20px 0 0;
+            padding: 18px;
             overflow-y: auto;
             transform: translateY(100%);
             transition: transform 0.3s ease;
+            border-top: 1px solid var(--border-color);
         }
         .cart-modal.open .cart-modal-content { transform: translateY(0); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
-        .modal-header h2 { font-size: 0.9rem; font-weight: 800; }
-        .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; }
-        .modal-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-color); }
-        .modal-item-info h4 { font-size: 0.8rem; font-weight: 700; }
-        .modal-item-info span { color: var(--accent); font-size: 0.75rem; font-weight: 800; }
-        .clear-cart-btn { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 2px 8px; border-radius: 5px; font-size: 0.65rem; cursor: pointer; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+        .modal-header h2 { font-size: 1rem; font-weight: 800; }
+        .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+        .modal-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border-color); }
+        .modal-item-info h4 { font-size: 0.85rem; font-weight: 700; }
+        .modal-item-info span { color: var(--accent); font-size: 0.8rem; font-weight: 800; }
+        .clear-cart-btn { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 3px 10px; border-radius: 6px; font-size: 0.7rem; cursor: pointer; }
 
         .order-tracker-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(11, 15, 25, 0.96);
             z-index: 500;
             display: flex; justify-content: center; align-items: center;
-            padding: 12px; display: none;
+            padding: 16px; display: none;
         }
         .order-tracker-card {
             background: var(--bg-card); border: 2px solid #22c55e;
-            border-radius: 16px; width: 100%; max-width: 400px; padding: 16px; text-align: center;
+            border-radius: 18px; width: 100%; max-width: 400px; padding: 20px; text-align: center;
         }
-        .tracker-icon { font-size: 2.2rem; margin-bottom: 4px; }
-        .tracker-title { color: #fff; font-size: 1.1rem; font-weight: 900; }
-        .tracker-subtitle { color: #4ade80; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; }
-        .tracker-status-box { background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; color: #4ade80; padding: 6px; border-radius: 8px; font-weight: 900; font-size: 0.8rem; margin-bottom: 8px; }
-        .tracker-details { text-align: right; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 8px; margin-bottom: 8px; font-size: 0.75rem; max-height: 100px; overflow-y: auto; }
-        .whatsapp-redirect-btn { background: #22c55e; color: #fff; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: 900; font-size: 0.9rem; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: 6px; }
-        .new-order-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); width: 100%; padding: 6px; border-radius: 8px; font-size: 0.7rem; cursor: pointer; }
+        .tracker-icon { font-size: 2.5rem; margin-bottom: 6px; }
+        .tracker-title { color: #fff; font-size: 1.2rem; font-weight: 900; }
+        .tracker-subtitle { color: #4ade80; font-size: 0.8rem; font-weight: 700; margin-bottom: 10px; }
+        .tracker-status-box { background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; color: #4ade80; padding: 8px; border-radius: 10px; font-weight: 900; font-size: 0.85rem; margin-bottom: 10px; }
+        .tracker-details { text-align: right; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 10px; margin-bottom: 12px; font-size: 0.8rem; max-height: 120px; overflow-y: auto; }
+        .whatsapp-redirect-btn { background: #22c55e; color: #fff; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: 900; font-size: 0.95rem; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 8px; }
+        .new-order-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); width: 100%; padding: 8px; border-radius: 10px; font-size: 0.75rem; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <!-- نافذة تنبيه الزبون المنبثقة (Popup Alert Modal) -->
-    <div class="category-alert-overlay" id="category-alert-modal">
-        <div class="category-alert-box">
-            <button class="category-alert-close" onclick="closeAlertModal()">&times;</button>
-            <div class="cat-alert-icon-large">⚠️</div>
-            <h3>تنبيه تصفح الأقسام الذكي</h3>
-            <p>يمكنك التبديل بين أنماط الأقسام (أكورديون، فلاتر، تبويبات) أو استخدام شريط البحث لتسهيل طلبك فوراً بكل راحة!</p>
-            <button class="cat-alert-btn" onclick="closeAlertModal()">حسناً، فهمت 🌯</button>
-        </div>
-    </div>
 
     <header>
         <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()">
@@ -599,7 +472,7 @@ if (file_exists($file)) {
         </button>
         <div class="logo-badge">🔥 نكهات استثنائية وعصرية</div>
         <h1>لفة <span>Mazaj</span> 🌯</h1>
-        <p>اختر نمط الأقسام المفضل لديك وتصفح المنيو بكل راحة</p>
+        <p>تصفح أشهى الوجبات بتصميم راقٍ ونقي</p>
     </header>
 
     <div class="container">
@@ -615,27 +488,9 @@ if (file_exists($file)) {
         <div class="top-tools">
             <div class="search-box-container">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك..." oninput="filterProducts()">
-            </div>
-            <div class="view-mode-selector">
-                <button class="view-mode-btn active" id="mode-accordion" onclick="setViewMode('accordion')">أقسام 📂</button>
-                <button class="view-mode-btn" id="mode-tabs" onclick="setViewMode('tabs')">فلاتر ⚡</button>
-                <button class="view-mode-btn" id="mode-single" onclick="setViewMode('single')">تبويبات 🎯</button>
+                <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك المفضلة..." oninput="filterProducts()">
             </div>
             <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
-        </div>
-
-        <!-- أزرار الفلتر الأفقي السريع -->
-        <div class="filter-tabs-bar" id="filter-tabs-bar">
-            <div class="filter-tab-chip active" onclick="filterByTab('all', this)">الكل 🔥</div>
-            <?php
-            if (!empty($products)) {
-                $categories = array_unique(array_column($products, 'category'));
-                foreach ($categories as $cat) {
-                    echo '<div class="filter-tab-chip" onclick="filterByTab(\'' . htmlspecialchars($cat) . '\', this)">' . htmlspecialchars($cat) . '</div>';
-                }
-            }
-            ?>
         </div>
 
         <?php
@@ -644,6 +499,7 @@ if (file_exists($file)) {
         } else {
             echo '<div class="categories-container" id="categories-wrapper">';
 
+            $categories = array_unique(array_column($products, 'category'));
             $index_cat = 0;
             foreach ($categories as $cat) {
                 $cat_products = array_filter($products, function($p) use ($cat) {
@@ -705,7 +561,7 @@ if (file_exists($file)) {
 
         <div class="developer-footer">
             <p>تصميم وبرمجة: <span class="dev-name">علي حسين ناصر الدين</span></p>
-            <p style="margin-top:2px;">للتواصل: <a href="https://wa.me/96181058043" target="_blank">96181058043+</a></p>
+            <p style="margin-top:3px;">للتواصل: <a href="https://wa.me/96181058043" target="_blank">96181058043+</a></p>
         </div>
     </div>
 
@@ -745,7 +601,6 @@ if (file_exists($file)) {
 
     <script>
         let cart = {};
-        let currentViewMode = 'accordion';
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
@@ -758,12 +613,6 @@ if (file_exists($file)) {
             
             checkLastOrderBanner();
         });
-
-        function closeAlertModal() {
-            let modal = document.getElementById('category-alert-modal');
-            modal.style.opacity = '0';
-            setTimeout(() => modal.style.display = 'none', 300);
-        }
 
         function toggleTheme() {
             let currentTheme = document.documentElement.getAttribute('data-theme');
@@ -780,57 +629,7 @@ if (file_exists($file)) {
             else { iconSpan.innerText = '☀️'; textSpan.innerText = 'مضيء'; }
         }
 
-        function setViewMode(mode) {
-            currentViewMode = mode;
-            document.getElementById('mode-accordion').classList.toggle('active', mode === 'accordion');
-            document.getElementById('mode-tabs').classList.toggle('active', mode === 'tabs');
-            document.getElementById('mode-single').classList.toggle('active', mode === 'single');
-
-            let filterBar = document.getElementById('filter-tabs-bar');
-            let catCards = document.querySelectorAll('.category-accordion-card');
-
-            filterBar.style.display = 'none';
-
-            if (mode === 'accordion') {
-                catCards.forEach((card, index) => {
-                    card.style.display = 'block';
-                    if(index === 0) card.classList.add('open');
-                    else card.classList.remove('open');
-                });
-            } else if (mode === 'tabs') {
-                filterBar.style.display = 'flex';
-                catCards.forEach(card => {
-                    card.style.display = 'block';
-                    card.classList.add('open');
-                });
-            } else if (mode === 'single') {
-                filterBar.style.display = 'flex';
-                if(catCards.length > 0) {
-                    let firstCatName = catCards[0].getAttribute('data-category-name');
-                    let firstChip = document.querySelector('.filter-tab-chip');
-                    filterByTab(firstCatName, firstChip);
-                }
-            }
-        }
-
-        function filterByTab(categoryName, chipElement) {
-            document.querySelectorAll('.filter-tab-chip').forEach(c => c.classList.remove('active'));
-            if(chipElement) chipElement.classList.add('active');
-
-            let catCards = document.querySelectorAll('.category-accordion-card');
-            catCards.forEach(catCard => {
-                let catName = catCard.getAttribute('data-category-name');
-                if (categoryName === 'all' || catName === categoryName) {
-                    catCard.style.display = 'block';
-                    catCard.classList.add('open');
-                } else {
-                    catCard.style.display = 'none';
-                }
-            });
-        }
-
         function toggleCategory(headerElement) {
-            if (currentViewMode === 'tabs' || currentViewMode === 'single') return;
             let card = headerElement.parentElement;
             card.classList.toggle('open');
         }
@@ -959,7 +758,7 @@ if (file_exists($file)) {
                 modalListHtml += `
                     <div class="modal-item">
                         <div class="modal-item-info"><h4>${item}</h4><span>$${itemTotal.toFixed(2)} (×${qty})</span></div>
-                        <div class="qty-control" style="padding: 1px 4px;">
+                        <div class="qty-control" style="padding: 2px 6px;">
                             <button class="qty-btn" onclick="changeQty('${item.replace(/'/g, "\\'")}', ${price}, -1, '${cart[item].hashId}')">-</button>
                             <span class="qty-num">${qty}</span>
                             <button class="qty-btn" onclick="changeQty('${item.replace(/'/g, "\\'")}', ${price}, 1, '${cart[item].hashId}')">+</button>
@@ -1014,7 +813,7 @@ if (file_exists($file)) {
                 }
                 message += `\n*الإجمالي:* $${subtotal.toFixed(2)}\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}`;
 
-                summaryHtml += `<p style="margin-top:4px; border-top:1px solid rgba(255,255,255,0.1)">الإجمالي: <span>$${subtotal.toFixed(2)}</span></p>`;
+                summaryHtml += `<p style="margin-top:6px; border-top:1px solid rgba(255,255,255,0.1)">الإجمالي: <span>$${subtotal.toFixed(2)}</span></p>`;
 
                 document.getElementById('cart-bar').classList.remove('show');
                 document.getElementById('cart-modal').classList.remove('open');
