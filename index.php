@@ -513,7 +513,7 @@ if (file_exists($file)) {
             background: rgba(0,0,0,0.3);
             padding: 15px;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-size: 0.85rem;
             max-height: 150px;
             overflow-y: auto;
@@ -521,23 +521,31 @@ if (file_exists($file)) {
         .tracker-details p { margin-bottom: 6px; color: var(--text-muted); }
         .tracker-details span { color: #fff; font-weight: 700; }
         
+        /* تأثير النبض والحركة لزر الواتساب لجذب انتباه الزبون */
+        @keyframes whatsappPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(34, 197, 94, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
         .whatsapp-redirect-btn {
             background: #22c55e;
             color: #fff;
             border: none;
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border-radius: 12px;
             font-weight: 900;
-            font-size: 1rem;
+            font-size: 1.05rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
-            margin-bottom: 10px;
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.5);
+            margin-bottom: 12px;
             text-decoration: none;
+            animation: whatsappPulse 2s infinite ease-in-out;
         }
         .new-order-btn {
             background: transparent;
@@ -690,9 +698,17 @@ if (file_exists($file)) {
             </div>
 
             <div class="tracker-details" id="tracker-order-summary">
-                <!-- تفاصيل الطلب تظهر هنا ديناميكياً -->
+                <!-- تفاصيل الطلب -->
             </div>
 
+            <!-- رسالة توضيحية للزبون -->
+            <div style="background: rgba(34, 197, 94, 0.1); border: 1px dashed #22c55e; padding: 10px; border-radius: 10px; margin-bottom: 15px; text-align: center;">
+                <p style="color: #4ade80; font-size: 0.78rem; font-weight: 700; line-height: 1.4;">
+                    ⚠️ تنبيه: يرجى الضغط على زر الواتساب أدناه لإرسال تفاصيل طلبك للمحل واعتماده بشكل نهائي!
+                </p>
+            </div>
+
+            <!-- زر واتساب نابض وساطع ليلفت انتباه الزبون بقوة -->
             <a href="#" id="tracker-wa-link" target="_blank" class="whatsapp-redirect-btn">
                 <span>تأكيد ومتابعة عبر الواتساب</span> 💬
             </a>
@@ -877,7 +893,7 @@ if (file_exists($file)) {
                 summaryHtml += `<p>الاسم: <span>${name}</span></p>`;
                 summaryHtml += `<p>العنوان: <span>${address}</span></p>`;
 
-                // إخفاء سلة الشراء وإظهار شاشة تتبع الطلب فوراً
+                // إخفاء السلة وإظهار شاشة النجاح
                 document.getElementById('cart-bar').classList.remove('show');
                 document.getElementById('cart-modal').classList.remove('open');
                 
