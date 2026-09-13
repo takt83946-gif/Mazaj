@@ -24,14 +24,14 @@ if (file_exists($file)) {
             --accent: #f97316;
             --accent-hover: #ea580c;
             --bg-body: #0b0f19;
-            --bg-header: rgba(17, 24, 39, 0.9);
+            --bg-header: rgba(17, 24, 39, 0.95);
             --bg-card: rgba(17, 24, 39, 0.75);
             --border-color: rgba(255, 255, 255, 0.06);
             --border-hover: rgba(249, 115, 22, 0.3);
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --input-bg: rgba(11, 15, 25, 0.8);
-            --chip-bg: rgba(30, 41, 59, 0.7);
+            --chip-bg: rgba(30, 41, 59, 0.85);
             --cart-bg: rgba(17, 24, 39, 0.95);
         }
 
@@ -39,14 +39,14 @@ if (file_exists($file)) {
             --accent: #f97316;
             --accent-hover: #ea580c;
             --bg-body: #f8fafc;
-            --bg-header: rgba(255, 255, 255, 0.9);
+            --bg-header: rgba(255, 255, 255, 0.95);
             --bg-card: rgba(255, 255, 255, 0.85);
             --border-color: rgba(0, 0, 0, 0.06);
             --border-hover: rgba(249, 115, 22, 0.3);
             --text-main: #1e293b;
             --text-muted: #64748b;
             --input-bg: rgba(241, 245, 249, 0.9);
-            --chip-bg: rgba(226, 232, 240, 0.8);
+            --chip-bg: rgba(226, 232, 240, 0.9);
             --cart-bg: rgba(255, 255, 255, 0.95);
         }
 
@@ -69,7 +69,7 @@ if (file_exists($file)) {
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             text-align: center; 
-            padding: 24px 20px 16px 20px; 
+            padding: 16px 12px; 
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
@@ -77,35 +77,33 @@ if (file_exists($file)) {
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .header-controls-group {
-            position: absolute;
-            top: 18px;
-            right: 18px;
+        /* شريط الأդوات العلوي المنظم لمنع التداخل */
+        .header-toolbar {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
             gap: 6px;
-            z-index: 10;
+            flex-wrap: wrap;
         }
 
-        .header-control-left {
-            position: absolute;
-            top: 18px;
-            left: 18px;
+        .header-group {
             display: flex;
-            gap: 4px;
-            z-index: 10;
+            gap: 5px;
+            align-items: center;
         }
 
         .control-btn {
             background: var(--chip-bg);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 6px 10px;
-            border-radius: 30px;
+            padding: 5px 9px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             gap: 4px;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 800;
         }
         .control-btn:hover { border-color: var(--accent); }
@@ -120,13 +118,13 @@ if (file_exists($file)) {
             border-radius: 30px;
             font-size: 0.7rem;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             border: 1px solid rgba(249, 115, 22, 0.2);
         }
 
-        header h1 { font-size: 1.5rem; color: var(--text-main); margin-bottom: 2px; font-weight: 900; letter-spacing: -0.5px; }
+        header h1 { font-size: 1.4rem; color: var(--text-main); margin-bottom: 2px; font-weight: 900; letter-spacing: -0.5px; }
         header h1 span { color: var(--accent); }
-        header p { color: var(--text-muted); font-size: 0.75rem; }
+        header p { color: var(--text-muted); font-size: 0.72rem; }
 
         .container { max-width: 800px; margin: 0 auto; padding: 0 16px; }
 
@@ -545,24 +543,28 @@ if (file_exists($file)) {
     <audio id="bg-music" loop></audio>
 
     <header>
-        <div class="header-control-left">
-            <!-- زر التحكم المستقل بأصوات الإضافات والنقرات -->
-            <button class="control-btn" id="sound-toggle-btn" onclick="toggleSound()" title="تشغيل / إيقاف أصوات الإضافات">
-                <span id="sound-icon">🔊</span> <span style="font-size:0.65rem;">الأصوات</span>
-            </button>
+        <div class="header-toolbar">
+            <!-- مجموعة الأزرار اليسرى: أصوات الإضافات -->
+            <div class="header-group">
+                <button class="control-btn" id="sound-toggle-btn" onclick="toggleSound()" title="تشغيل / إيقاف أصوات الإضافات">
+                    <span id="sound-icon">🔊</span> <span>الأصوات</span>
+                </button>
+            </div>
+
+            <!-- مجموعة الأزرار اليمنى: الموسيقى، التخطي، والوضع الليلي -->
+            <div class="header-group">
+                <button class="control-btn" id="music-toggle-btn" onclick="toggleMusic()" title="تشغيل / إيقاف الموسيقى">
+                    <span id="music-icon">🎵</span> <span id="music-text">الموسيقى</span>
+                </button>
+                <button class="control-btn" onclick="nextSong()" title="أغنية أخرى">
+                    <span>⏭️</span>
+                </button>
+                <button class="control-btn" id="theme-toggle" onclick="toggleTheme()">
+                    <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
+                </button>
+            </div>
         </div>
-        <div class="header-controls-group">
-            <!-- زر التحكم المستقل بموسيقى الخلفية -->
-            <button class="control-btn" id="music-toggle-btn" onclick="toggleMusic()" title="تشغيل / إيقاف موسيقى الخلفية">
-                <span id="music-icon">🎵</span> <span id="music-text">الموسيقى</span>
-            </button>
-            <button class="control-btn" onclick="nextSong()" title="أغنية أخرى">
-                <span>⏭️</span>
-            </button>
-            <button class="control-btn" id="theme-toggle" onclick="toggleTheme()">
-                <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
-            </button>
-        </div>
+
         <div class="logo-badge">🔥 نكهات استثنائية وعصرية</div>
         <h1>لفة <span>Mazaj</span> 🌯</h1>
         <p>تصفح أشهى الوجبات بتصميم راقٍ ونقي</p>
@@ -729,7 +731,6 @@ if (file_exists($file)) {
         let soundEnabled = localStorage.getItem('mazaj_sound') !== 'off';
         let musicPlaying = false;
 
-        // روابط موسيقى مستقرة ومفتوحة المصدر لا تتأثر بقيود CORS
         const playlist = [
             "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3",
             "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=chill-abstract-intention-12099.mp3",
@@ -843,13 +844,11 @@ if (file_exists($file)) {
             let bgMusic = document.getElementById('bg-music');
             bgMusic.src = playlist[0];
 
-            // محاولة التشغيل التلقائي فوراً عند تحميل الصفحة
             bgMusic.play().then(() => {
                 musicPlaying = true;
                 document.getElementById('music-icon').innerText = '⏸️';
                 document.getElementById('music-text').innerText = 'إيقاف';
             }).catch(e => {
-                // في حال حظر المتصفح التشغيل التلقائي الصامت، سيعمل تلقائياً مع أول تفاعل (نقر) من المستخدم على الصفحة
                 const startAudioOnInteract = () => {
                     if (!musicPlaying) {
                         bgMusic.play().then(() => {
