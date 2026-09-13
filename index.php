@@ -13,28 +13,50 @@ if (file_exists($file)) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لفة Mazaj | المنيو العصري</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
+        /* الثيم الداكن (الافتراضي) */
+        [data-theme="dark"] {
             --accent: #f97316;
             --accent-hover: #ea580c;
+            --bg-body: #0b0f19;
+            --bg-header: rgba(17, 24, 39, 0.95);
             --bg-card: rgba(17, 24, 39, 0.75);
             --border-color: rgba(255, 255, 255, 0.08);
             --border-hover: rgba(249, 115, 22, 0.4);
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
+            --input-bg: rgba(11, 15, 25, 0.7);
+            --chip-bg: rgba(30, 41, 59, 0.85);
+            --cart-bg: rgba(17, 24, 39, 0.95);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        /* الثيم المضيء */
+        [data-theme="light"] {
+            --accent: #f97316;
+            --accent-hover: #ea580c;
+            --bg-body: #f8fafc;
+            --bg-header: rgba(255, 255, 255, 0.95);
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --border-hover: rgba(249, 115, 22, 0.4);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --input-bg: rgba(241, 245, 249, 0.9);
+            --chip-bg: rgba(226, 232, 240, 0.9);
+            --cart-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         
         body { 
-            background-color: #0b0f19;
-            background-image: linear-gradient(rgba(11, 15, 25, 0.88), rgba(17, 24, 39, 0.88)), url('uploads/Ali.jpg');
+            background-color: var(--bg-body);
+            background-image: linear-gradient(var(--bg-body), var(--bg-body)), url('uploads/Ali.jpg');
             background-size: contain;
             background-repeat: repeat;
             background-attachment: fixed;
@@ -45,16 +67,36 @@ if (file_exists($file)) {
         }
 
         header { 
-            background: rgba(17, 24, 39, 0.95);
+            background: var(--bg-header);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             text-align: center; 
             padding: 30px 20px 20px 20px; 
             border-bottom: 1px solid var(--border-color);
             position: relative;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
+
+        /* زر تبديل الثيم */
+        .theme-toggle-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--chip-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+        .theme-toggle-btn:hover { transform: scale(1.05); }
 
         .fairy-lights {
             position: absolute;
@@ -107,13 +149,12 @@ if (file_exists($file)) {
             border: 1px solid rgba(249, 115, 22, 0.2);
         }
 
-        header h1 { font-size: 2rem; color: #fff; margin-bottom: 4px; font-weight: 900; letter-spacing: -0.5px; }
+        header h1 { font-size: 2rem; color: var(--text-main); margin-bottom: 4px; font-weight: 900; letter-spacing: -0.5px; }
         header h1 span { color: var(--accent); }
         header p { color: var(--text-muted); font-size: 0.85rem; }
 
         .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
 
-        /* شريط الأدوات العلوي (بحث + زر على مزاجك) */
         .top-tools {
             display: flex;
             gap: 10px;
@@ -127,15 +168,15 @@ if (file_exists($file)) {
         .search-input {
             width: 100%;
             padding: 12px 42px 12px 16px;
-            background: rgba(17, 24, 39, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
             border-radius: 14px;
-            color: #fff;
+            color: var(--text-main);
             font-size: 0.9rem;
             outline: none;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .search-input::placeholder { color: var(--text-muted); }
         .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(249, 115, 22, 0.2); }
@@ -149,7 +190,6 @@ if (file_exists($file)) {
             pointer-events: none;
         }
 
-        /* 1. زر على مزاجك */
         .mood-btn {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: #fff;
@@ -169,7 +209,6 @@ if (file_exists($file)) {
         }
         .mood-btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5); }
 
-        /* 2. بانر إعادة الطلب السابق */
         .reorder-banner {
             background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(20, 83, 45, 0.3));
             border: 1px solid #22c55e;
@@ -180,9 +219,9 @@ if (file_exists($file)) {
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 20px rgba(34, 197, 94, 0.15);
-            display: none; /* يظهر فقط لو فيه طلب سابق */
+            display: none;
         }
-        .reorder-info h4 { color: #4ade80; font-size: 0.9rem; font-weight: 800; margin-bottom: 2px; }
+        .reorder-info h4 { color: #22c55e; font-size: 0.9rem; font-weight: 800; margin-bottom: 2px; }
         .reorder-info p { color: var(--text-muted); font-size: 0.75rem; }
         .reorder-action-btn {
             background: #22c55e;
@@ -211,9 +250,9 @@ if (file_exists($file)) {
         .categories-nav::-webkit-scrollbar { display: none; }
         
         .cat-chip {
-            background: rgba(30, 41, 59, 0.85);
+            background: var(--chip-bg);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
             color: var(--text-muted);
             padding: 8px 14px;
             border-radius: 16px;
@@ -228,8 +267,8 @@ if (file_exists($file)) {
         }
         .cat-chip .cat-icon { font-size: 1rem; }
         .cat-chip .cat-count {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            background: rgba(0, 0, 0, 0.08);
+            color: var(--text-main);
             padding: 2px 6px;
             border-radius: 8px;
             font-size: 0.7rem;
@@ -242,9 +281,10 @@ if (file_exists($file)) {
             box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
             transform: translateY(-1px);
         }
+        .cat-chip.active .cat-count { background: rgba(255,255,255,0.2); color: #fff; }
 
         .section-title { 
-            color: #fff; 
+            color: var(--text-main); 
             font-size: 1.15rem; 
             margin: 25px 0 12px 0; 
             font-weight: 800;
@@ -276,32 +316,14 @@ if (file_exists($file)) {
             flex-direction: column; 
             justify-content: space-between;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             position: relative;
-        }
-
-        /* تصميم خاص لبطاقات قسم الترند */
-        .card.trending-card {
-            border: 1px solid rgba(249, 115, 22, 0.6);
-            box-shadow: 0 4px 25px rgba(249, 115, 22, 0.2);
-        }
-        .trending-badge {
-            position: absolute;
-            top: 8px; right: 8px;
-            background: linear-gradient(135deg, #f59e0b, #ef4444);
-            color: #fff;
-            font-size: 0.65rem;
-            font-weight: 900;
-            padding: 3px 8px;
-            border-radius: 6px;
-            z-index: 10;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .card:hover {
             transform: translateY(-4px);
             border-color: var(--border-hover);
-            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.18);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.15);
         }
 
         .card-img-container {
@@ -331,7 +353,7 @@ if (file_exists($file)) {
             flex-direction: column; 
             justify-content: space-between; 
         }
-        .card h3 { font-size: 0.85rem; margin-bottom: 3px; color: #fff; font-weight: 800; line-height: 1.3; }
+        .card h3 { font-size: 0.85rem; margin-bottom: 3px; color: var(--text-main); font-weight: 800; line-height: 1.3; }
         .card p { color: var(--text-muted); font-size: 0.72rem; margin-bottom: 8px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         
         .card-footer {
@@ -340,10 +362,10 @@ if (file_exists($file)) {
             align-items: center;
             margin-top: auto;
             padding-top: 6px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid var(--border-color);
         }
         
-        .price { color: #fb923c; font-weight: 900; font-size: 0.95rem; text-shadow: 0 2px 10px rgba(249,115,22,0.3); }
+        .price { color: #fb923c; font-weight: 900; font-size: 0.95rem; text-shadow: 0 2px 10px rgba(249,115,22,0.2); }
 
         .action-btn { 
             background: linear-gradient(135deg, var(--accent), var(--accent-hover));
@@ -363,7 +385,7 @@ if (file_exists($file)) {
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(11, 15, 25, 0.9);
+            background: var(--input-bg);
             border-radius: 8px;
             padding: 2px 6px;
             border: 1px solid var(--border-hover);
@@ -383,7 +405,7 @@ if (file_exists($file)) {
             transition: 0.2s;
         }
         .qty-btn:active { transform: scale(0.85); }
-        .qty-num { font-weight: 900; font-size: 0.8rem; color: #fff; min-width: 12px; text-align: center; }
+        .qty-num { font-weight: 900; font-size: 0.8rem; color: var(--text-main); min-width: 12px; text-align: center; }
 
         .checkout-section { 
             background: var(--bg-card); 
@@ -392,19 +414,19 @@ if (file_exists($file)) {
             padding: 20px; 
             border-radius: 16px; 
             margin-top: 35px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
-        .checkout-section h3 { color: #fff; margin-bottom: 12px; font-size: 1.1rem; display: flex; align-items: center; gap: 6px; font-weight: 800; }
+        .checkout-section h3 { color: var(--text-main); margin-bottom: 12px; font-size: 1.1rem; display: flex; align-items: center; gap: 6px; font-weight: 800; }
         
         .input-group { display: flex; gap: 10px; flex-wrap: wrap; }
         .input-group input { 
             flex: 1; 
             min-width: 220px; 
             padding: 12px 14px; 
-            background: rgba(11, 15, 25, 0.7); 
+            background: var(--input-bg); 
             border: 1px solid var(--border-color); 
             border-radius: 10px; 
-            color: #fff; 
+            color: var(--text-main); 
             outline: none; 
             font-size: 0.9rem;
             transition: all 0.2s ease;
@@ -423,7 +445,7 @@ if (file_exists($file)) {
             backdrop-filter: blur(12px);
             border-radius: 16px 16px 0 0;
         }
-        .developer-footer .dev-name { color: #fff; font-weight: 800; font-size: 0.95rem; }
+        .developer-footer .dev-name { color: var(--text-main); font-weight: 800; font-size: 0.95rem; }
         .developer-footer a { color: var(--accent); text-decoration: none; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
 
         .cart-bar { 
@@ -431,7 +453,7 @@ if (file_exists($file)) {
             bottom: 16px; left: 16px; right: 16px; 
             max-width: 860px;
             margin: 0 auto;
-            background: rgba(17, 24, 39, 0.95); 
+            background: var(--cart-bg); 
             backdrop-filter: blur(20px);
             border: 2px solid var(--accent); 
             border-radius: 16px;
@@ -439,7 +461,7 @@ if (file_exists($file)) {
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            box-shadow: 0 10px 40px rgba(249, 115, 22, 0.35); 
+            box-shadow: 0 10px 40px rgba(249, 115, 22, 0.25); 
             z-index: 100; 
             transform: translateY(150%);
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -460,7 +482,7 @@ if (file_exists($file)) {
         
         .cart-details-text { display: flex; flex-direction: column; }
         .cart-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; }
-        .cart-total-val { color: #fff; font-weight: 900; font-size: 1.2rem; }
+        .cart-total-val { color: var(--text-main); font-weight: 900; font-size: 1.2rem; }
         .cart-total-val span { color: var(--accent); }
         
         .send-btn { 
@@ -483,7 +505,7 @@ if (file_exists($file)) {
         .cart-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(6px);
             z-index: 200;
             display: flex;
@@ -495,7 +517,7 @@ if (file_exists($file)) {
         .cart-modal.open { opacity: 1; pointer-events: auto; }
         
         .cart-modal-content {
-            background: #111827;
+            background: var(--bg-card);
             width: 100%;
             max-height: 85vh;
             border-radius: 20px 20px 0 0;
@@ -515,7 +537,7 @@ if (file_exists($file)) {
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
         }
-        .modal-header h2 { font-size: 1.1rem; color: #fff; font-weight: 800; }
+        .modal-header h2 { font-size: 1.1rem; color: var(--text-main); font-weight: 800; }
         .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
         
         .modal-item {
@@ -523,9 +545,9 @@ if (file_exists($file)) {
             justify-content: space-between;
             align-items: center;
             padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid var(--border-color);
         }
-        .modal-item-info h4 { font-size: 0.9rem; color: #fff; margin-bottom: 2px; font-weight: 700; }
+        .modal-item-info h4 { font-size: 0.9rem; color: var(--text-main); margin-bottom: 2px; font-weight: 700; }
         .modal-item-info span { color: var(--accent); font-weight: 800; font-size: 0.85rem; }
 
         .clear-cart-btn {
@@ -541,7 +563,6 @@ if (file_exists($file)) {
         }
         .clear-cart-btn:hover { background: #ef4444; color: #fff; }
 
-        /* شاشة تتبع الطلب الذكية */
         .order-tracker-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -611,7 +632,7 @@ if (file_exists($file)) {
             overflow-y: auto;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .tracker-details p { margin-bottom: 6px; color: var(--text-muted); }
+        .tracker-details p { margin-bottom: 6px; color: #9ca3af; }
         .tracker-details span { color: #fff; font-weight: 700; }
         
         .urgency-box {
@@ -672,12 +693,14 @@ if (file_exists($file)) {
             font-size: 0.82rem;
             cursor: pointer;
         }
-        .new-order-btn:hover { color: #fff; border-color: #fff; }
+        .new-order-btn:hover { color: var(--text-main); border-color: var(--text-main); }
     </style>
 </head>
 <body>
 
     <header>
+        <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">🌙</button>
+        
         <div class="fairy-lights">
             <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
             <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
@@ -694,7 +717,6 @@ if (file_exists($file)) {
 
     <div class="container">
         
-        <!-- بانر ميزة 2: إعادة الطلب السابق -->
         <div class="reorder-banner" id="reorder-banner">
             <div class="reorder-info">
                 <h4>🔄 طلبت مسبقاً؟</h4>
@@ -703,7 +725,6 @@ if (file_exists($file)) {
             <button class="reorder-action-btn" onclick="repeatLastOrder()">اطلبها الآن ⚡</button>
         </div>
 
-        <!-- شريط البحث + زر ميزة 1: على مزاجك -->
         <div class="top-tools">
             <div class="search-box-container">
                 <span class="search-icon">🔍</span>
@@ -718,37 +739,7 @@ if (file_exists($file)) {
         } else {
             $categories = array_unique(array_column($products, 'category'));
             $total_products_count = count($products);
-            
-            // ميزة 3: قسم الترند (أول 3 منتجات مثلاً أو الأحدث كعرض ترند)
-            $trending_products = array_slice($products, 0, 3);
-            if (!empty($trending_products)) {
-                echo '<div class="category-section" data-category="trending-section">';
-                echo '<h2 class="section-title">🔥 الأكثر طلباً (الترند)</h2>';
-                echo '<div class="menu-grid">';
-                foreach ($trending_products as $p) {
-                    $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
-                    $hash_id = 'trend_' . md5($p['name']);
-                    $item_price = $p['price'] ?? 0;
-                    $item_image = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : 'uploads/default.jpg'));
 
-                    echo '<div class="card product-card trending-card" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
-                    echo '  <div class="trending-badge">🔥 ترند نار</div>';
-                    echo '  <div class="card-img-container">';
-                    echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
-                    echo '  </div>';
-                    echo '  <div class="card-body">';
-                    echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
-                    echo '      <div class="card-footer">';
-                    echo '          <span class="price" id="price-' . $hash_id . '">$' . number_format($item_price, 2) . '</span>';
-                    echo '          <div id="btn-container-' . $hash_id . '"><button class="action-btn" onclick="changeQty(\'' . $safe_name . '\', ' . $item_price . ', 1, \'' . $hash_id . '\')">إضافة +</button></div>';
-                    echo '      </div>';
-                    echo '  </div>';
-                    echo '</div>';
-                }
-                echo '</div></div>';
-            }
-
-            // نافذة الفئات العادية
             echo '<div class="categories-nav">';
             echo '<div class="cat-chip active" onclick="filterCategory(\'all\', this)">';
             echo '<span class="cat-icon">⚡</span><span>الكل</span>';
@@ -856,13 +847,30 @@ if (file_exists($file)) {
         let countdownInterval = null;
 
         window.addEventListener('DOMContentLoaded', () => {
+            // تحميل الثيم المحفوظ
+            let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
             if(localStorage.getItem('mazaj_address')) document.getElementById('cust-address').value = localStorage.getItem('mazaj_address');
             
-            // فحص وجود طلب سابق لتفعيل ميزة 2
             checkLastOrderBanner();
         });
+
+        function toggleTheme() {
+            let currentTheme = document.documentElement.getAttribute('data-theme');
+            let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('mazaj_theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            let btn = document.getElementById('theme-toggle');
+            btn.innerText = theme === 'dark' ? '🌙' : '☀️';
+        }
 
         function saveCustomerData() {
             localStorage.setItem('mazaj_name', document.getElementById('cust-name').value);
@@ -870,12 +878,10 @@ if (file_exists($file)) {
             localStorage.setItem('mazaj_address', document.getElementById('cust-address').value);
         }
 
-        // ميزة 1: زر على مزاجك (اقتراح عشوائي)
         function suggestRandomProduct() {
             let cards = document.querySelectorAll('.product-card');
             if (cards.length === 0) return alert('لا توجد منتجات متاحة حالياً!');
             
-            // تأثير بصري خفيف على الزر
             let btn = document.querySelector('.mood-btn');
             btn.style.transform = 'scale(0.95)';
             setTimeout(() => btn.style.transform = 'scale(1)', 150);
@@ -883,7 +889,6 @@ if (file_exists($file)) {
             let randomIndex = Math.floor(Math.random() * cards.length);
             let selectedCard = cards[randomIndex];
             
-            // تمرير الشاشة بسلاسة للمنتج المقترح وإعطائه ومضة تمييز
             selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             selectedCard.style.transition = '0.5s';
             selectedCard.style.borderColor = '#8b5cf6';
@@ -895,7 +900,6 @@ if (file_exists($file)) {
             }, 2500);
         }
 
-        // ميزة 2: حفظ آخر طلب وتكراره
         function saveLastOrderToLocalStorage(orderCart) {
             localStorage.setItem('mazaj_last_order', JSON.stringify(orderCart));
         }
@@ -920,13 +924,11 @@ if (file_exists($file)) {
             try {
                 let parsed = JSON.parse(lastOrder);
                 cart = parsed;
-                // إعادة مزامنة الواجهة بالكامل
                 for (let itemName in cart) {
                     updateUI(itemName, cart[itemName].hashId);
                 }
                 updateCartBar();
                 alert('تمت إضافة طلبك السابق إلى السلة بنجاح! 🚀');
-                // تمرير الشاشة للسلة
                 window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             } catch(e) {
                 alert('حدث خطأ أثناء استرجاع الطلب السابق.');
@@ -1016,7 +1018,7 @@ if (file_exists($file)) {
 
             document.getElementById('cart-count').innerText = totalCount;
             document.getElementById('total-price').innerText = subtotal.toFixed(2);
-            document.getElementById('modal-items-list').innerHTML = modalListHtml || '<p style="text-align:center; color:#9ca3af; padding:20px;">السلة فارغة حالياً</p>';
+            document.getElementById('modal-items-list').innerHTML = modalListHtml || '<p style="text-align:center; color:var(--text-muted); padding:20px;">السلة فارغة حالياً</p>';
             
             let cartBar = document.getElementById('cart-bar');
             if (totalCount > 0) cartBar.classList.add('show');
@@ -1038,7 +1040,7 @@ if (file_exists($file)) {
                 if (category === 'all') {
                     sec.style.display = 'block';
                 } else {
-                    sec.style.display = (secCat === category || secCat === 'trending-section') ? 'block' : 'none';
+                    sec.style.display = (secCat === category) ? 'block' : 'none';
                 }
             });
         }
@@ -1079,7 +1081,6 @@ if (file_exists($file)) {
             if (!phone) { alert('الرجاء إدخال رقم الهاتف (الواتساب)!'); phoneInput.focus(); return; }
             if (!address) { alert('الرجاء إدخال عنوان التوصيل!'); addressInput.focus(); return; }
 
-            // حفظ الطلب في ميزة 2 (آخر طلب) قبل الإرسال
             saveLastOrderToLocalStorage(cart);
 
             let sendBtn = document.getElementById('send-order-btn');
