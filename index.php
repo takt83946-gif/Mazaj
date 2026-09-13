@@ -727,12 +727,11 @@ if (file_exists($file)) {
         let soundEnabled = localStorage.getItem('mazaj_sound') !== 'off';
         let musicPlaying = false;
 
-        // قائمة الأغاني المتاحة للتبديل
+        // روابط موسيقى مستقرة ومفتوحة المصدر لا تتأثر بقيود CORS
         const playlist = [
-            "https://www.bensound.com/bensound-music/bensound-thejazzpiano.mp3",
-            "https://www.bensound.com/bensound-music/bensound-tenderness.mp3",
-            "https://www.bensound.com/bensound-music/bensound-anewbeginning.mp3",
-            "https://www.bensound.com/bensound-music/bensound-creativeminds.mp3"
+            "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3",
+            "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=chill-abstract-intention-12099.mp3",
+            "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c3a6427d.mp3?filename=it-s-going-be-okay-10356.mp3"
         ];
         let currentSongIndex = 0;
 
@@ -809,7 +808,7 @@ if (file_exists($file)) {
                 musicIcon.innerText = '🎵';
                 musicText.innerText = 'الموسيقى';
             } else {
-                if (!bgMusic.src || bgMusic.src === window.location.href) {
+                if (!bgMusic.src || bgMusic.src === window.location.href || bgMusic.src === "") {
                     bgMusic.src = playlist[currentSongIndex];
                 }
                 bgMusic.play().then(() => {
@@ -817,7 +816,7 @@ if (file_exists($file)) {
                     musicIcon.innerText = '⏸️';
                     musicText.innerText = 'إيقاف';
                 }).catch(e => {
-                    alert('تعذر تشغيل الموسيقى تلقائياً، يرجى النقر أولاً في الصفحة.');
+                    alert('تعذر تشغيل الموسيقى، تأكد من النقر أولاً في الصفحة.');
                 });
             }
         }
@@ -827,17 +826,17 @@ if (file_exists($file)) {
             currentSongIndex = (currentSongIndex + 1) % playlist.length;
             let bgMusic = document.getElementById('bg-music');
             bgMusic.src = playlist[currentSongIndex];
+            bgMusic.load();
             
-            if (musicPlaying) {
-                bgMusic.play().catch(e => {});
-            } else {
-                // إذا كانت الموسيقى متوقفة، نقوم بتشغيل الأغنية الجديدة مباشرة وتحديث زر الحالة
-                bgMusic.play().then(() => {
-                    musicPlaying = true;
-                    document.getElementById('music-icon').innerText = '⏸️';
-                    document.getElementById('music-text').innerText = 'إيقاف';
-                }).catch(e => {});
-            }
+            bgMusic.play().then(() => {
+                musicPlaying = true;
+                document.getElementById('music-icon').innerText = '⏸️';
+                document.getElementById('music-text').innerText = 'إيقاف';
+            }).catch(e => {
+                musicPlaying = false;
+                document.getElementById('music-icon').innerText = '🎵';
+                document.getElementById('music-text').innerText = 'الموسيقى';
+            });
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -846,7 +845,8 @@ if (file_exists($file)) {
             updateThemeUI(savedTheme);
             updateSoundUI();
 
-            document.getElementById('bg-music').src = playlist[0];
+            let bgMusic = document.getElementById('bg-music');
+            bgMusic.src = playlist[0];
 
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
