@@ -122,7 +122,26 @@ if (file_exists($file)) {
             align-items: center;
             flex-wrap: wrap;
         }
-        .search-box-container { position: relative; flex-grow: 1; min-width: 160px; }
+
+        /* زر التصنيفات الجامع الجديد */
+        .categories-master-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: #fff;
+            border: none;
+            padding: 0 14px;
+            height: 36px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        .search-box-container { position: relative; flex-grow: 1; min-width: 140px; }
         .search-input {
             width: 100%;
             padding: 8px 34px 8px 12px;
@@ -181,63 +200,73 @@ if (file_exists($file)) {
             cursor: pointer;
         }
 
-        /* ------------------------------------------------ */
-        /* شبكة أزرار التصنيفات البارزة (Category Buttons Grid) */
-        /* ------------------------------------------------ */
-        .category-buttons-grid {
+        /* نافذة اختيار التصنيفات المنبثقة (Popup Modal) */
+        .categories-modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 300;
+            display: flex; align-items: center; justify-content: center;
+            padding: 15px;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.25s ease;
+            backdrop-filter: blur(5px);
+        }
+        .categories-modal.open { opacity: 1; pointer-events: auto; }
+        
+        .categories-modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border-hover);
+            width: 100%; max-width: 400px;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: scale(0.9);
+            transition: transform 0.25s ease;
+        }
+        .categories-modal.open .categories-modal-content { transform: scale(1); }
+
+        .cat-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .cat-modal-header h3 { font-size: 0.95rem; font-weight: 900; color: var(--text-main); }
+        .close-cat-modal { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+
+        .cat-popup-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            margin-bottom: 16px;
         }
 
-        .cat-selection-card {
-            background: var(--bg-card);
+        .cat-popup-item {
+            background: var(--bg-body);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 10px 8px;
+            padding: 10px;
             text-align: center;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             transition: 0.2s ease;
         }
-
-        .cat-selection-card:hover, .cat-selection-card.active {
+        .cat-popup-item:hover, .cat-popup-item.active {
             border-color: var(--accent);
-            background: rgba(249, 115, 22, 0.05);
-            transform: translateY(-2px);
+            background: rgba(249, 115, 22, 0.08);
         }
-
-        .cat-selection-img {
-            width: 50px;
-            height: 50px;
+        .cat-popup-img {
+            width: 50px; height: 50px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--border-color);
         }
-
-        .cat-selection-card.active .cat-selection-img {
-            border-color: var(--accent);
-            box-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
-        }
-
-        .cat-selection-name {
-            font-size: 0.75rem;
-            font-weight: 900;
-            color: var(--text-main);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-        }
-
-        .cat-selection-card.active .cat-selection-name {
-            color: var(--accent);
-        }
+        .cat-popup-item.active .cat-popup-img { border-color: var(--accent); }
+        .cat-popup-name { font-size: 0.75rem; font-weight: 900; color: var(--text-main); }
 
         /* حاوية الأقسام */
         .category-section-block {
@@ -501,6 +530,9 @@ if (file_exists($file)) {
         </div>
 
         <div class="top-tools">
+            <button class="categories-master-btn" onclick="toggleCategoriesModal()">
+                <span>🗂️</span> اختر التصنيف
+            </button>
             <div class="search-box-container">
                 <span class="search-icon">🔍</span>
                 <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك..." oninput="filterProducts()">
@@ -514,32 +546,7 @@ if (file_exists($file)) {
         } else {
             $categories = array_unique(array_column($products, 'category'));
             
-            // شبكة أزرار التصنيفات البارزة ليختر الزبون منها
-            echo '<div class="category-buttons-grid" id="category-buttons">';
-            echo '  <div class="cat-selection-card active" onclick="filterByCategory(\'all\', this)">';
-            echo '      <img src="uploads/Ali.jpg" class="cat-selection-img" onerror="this.src=\'uploads/default.jpg\'">';
-            echo '      <span class="cat-selection-name">الكل 🔥</span>';
-            echo '  </div>';
-
-            foreach ($categories as $cat) {
-                $cat_first_img = 'uploads/default.jpg';
-                foreach ($products as $p) {
-                    if (isset($p['category']) && $p['category'] === $cat) {
-                        $img = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : ''));
-                        if (!empty($img)) {
-                            $cat_first_img = $img;
-                            break;
-                        }
-                    }
-                }
-
-                echo '  <div class="cat-selection-card" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', this)">';
-                echo '      <img src="' . htmlspecialchars($cat_first_img) . '" class="cat-selection-img" onerror="this.src=\'uploads/default.jpg\'">';
-                echo '      <span class="cat-selection-name">' . htmlspecialchars($cat) . '</span>';
-                echo '  </div>';
-            }
-            echo '</div>';
-
+            // حاوية الأقسام الرئيسية
             echo '<div class="categories-container" id="categories-wrapper">';
 
             foreach ($categories as $cat) {
@@ -582,6 +589,39 @@ if (file_exists($file)) {
             echo '</div>';
         }
         ?>
+
+        <!-- نافذة منبثقة تجمع كل التصنيفات ليختار الزبون منها -->
+        <div class="categories-modal" id="categories-modal" onclick="if(event.target === this) toggleCategoriesModal()">
+            <div class="categories-modal-content">
+                <div class="cat-modal-header">
+                    <h3>🗂️ اختر القسم المطلوب</h3>
+                    <button class="close-cat-modal" onclick="toggleCategoriesModal()">&times;</button>
+                </div>
+                <div class="cat-popup-grid">
+                    <div class="cat-popup-item active" onclick="filterByCategory('all', this)">
+                        <img src="uploads/Ali.jpg" class="cat-popup-img" onerror="this.src='uploads/default.jpg'">
+                        <span class="cat-popup-name">الكل 🔥</span>
+                    </div>
+                    <?php
+                    if (!empty($products)) {
+                        foreach ($categories as $cat) {
+                            $cat_first_img = 'uploads/default.jpg';
+                            foreach ($products as $p) {
+                                if (isset($p['category']) && $p['category'] === $cat) {
+                                    $img = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : ''));
+                                    if (!empty($img)) { $cat_first_img = $img; break; }
+                                }
+                            }
+                            echo '<div class="cat-popup-item" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', this)">';
+                            echo '  <img src="' . htmlspecialchars($cat_first_img) . '" class="cat-popup-img" onerror="this.src=\'uploads/default.jpg\'">';
+                            echo '  <span class="cat-popup-name">' . htmlspecialchars($cat) . '</span>';
+                            echo '</div>';
+                        }
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
 
         <div class="checkout-section">
             <h3>📍 بيانات الاستلام والتوصيل</h3>
@@ -668,6 +708,10 @@ if (file_exists($file)) {
             localStorage.setItem('mazaj_address', document.getElementById('cust-address').value);
         }
 
+        function toggleCategoriesModal() {
+            document.getElementById('categories-modal').classList.toggle('open');
+        }
+
         function suggestRandomProduct() {
             let cards = document.querySelectorAll('.product-card');
             let visibleCards = Array.from(cards).filter(c => c.style.display !== 'none');
@@ -707,7 +751,7 @@ if (file_exists($file)) {
         }
 
         function filterByCategory(categoryName, element) {
-            document.querySelectorAll('.cat-selection-card').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.cat-popup-item').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
 
             let catSections = document.querySelectorAll('.category-section-block');
@@ -720,6 +764,7 @@ if (file_exists($file)) {
                 }
             });
             document.getElementById('search-input').value = '';
+            toggleCategoriesModal(); // إغلاق النافذة تلقائياً بعد الاختيار
         }
 
         function filterProducts() {
@@ -727,7 +772,7 @@ if (file_exists($file)) {
             let catSections = document.querySelectorAll('.category-section-block');
 
             if (query !== '') {
-                document.querySelectorAll('.cat-selection-card').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.cat-popup-item').forEach(el => el.classList.remove('active'));
             }
 
             catSections.forEach(section => {
