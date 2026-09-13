@@ -17,7 +17,7 @@ if (file_exists($file)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لفة Mazaj | المنيو العصري</title>
+    <title>لفة Mazaj | المنيو العصري مع الكوبونات</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -203,7 +203,6 @@ if (file_exists($file)) {
             border-radius: 4px;
         }
 
-        /* تعديلات شكل المنتجات الجديدة كلياً (فاخرة وعصرية) */
         .menu-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); 
@@ -389,6 +388,7 @@ if (file_exists($file)) {
         .cart-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; }
         .cart-total-val { color: #fff; font-weight: 900; font-size: 1.2rem; }
         .cart-total-val span { color: var(--accent); }
+        .cart-total-val .original-price { text-decoration: line-through; color: var(--text-muted); font-size: 0.9rem; margin-left: 6px; }
         
         .send-btn { 
             background: linear-gradient(135deg, #22c55e, #16a34a); 
@@ -424,7 +424,7 @@ if (file_exists($file)) {
         .cart-modal-content {
             background: #111827;
             width: 100%;
-            max-height: 80vh;
+            max-height: 85vh;
             border-radius: 20px 20px 0 0;
             border-top: 1px solid var(--border-color);
             padding: 20px;
@@ -454,6 +454,50 @@ if (file_exists($file)) {
         }
         .modal-item-info h4 { font-size: 0.9rem; color: #fff; margin-bottom: 2px; font-weight: 700; }
         .modal-item-info span { color: var(--accent); font-weight: 800; font-size: 0.85rem; }
+
+        /* صندوق كوبونات الخصم داخل السلة */
+        .coupon-section {
+            background: rgba(249, 115, 22, 0.08);
+            border: 1px dashed rgba(249, 115, 22, 0.4);
+            padding: 12px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+        .coupon-row {
+            display: flex;
+            gap: 8px;
+        }
+        .coupon-row input {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(11, 15, 25, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.85rem;
+            outline: none;
+            text-transform: uppercase;
+        }
+        .coupon-row input:focus { border-color: var(--accent); }
+        .apply-coupon-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 0 15px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .apply-coupon-btn:hover { background: var(--accent-hover); }
+        .coupon-msg {
+            font-size: 0.75rem;
+            margin-top: 6px;
+            font-weight: 700;
+        }
+        .coupon-msg.success { color: #4ade80; }
+        .coupon-msg.error { color: #ef4444; }
 
         .clear-cart-btn {
             background: transparent;
@@ -710,12 +754,13 @@ if (file_exists($file)) {
             <div class="cart-icon-box">🛒</div>
             <div class="cart-details-text">
                 <span class="cart-title">إجمالي السلة (<span id="cart-count">0</span> أصناف)</span>
-                <span class="cart-total-val">$<span id="total-price">0.00</span></span>
+                <span class="cart-total-val" id="cart-bar-price-container">$<span id="total-price">0.00</span></span>
             </div>
         </div>
         <button class="send-btn" id="send-order-btn" onclick="sendOrder()"><span>إرسال الطلب</span> 💬</button>
     </div>
 
+    <!-- نافذة تفاصيل السلة مع خانة الكوبونات -->
     <div class="cart-modal" id="cart-modal" onclick="if(event.target === this) toggleCartModal()">
         <div class="cart-modal-content">
             <div class="modal-header">
@@ -723,7 +768,17 @@ if (file_exists($file)) {
                 <button class="clear-cart-btn" onclick="clearCart()">🗑️ تفريغ السلة</button>
                 <button class="close-modal" onclick="toggleCartModal()">&times;</button>
             </div>
+            
             <div id="modal-items-list"></div>
+
+            <!-- صندوق الكوبونات -->
+            <div class="coupon-section">
+                <div class="coupon-row">
+                    <input type="text" id="coupon-input" placeholder="أدخل كود الخصم (مثال: MAZAJ10)">
+                    <button class="apply-coupon-btn" onclick="applyCoupon()">تطبيق</button>
+                </div>
+                <div class="coupon-msg" id="coupon-msg"></div>
+            </div>
         </div>
     </div>
 
@@ -760,6 +815,8 @@ if (file_exists($file)) {
         let cart = {};
         let currentActiveCategory = 'all';
         let countdownInterval = null;
+        let appliedDiscount = 0; // نسبة الخصم أو القيمة
+        let appliedCouponCode = '';
 
         window.addEventListener('DOMContentLoaded', () => {
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
@@ -809,6 +866,8 @@ if (file_exists($file)) {
         function clearCart() {
             if (confirm('هل أنت متأكد من تفريغ السلة؟')) {
                 cart = {};
+                appliedDiscount = 0;
+                appliedCouponCode = '';
                 location.reload(); 
             }
         }
@@ -837,12 +896,36 @@ if (file_exists($file)) {
             }
         }
 
+        function applyCoupon() {
+            let code = document.getElementById('coupon-input').value.trim().toUpperCase();
+            let msgBox = document.getElementById('coupon-msg');
+
+            // قائمة الأكواد المتاحة (يمكنك تعديلها بحرية)
+            if (code === 'MAZAJ10') {
+                appliedDiscount = 0.10; // خصم 10%
+                appliedCouponCode = 'MAZAJ10 (خصم 10%)';
+                msgBox.className = 'coupon-msg success';
+                msgBox.innerText = '🎉 تم تطبيق كود الخصم بنجاح (-10%)!';
+            } else if (code === 'VIP5') {
+                appliedDiscount = 5; // خصم 5$ ثابت
+                appliedCouponCode = 'VIP5 (خصم 5$)';
+                msgBox.className = 'coupon-msg success';
+                msgBox.innerText = '🎉 تم تطبيق خصم بقيمة 5$!';
+            } else {
+                appliedDiscount = 0;
+                appliedCouponCode = '';
+                msgBox.className = 'coupon-msg error';
+                msgBox.innerText = '❌ كود الخصم غير صحيح أو منتهي الصلاحية.';
+            }
+            updateCartBar();
+        }
+
         function updateCartBar() {
-            let totalCount = 0, totalPrice = 0, modalListHtml = '';
+            let totalCount = 0, subtotal = 0, modalListHtml = '';
             for (let item in cart) {
                 let qty = cart[item].qty, price = cart[item].price, itemTotal = price * qty;
                 totalCount += qty;
-                totalPrice += itemTotal;
+                subtotal += itemTotal;
                 modalListHtml += `
                     <div class="modal-item">
                         <div class="modal-item-info"><h4>${item}</h4><span>$${itemTotal.toFixed(2)} (العدد: ${qty})</span></div>
@@ -854,8 +937,29 @@ if (file_exists($file)) {
                     </div>`;
             }
 
+            // حساب الإجمالي بعد الخصم
+            let finalTotal = subtotal;
+            let priceHtml = '';
+            if (appliedDiscount > 0) {
+                if (appliedDiscount < 1) { // خصم نسبة مئوية
+                    let discountAmount = subtotal * appliedDiscount;
+                    finalTotal = subtotal - discountAmount;
+                } else { // خصم قيمة ثابتة
+                    finalTotal = Math.max(0, subtotal - appliedDiscount);
+                }
+                priceHtml = `<span class="original-price">$${subtotal.toFixed(2)}</span>$${finalTotal.toFixed(2)}`;
+            } else {
+                priceHtml = `$${subtotal.toFixed(2)}`;
+            }
+
             document.getElementById('cart-count').innerText = totalCount;
-            document.getElementById('total-price').innerText = totalPrice.toFixed(2);
+            document.getElementById('total-price').innerText = finalTotal.toFixed(2);
+            if(appliedDiscount > 0) {
+                document.getElementById('cart-bar-price-container').innerHTML = `<span class="original-price">$${subtotal.toFixed(2)}</span>$<span id="total-price">${finalTotal.toFixed(2)}</span>`;
+            } else {
+                document.getElementById('cart-bar-price-container').innerHTML = `$<span>${finalTotal.toFixed(2)}</span>`;
+            }
+
             document.getElementById('modal-items-list').innerHTML = modalListHtml || '<p style="text-align:center; color:#9ca3af; padding:20px;">السلة فارغة حالياً</p>';
             
             let cartBar = document.getElementById('cart-bar');
@@ -918,12 +1022,22 @@ if (file_exists($file)) {
             sendBtn.disabled = true;
             sendBtn.innerHTML = "<span>جاري المعالجة...</span> ⏳";
 
+            // حساب الإجمالي النهائي للإرسال
+            let subtotal = 0;
+            for (let item in cart) subtotal += cart[item].price * cart[item].qty;
+            let finalTotal = subtotal;
+            if (appliedDiscount > 0) {
+                if (appliedDiscount < 1) finalTotal = subtotal - (subtotal * appliedDiscount);
+                else finalTotal = Math.max(0, subtotal - appliedDiscount);
+            }
+
             let orderData = {
                 customer_name: name,
                 customer_phone: phone,
                 customer_address: address,
                 items: cart,
-                total: '$' + document.getElementById('total-price').innerText,
+                coupon: appliedCouponCode || 'بدون كوبون',
+                total: '$' + finalTotal.toFixed(2),
                 status: 'قيد التحضير 🔥',
                 time: new Date().toLocaleString()
             };
@@ -935,21 +1049,28 @@ if (file_exists($file)) {
             }).then(response => response.json()).then(data => {
                 let adminPhone = "96181079589"; 
                 let message = "مرحباً *لفة Mazaj* 🌯، أريد طلب الآتي:\n\n";
-                let index = 1, totalPrice = 0, summaryHtml = '';
+                let index = 1, summaryHtml = '';
 
                 for (let item in cart) {
                     let qty = cart[item].qty, itemTotal = cart[item].price * qty;
-                    totalPrice += itemTotal;
                     message += `${index}. *${item}* (العدد: ${qty}) - $${itemTotal.toFixed(2)}\n`;
                     summaryHtml += `<p>• ${item} (×${qty}) - <span>$${itemTotal.toFixed(2)}</span></p>`;
                     index++;
                 }
-                message += `\n*الإجمالي النهائي:* $${totalPrice.toFixed(2)}\n`;
+
+                if (appliedDiscount > 0) {
+                    message += `\n🏷️ *كود الخصم المستخدم:* ${appliedCouponCode}`;
+                    message += `\n*الإجمالي بعد الخصم:* $${finalTotal.toFixed(2)}\n`;
+                    summaryHtml += `<p style="color:#4ade80;">الخصم: <span>${appliedCouponCode}</span></p>`;
+                } else {
+                    message += `\n*الإجمالي النهائي:* $${finalTotal.toFixed(2)}\n`;
+                }
+
                 message += `\n👤 *الاسم:* ${name}`;
                 message += `\n📞 *الهاتف:* ${phone}`;
                 message += `\n📍 *العنوان:* ${address}`;
 
-                summaryHtml += `<p style="margin-top:8px; border-top:1px solid rgba(255,255,255,0.1); pt:6px;">الإجمالي الكلي: <span>$${totalPrice.toFixed(2)}</span></p>`;
+                summaryHtml += `<p style="margin-top:8px; border-top:1px solid rgba(255,255,255,0.1); pt:6px;">الإجمالي الكلي: <span>$${finalTotal.toFixed(2)}</span></p>`;
                 summaryHtml += `<p>الاسم: <span>${name}</span></p>`;
                 summaryHtml += `<p>العنوان: <span>${address}</span></p>`;
 
