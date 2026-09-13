@@ -71,30 +71,30 @@ if (file_exists($file)) {
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             text-align: center; 
-            padding: 30px 20px 20px 20px; 
+            padding: 24px 20px 15px 20px; 
             border-bottom: 1px solid var(--border-color);
-            position: relative;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         }
 
         /* زر تبديل الثيم */
         .theme-toggle-btn {
             position: absolute;
-            top: 20px;
+            top: 18px;
             left: 20px;
             background: var(--chip-bg);
             border: 1px solid var(--border-hover);
             color: var(--text-main);
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 30px;
             display: flex;
             align-items: center;
             gap: 6px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 800;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             z-index: 10;
             transition: all 0.25s ease;
         }
@@ -102,43 +102,6 @@ if (file_exists($file)) {
             transform: scale(1.05); 
             background: var(--accent); 
             color: #fff;
-            border-color: var(--accent);
-        }
-
-        .fairy-lights {
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 12px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 0 10px;
-            pointer-events: none;
-        }
-
-        .light-bulb {
-            width: 8px; height: 10px;
-            background-color: #fde047;
-            border-radius: 50% 50% 40% 40%;
-            box-shadow: 0 0 8px 3px #f59e0b, 0 0 15px 6px rgba(245, 158, 11, 0.6);
-            animation: flashLights 1.5s infinite alternate ease-in-out;
-        }
-
-        .light-bulb:nth-child(even) {
-            background-color: #fca5a5;
-            box-shadow: 0 0 8px 3px #ef4444, 0 0 15px 6px rgba(239, 68, 68, 0.6);
-            animation-delay: 0.5s;
-        }
-
-        .light-bulb:nth-child(3n) {
-            background-color: #86efac;
-            box-shadow: 0 0 8px 3px #22c55e, 0 0 15px 6px rgba(34, 197, 94, 0.6);
-            animation-delay: 1s;
-        }
-
-        @keyframes flashLights {
-            0% { opacity: 0.4; transform: scale(0.8); }
-            100% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 12px 5px currentColor, 0 0 25px 10px rgba(255, 255, 255, 0.8); }
         }
 
         .logo-badge {
@@ -147,25 +110,24 @@ if (file_exists($file)) {
             gap: 6px;
             background: rgba(249, 115, 22, 0.1);
             color: #fb923c;
-            padding: 4px 14px;
+            padding: 3px 12px;
             border-radius: 30px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            margin-bottom: 8px;
-            margin-top: 5px;
+            margin-bottom: 4px;
             border: 1px solid rgba(249, 115, 22, 0.2);
         }
 
-        header h1 { font-size: 2rem; color: var(--text-main); margin-bottom: 4px; font-weight: 900; letter-spacing: -0.5px; }
+        header h1 { font-size: 1.6rem; color: var(--text-main); margin-bottom: 2px; font-weight: 900; }
         header h1 span { color: var(--accent); }
-        header p { color: var(--text-muted); font-size: 0.85rem; }
+        header p { color: var(--text-muted); font-size: 0.75rem; }
 
         .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
 
         .top-tools {
             display: flex;
             gap: 10px;
-            margin: 20px 0 10px 0;
+            margin: 15px 0 10px 0;
             align-items: center;
         }
         .search-box-container {
@@ -174,26 +136,25 @@ if (file_exists($file)) {
         }
         .search-input {
             width: 100%;
-            padding: 12px 42px 12px 16px;
+            padding: 10px 38px 10px 14px;
             background: var(--bg-card);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
+            border-radius: 12px;
             color: var(--text-main);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             outline: none;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .search-input::placeholder { color: var(--text-muted); }
-        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(249, 115, 22, 0.2); }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(249, 115, 22, 0.2); }
         .search-icon {
             position: absolute;
-            right: 14px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 1rem;
             pointer-events: none;
         }
 
@@ -201,11 +162,11 @@ if (file_exists($file)) {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: #fff;
             border: none;
-            padding: 0 16px;
-            height: 46px;
-            border-radius: 14px;
+            padding: 0 14px;
+            height: 40px;
+            border-radius: 12px;
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             cursor: pointer;
             white-space: nowrap;
             display: flex;
@@ -214,43 +175,39 @@ if (file_exists($file)) {
             box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
             transition: 0.2s;
         }
-        .mood-btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5); }
+        .mood-btn:hover { transform: scale(1.03); }
 
         .reorder-banner {
             background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(20, 83, 45, 0.3));
             border: 1px solid #22c55e;
-            padding: 12px 16px;
-            border-radius: 14px;
-            margin-bottom: 15px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.15);
             display: none;
         }
-        .reorder-info h4 { color: #22c55e; font-size: 0.9rem; font-weight: 800; margin-bottom: 2px; }
-        .reorder-info p { color: var(--text-muted); font-size: 0.75rem; }
+        .reorder-info h4 { color: #22c55e; font-size: 0.85rem; font-weight: 800; margin-bottom: 1px; }
+        .reorder-info p { color: var(--text-muted); font-size: 0.7rem; }
         .reorder-action-btn {
             background: #22c55e;
             color: #fff;
             border: none;
-            padding: 8px 14px;
-            border-radius: 10px;
+            padding: 6px 12px;
+            border-radius: 8px;
             font-weight: 800;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             cursor: pointer;
-            box-shadow: 0 3px 10px rgba(34, 197, 94, 0.4);
-            transition: 0.2s;
         }
-        .reorder-action-btn:hover { transform: scale(1.05); }
 
         .categories-nav {
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
-            gap: 10px;
+            gap: 8px;
             overflow-x: auto;
-            padding: 6px 0 8px 0;
+            padding: 4px 0 6px 0;
             scrollbar-width: none;
             direction: rtl;
         }
@@ -261,39 +218,37 @@ if (file_exists($file)) {
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            padding: 8px 14px;
-            border-radius: 16px;
+            padding: 6px 12px;
+            border-radius: 14px;
             white-space: nowrap;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
             transition: all 0.25s ease;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
-        .cat-chip .cat-icon { font-size: 1rem; }
         .cat-chip .cat-count {
             background: rgba(0, 0, 0, 0.08);
             color: var(--text-main);
-            padding: 2px 6px;
-            border-radius: 8px;
-            font-size: 0.7rem;
+            padding: 1px 5px;
+            border-radius: 6px;
+            font-size: 0.65rem;
             font-weight: 800;
         }
         .cat-chip.active, .cat-chip:hover {
             background: var(--accent);
             color: #fff;
             border-color: var(--accent);
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
-            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
         }
         .cat-chip.active .cat-count { background: rgba(255,255,255,0.2); color: #fff; }
 
         .section-title { 
             color: var(--text-main); 
-            font-size: 1.15rem; 
-            margin: 25px 0 12px 0; 
+            font-size: 1.05rem; 
+            margin: 20px 0 10px 0; 
             font-weight: 800;
             display: flex;
             align-items: center;
@@ -301,41 +256,38 @@ if (file_exists($file)) {
         }
         .section-title::before {
             content: '';
-            width: 4px; height: 16px;
+            width: 4px; height: 14px;
             background: var(--accent);
             border-radius: 4px;
         }
 
         .menu-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); 
-            gap: 12px; 
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 10px; 
         }
         
         .card { 
             background: var(--bg-card); 
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border-color); 
-            border-radius: 14px; 
+            border-radius: 12px; 
             overflow: hidden; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            position: relative;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .card:hover {
-            transform: translateY(-4px);
             border-color: var(--border-hover);
-            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.15);
+            transform: translateY(-2px);
         }
 
         .card-img-container {
             width: 100%;
-            height: 110px;
+            height: 100px;
             overflow: hidden;
             background: #000;
             position: relative;
@@ -346,166 +298,158 @@ if (file_exists($file)) {
             height: 100%;
             object-fit: cover;
             display: block;
-            transition: transform 0.5s ease;
+            transition: transform 0.4s ease;
         }
 
-        .card:hover .card-img {
-            transform: scale(1.08);
-        }
+        .card:hover .card-img { transform: scale(1.05); }
         
         .card-body { 
-            padding: 10px 12px; 
+            padding: 8px 10px; 
             flex-grow: 1; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
         }
-        .card h3 { font-size: 0.85rem; margin-bottom: 3px; color: var(--text-main); font-weight: 800; line-height: 1.3; }
-        .card p { color: var(--text-muted); font-size: 0.72rem; margin-bottom: 8px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card h3 { font-size: 0.8rem; margin-bottom: 2px; color: var(--text-main); font-weight: 800; line-height: 1.2; }
+        .card p { color: var(--text-muted); font-size: 0.7rem; margin-bottom: 6px; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: auto;
-            padding-top: 6px;
+            padding-top: 5px;
             border-top: 1px solid var(--border-color);
         }
         
-        .price { color: #fb923c; font-weight: 900; font-size: 0.95rem; text-shadow: 0 2px 10px rgba(249,115,22,0.2); }
+        .price { color: #fb923c; font-weight: 900; font-size: 0.9rem; }
 
         .action-btn { 
             background: linear-gradient(135deg, var(--accent), var(--accent-hover));
             color: #fff; 
             border: none; 
-            padding: 5px 12px; 
-            border-radius: 8px; 
+            padding: 4px 10px; 
+            border-radius: 6px; 
             cursor: pointer; 
             font-weight: 800; 
-            font-size: 0.75rem;
-            transition: all 0.25s ease;
-            box-shadow: 0 3px 10px rgba(249, 115, 22, 0.3);
+            font-size: 0.7rem;
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
         }
-        .action-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(249, 115, 22, 0.5); }
         
         .qty-control {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             background: var(--input-bg);
-            border-radius: 8px;
-            padding: 2px 6px;
+            border-radius: 6px;
+            padding: 1px 5px;
             border: 1px solid var(--border-hover);
         }
         .qty-btn {
             background: none;
             border: none;
             color: var(--accent);
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 900;
             cursor: pointer;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.2s;
         }
-        .qty-btn:active { transform: scale(0.85); }
-        .qty-num { font-weight: 900; font-size: 0.8rem; color: var(--text-main); min-width: 12px; text-align: center; }
+        .qty-num { font-weight: 900; font-size: 0.75rem; color: var(--text-main); min-width: 10px; text-align: center; }
 
+        /* منطقة تفاصيل التوصيل أصبحت مدمجة ومرتبة بشكل أنيق في الأسفل دون إطالة */
         .checkout-section { 
             background: var(--bg-card); 
             backdrop-filter: blur(12px);
             border: 1px solid var(--border-color); 
-            padding: 20px; 
-            border-radius: 16px; 
-            margin-top: 35px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 16px; 
+            border-radius: 14px; 
+            margin-top: 30px; 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05);
         }
-        .checkout-section h3 { color: var(--text-main); margin-bottom: 12px; font-size: 1.1rem; display: flex; align-items: center; gap: 6px; font-weight: 800; }
+        .checkout-section h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; gap: 6px; font-weight: 800; }
         
-        .input-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .input-group { display: flex; gap: 8px; flex-wrap: wrap; }
         .input-group input { 
             flex: 1; 
-            min-width: 220px; 
-            padding: 12px 14px; 
+            min-width: 180px; 
+            padding: 10px 12px; 
             background: var(--input-bg); 
             border: 1px solid var(--border-color); 
-            border-radius: 10px; 
+            border-radius: 8px; 
             color: var(--text-main); 
             outline: none; 
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
+            font-size: 0.85rem;
         }
         .input-group input::placeholder { color: var(--text-muted); }
-        .input-group input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(249, 115, 22, 0.15); }
+        .input-group input:focus { border-color: var(--accent); }
 
         .developer-footer {
             text-align: center;
-            margin-top: 40px;
-            padding: 20px;
+            margin-top: 30px;
+            padding: 15px;
             border-top: 1px solid var(--border-color);
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border-radius: 16px 16px 0 0;
+            border-radius: 14px 14px 0 0;
         }
-        .developer-footer .dev-name { color: var(--text-main); font-weight: 800; font-size: 0.95rem; }
-        .developer-footer a { color: var(--accent); text-decoration: none; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
+        .developer-footer .dev-name { color: var(--text-main); font-weight: 800; font-size: 0.85rem; }
+        .developer-footer a { color: var(--accent); text-decoration: none; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; }
 
         .cart-bar { 
             position: fixed; 
-            bottom: 16px; left: 16px; right: 16px; 
+            bottom: 12px; left: 16px; right: 16px; 
             max-width: 860px;
             margin: 0 auto;
             background: var(--cart-bg); 
             backdrop-filter: blur(20px);
             border: 2px solid var(--accent); 
-            border-radius: 16px;
-            padding: 12px 18px; 
+            border-radius: 14px;
+            padding: 10px 16px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            box-shadow: 0 10px 40px rgba(249, 115, 22, 0.25); 
+            box-shadow: 0 8px 30px rgba(249, 115, 22, 0.25); 
             z-index: 100; 
             transform: translateY(150%);
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .cart-bar.show { transform: translateY(0); }
         
-        .cart-info { display: flex; align-items: center; gap: 12px; cursor: pointer; flex-grow: 1; }
+        .cart-info { display: flex; align-items: center; gap: 10px; cursor: pointer; flex-grow: 1; }
         .cart-icon-box {
             background: var(--accent);
             color: #fff;
-            width: 42px; height: 42px;
-            border-radius: 12px;
+            width: 38px; height: 38px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
         
         .cart-details-text { display: flex; flex-direction: column; }
-        .cart-title { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; }
-        .cart-total-val { color: var(--text-main); font-weight: 900; font-size: 1.2rem; }
+        .cart-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
+        .cart-total-val { color: var(--text-main); font-weight: 900; font-size: 1.1rem; }
         .cart-total-val span { color: var(--accent); }
         
         .send-btn { 
             background: linear-gradient(135deg, #22c55e, #16a34a); 
             color: white; 
             border: none; 
-            padding: 10px 20px; 
-            border-radius: 12px; 
+            padding: 8px 16px; 
+            border-radius: 10px; 
             font-weight: 900; 
             cursor: pointer; 
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.45);
-            transition: 0.2s;
+            gap: 5px;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
         }
         .send-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
@@ -526,13 +470,13 @@ if (file_exists($file)) {
         .cart-modal-content {
             background: var(--bg-card);
             width: 100%;
-            max-height: 85vh;
+            max-height: 80vh;
             border-radius: 20px 20px 0 0;
             border-top: 1px solid var(--border-color);
-            padding: 20px;
+            padding: 16px;
             overflow-y: auto;
             transform: translateY(100%);
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .cart-modal.open .cart-modal-content { transform: translateY(0); }
         
@@ -540,184 +484,129 @@ if (file_exists($file)) {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
-        .modal-header h2 { font-size: 1.1rem; color: var(--text-main); font-weight: 800; }
-        .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
+        .modal-header h2 { font-size: 1rem; color: var(--text-main); font-weight: 800; }
+        .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
         
         .modal-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .modal-item-info h4 { font-size: 0.9rem; color: var(--text-main); margin-bottom: 2px; font-weight: 700; }
-        .modal-item-info span { color: var(--accent); font-weight: 800; font-size: 0.85rem; }
+        .modal-item-info h4 { font-size: 0.85rem; color: var(--text-main); margin-bottom: 1px; font-weight: 700; }
+        .modal-item-info span { color: var(--accent); font-weight: 800; font-size: 0.8rem; }
 
         .clear-cart-btn {
             background: transparent;
             border: 1px solid #ef4444;
             color: #ef4444;
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.2s;
         }
-        .clear-cart-btn:hover { background: #ef4444; color: #fff; }
 
         .order-tracker-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(11, 15, 25, 0.96);
-            backdrop-filter: blur(25px);
+            backdrop-filter: blur(20px);
             z-index: 500;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 16px;
             display: none;
         }
         .order-tracker-card {
             background: var(--bg-card);
             border: 2px solid #22c55e;
-            border-radius: 24px;
+            border-radius: 20px;
             width: 100%;
-            max-width: 500px;
-            padding: 25px;
+            max-width: 450px;
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(34, 197, 94, 0.35);
-            animation: popUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 15px 40px rgba(34, 197, 94, 0.3);
         }
-        @keyframes popUp {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .tracker-icon {
-            font-size: 3.2rem;
-            margin-bottom: 8px;
-            animation: bounceIcon 1s infinite alternate;
-        }
-        @keyframes bounceIcon {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-8px); }
-        }
-        .tracker-title {
-            color: #fff;
-            font-size: 1.35rem;
-            font-weight: 900;
-            margin-bottom: 4px;
-        }
-        .tracker-subtitle {
-            color: #4ade80;
-            font-size: 0.85rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
+        .tracker-icon { font-size: 2.8rem; margin-bottom: 6px; }
+        .tracker-title { color: #fff; font-size: 1.2rem; font-weight: 900; margin-bottom: 2px; }
+        .tracker-subtitle { color: #4ade80; font-size: 0.8rem; font-weight: 700; margin-bottom: 12px; }
         .tracker-status-box {
             background: rgba(34, 197, 94, 0.15);
             border: 1px solid #22c55e;
             color: #4ade80;
-            padding: 10px;
-            border-radius: 12px;
+            padding: 8px;
+            border-radius: 10px;
             font-weight: 900;
-            font-size: 0.95rem;
-            margin-bottom: 15px;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
         }
         .tracker-details {
             text-align: right;
             background: rgba(0,0,0,0.4);
-            padding: 12px 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            font-size: 0.85rem;
-            max-height: 140px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            max-height: 120px;
             overflow-y: auto;
-            border: 1px solid rgba(255,255,255,0.05);
         }
-        .tracker-details p { margin-bottom: 6px; color: #9ca3af; }
+        .tracker-details p { margin-bottom: 4px; color: #9ca3af; }
         .tracker-details span { color: #fff; font-weight: 700; }
         
         .urgency-box {
             background: rgba(249, 115, 22, 0.12);
             border: 1px dashed var(--accent);
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
             text-align: center;
         }
-        .urgency-box p {
-            color: #fdba74;
-            font-size: 0.8rem;
-            font-weight: 800;
-            line-height: 1.4;
-        }
-        .urgency-box span#countdown-timer {
-            color: #fff;
-            background: var(--accent);
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-weight: 900;
-        }
-
-        @keyframes whatsappPulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-            70% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-        }
+        .urgency-box p { color: #fdba74; font-size: 0.75rem; font-weight: 800; line-height: 1.3; }
+        .urgency-box span#countdown-timer { color: #fff; background: var(--accent); padding: 1px 5px; border-radius: 4px; font-weight: 900; }
 
         .whatsapp-redirect-btn {
             background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #fff;
             border: none;
             width: 100%;
-            padding: 14px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 10px;
             font-weight: 900;
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            box-shadow: 0 6px 25px rgba(34, 197, 94, 0.5);
-            margin-bottom: 10px;
+            gap: 6px;
+            margin-bottom: 8px;
             text-decoration: none;
-            animation: whatsappPulse 1.8s infinite ease-in-out;
         }
         .new-order-btn {
             background: transparent;
             border: 1px solid var(--border-color);
             color: var(--text-muted);
             width: 100%;
-            padding: 10px;
-            border-radius: 12px;
+            padding: 8px;
+            border-radius: 10px;
             font-weight: 700;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             cursor: pointer;
         }
-        .new-order-btn:hover { color: var(--text-main); border-color: var(--text-main); }
     </style>
 </head>
 <body>
 
     <header>
         <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()" title="تغيير المظهر">
-            <span id="theme-icon">☀️</span> <span id="theme-text">الوضع المضيء</span>
+            <span id="theme-icon">☀️</span> <span id="theme-text">المضيء</span>
         </button>
-        
-        <div class="fairy-lights">
-            <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
-            <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
-            <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
-            <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
-            <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
-            <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
-        </div>
         
         <div class="logo-badge">🔥 نكهات استثنائية وعصرية</div>
         <h1>لفة <span>Mazaj</span> 🌯</h1>
@@ -739,19 +628,19 @@ if (file_exists($file)) {
                 <span class="search-icon">🔍</span>
                 <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك المفضلة..." oninput="filterProducts()">
             </div>
-            <button class="mood-btn" onclick="suggestRandomProduct()">🎲 على مزاجي</button>
+            <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
         </div>
 
         <?php
         if (empty($products)) {
-            echo '<p style="text-align:center; padding:70px; color:var(--text-muted); font-weight:700;">لا توجد منتجات مضافة حالياً. أضف منتجاتك عبر لوحة التحكم admin.php</p>';
+            echo '<p style="text-align:center; padding:50px; color:var(--text-muted); font-weight:700;">لا توجد منتجات مضافة حالياً. أضف منتجاتك عبر لوحة التحكم admin.php</p>';
         } else {
             $categories = array_unique(array_column($products, 'category'));
             $total_products_count = count($products);
 
             echo '<div class="categories-nav">';
             echo '<div class="cat-chip active" onclick="filterCategory(\'all\', this)">';
-            echo '<span class="cat-icon">⚡</span><span>الكل</span>';
+            echo '<span>⚡ الكل</span>';
             echo '<span class="cat-count">' . $total_products_count . '</span>';
             echo '</div>';
 
@@ -760,7 +649,7 @@ if (file_exists($file)) {
                     return isset($p['category']) && $p['category'] === $cat;
                 }));
                 echo '<div class="cat-chip" onclick="filterCategory(\'' . htmlspecialchars($cat) . '\', this)">';
-                echo '<span class="cat-icon">🌯</span><span>' . htmlspecialchars($cat) . '</span>';
+                echo '<span>🌯 ' . htmlspecialchars($cat) . '</span>';
                 echo '<span class="cat-count">' . $cat_count . '</span>';
                 echo '</div>';
             }
@@ -775,7 +664,6 @@ if (file_exists($file)) {
                         $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
                         $hash_id = md5($p['name']);
                         $item_price = $p['price'] ?? 0;
-                        
                         $item_image = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : 'uploads/default.jpg'));
                         
                         echo '<div class="card product-card" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
@@ -802,14 +690,14 @@ if (file_exists($file)) {
             <div class="input-group">
                 <input type="text" id="cust-name" placeholder="اسمك الكريم" oninput="saveCustomerData()">
                 <input type="tel" id="cust-phone" placeholder="رقم الهاتف (الواتساب)" oninput="saveCustomerData()">
-                <input type="text" id="cust-address" placeholder="عنوان التوصيل (المنطقة، الشارع، البناية)" oninput="saveCustomerData()">
+                <input type="text" id="cust-address" placeholder="عنوان التوصيل (المنطقة، الشارع)" oninput="saveCustomerData()">
             </div>
         </div>
 
         <div class="developer-footer">
-            <p>تم التصميم وبرمجة النظام خصيصاً بواسطة المبرمج:</p>
+            <p>تصميم وبرمجة:</p>
             <p class="dev-name">علي حسين ناصر الدين</p>
-            <p style="margin-top: 4px;">للتواصل وحجز التطبيقات والبرمجيات: <a href="https://wa.me/96181058043" target="_blank">💬 96181058043+</a></p>
+            <p style="margin-top: 2px;">للتواصل: <a href="https://wa.me/96181058043" target="_blank">💬 96181058043+</a></p>
         </div>
     </div>
 
@@ -821,14 +709,14 @@ if (file_exists($file)) {
                 <span class="cart-total-val">$<span id="total-price">0.00</span></span>
             </div>
         </div>
-        <button class="send-btn" id="send-order-btn" onclick="sendOrder()"><span>إرسال الطلب</span> 💬</button>
+        <button class="send-btn" id="send-order-btn" onclick="sendOrder()"><span>إرسال</span> 💬</button>
     </div>
 
     <div class="cart-modal" id="cart-modal" onclick="if(event.target === this) toggleCartModal()">
         <div class="cart-modal-content">
             <div class="modal-header">
                 <h2>مراجعة سلة طلباتك 🛍️</h2>
-                <button class="clear-cart-btn" onclick="clearCart()">🗑️ تفريغ السلة</button>
+                <button class="clear-cart-btn" onclick="clearCart()">🗑️ تفريغ</button>
                 <button class="close-modal" onclick="toggleCartModal()">&times;</button>
             </div>
             <div id="modal-items-list"></div>
@@ -840,12 +728,12 @@ if (file_exists($file)) {
             <div class="tracker-icon">🚀</div>
             <div class="tracker-title">تم حفظ طلبك بنجاح!</div>
             <div class="tracker-subtitle">الخطوة الأخيرة لاعتماد وجبتك فوراً</div>
-            <div class="tracker-status-box" id="tracker-status-text">حالة الطلب: بانتظار تأكيد الواتساب 🔥</div>
+            <div class="tracker-status-box" id="tracker-status-text">بانتظار تأكيد الواتساب 🔥</div>
             <div class="tracker-details" id="tracker-order-summary"></div>
             <div class="urgency-box">
-                <p>⚡ تم نسخ تفاصيل طلبك تلقائياً للحافظة!<br>اضغط الزر أدناه لتأكيد الطلب عبر الواتساب خلال (<span id="countdown-timer">15</span>ث)</p>
+                <p>⚡ تم نسخ تفاصيل طلبك تلقائياً للحافظة!<br>اضغط الزر أدناه لتأكيد الطلب خلال (<span id="countdown-timer">15</span>ث)</p>
             </div>
-            <a href="#" id="tracker-wa-link" target="_blank" class="whatsapp-redirect-btn" onclick="handleWhatsAppClick()"><span>تأكيد الطلب الآن عبر الواتساب</span> 💬</a>
+            <a href="#" id="tracker-wa-link" target="_blank" class="whatsapp-redirect-btn" onclick="handleWhatsAppClick()"><span>تأكيد الطلب عبر الواتساب</span> 💬</a>
             <button class="new-order-btn" onclick="location.reload()">طلب وجبة أخرى 🔄</button>
         </div>
     </div>
@@ -855,47 +743,37 @@ if (file_exists($file)) {
         let currentActiveCategory = 'all';
         let countdownInterval = null;
 
-        // نظام التأثيرات الصوتية التفاعلية (Sound FX) بدون ملفات خارجية
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
         function playSound(type) {
             try {
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
+                if (audioCtx.state === 'suspended') audioCtx.resume();
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
 
                 if (type === 'add') {
-                    // صوت بوب (Pop) خفيف عند الإضافة
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(400, audioCtx.currentTime);
                     osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
                     gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.1);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
                 } else if (type === 'remove') {
-                    // صوت هابط عند النقصان
                     osc.type = 'sine';
                     osc.frequency.setValueAtTime(500, audioCtx.currentTime);
                     osc.frequency.exponentialRampToValueAtTime(250, audioCtx.currentTime + 0.1);
                     gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.1);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
                 } else if (type === 'success') {
-                    // نغمة نجاح عند إرسال الطلب
                     osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
-                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
                     gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.4);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.4);
                 }
             } catch(e) {}
         }
@@ -924,13 +802,8 @@ if (file_exists($file)) {
         function updateThemeUI(theme) {
             let iconSpan = document.getElementById('theme-icon');
             let textSpan = document.getElementById('theme-text');
-            if (theme === 'dark') {
-                iconSpan.innerText = '🌙';
-                textSpan.innerText = 'الوضع الليلي';
-            } else {
-                iconSpan.innerText = '☀️';
-                textSpan.innerText = 'الوضع المضيء';
-            }
+            if (theme === 'dark') { iconSpan.innerText = '🌙'; textSpan.innerText = 'ليلي'; }
+            else { iconSpan.innerText = '☀️'; textSpan.innerText = 'مضيء'; }
         }
 
         function saveCustomerData() {
@@ -942,28 +815,13 @@ if (file_exists($file)) {
         function suggestRandomProduct() {
             let cards = document.querySelectorAll('.product-card');
             if (cards.length === 0) return alert('لا توجد منتجات متاحة حالياً!');
-            
             playSound('add');
-            let btn = document.querySelector('.mood-btn');
-            btn.style.transform = 'scale(0.95)';
-            setTimeout(() => btn.style.transform = 'scale(1)', 150);
-
             let randomIndex = Math.floor(Math.random() * cards.length);
             let selectedCard = cards[randomIndex];
-            
             selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             selectedCard.style.transition = '0.5s';
             selectedCard.style.borderColor = '#8b5cf6';
-            selectedCard.style.boxShadow = '0 0 30px rgba(139, 92, 246, 0.6)';
-            
-            setTimeout(() => {
-                selectedCard.style.borderColor = '';
-                selectedCard.style.boxShadow = '';
-            }, 2500);
-        }
-
-        function saveLastOrderToLocalStorage(orderCart) {
-            localStorage.setItem('mazaj_last_order', JSON.stringify(orderCart));
+            setTimeout(() => selectedCard.style.borderColor = '', 2000);
         }
 
         function checkLastOrderBanner() {
@@ -984,18 +842,12 @@ if (file_exists($file)) {
             let lastOrder = localStorage.getItem('mazaj_last_order');
             if (!lastOrder) return;
             try {
-                let parsed = JSON.parse(lastOrder);
-                cart = parsed;
-                for (let itemName in cart) {
-                    updateUI(itemName, cart[itemName].hashId);
-                }
+                cart = JSON.parse(lastOrder);
+                for (let itemName in cart) updateUI(itemName, cart[itemName].hashId);
                 updateCartBar();
                 playSound('success');
                 alert('تمت إضافة طلبك السابق إلى السلة بنجاح! 🚀');
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            } catch(e) {
-                alert('حدث خطأ أثناء استرجاع الطلب السابق.');
-            }
+            } catch(e) {}
         }
 
         function filterProducts() {
@@ -1008,11 +860,7 @@ if (file_exists($file)) {
                 cards.forEach(card => {
                     let name = card.getAttribute('data-name');
                     let desc = card.getAttribute('data-desc');
-                    if (name.includes(query) || desc.includes(query)) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    }
+                    card.style.display = (name.includes(query) || desc.includes(query)) ? 'flex' : 'none';
                 });
             } else {
                 filterCategory(currentActiveCategory, document.querySelector('.cat-chip.active'));
@@ -1022,15 +870,10 @@ if (file_exists($file)) {
         function changeQty(name, price, change, hashId) {
             price = parseFloat(price);
             if (!cart[name]) {
-                if (change > 0) {
-                    cart[name] = { price: price, qty: 1, hashId: hashId };
-                    playSound('add');
-                }
+                if (change > 0) { cart[name] = { price: price, qty: 1, hashId: hashId }; playSound('add'); }
             } else {
                 cart[name].qty += change;
-                if (change > 0) playSound('add');
-                else playSound('remove');
-
+                if (change > 0) playSound('add'); else playSound('remove');
                 if (cart[name].qty <= 0) delete cart[name];
             }
             updateUI(name, hashId);
@@ -1078,9 +921,9 @@ if (file_exists($file)) {
                 modalListHtml += `
                     <div class="modal-item">
                         <div class="modal-item-info"><h4>${item}</h4><span>$${itemTotal.toFixed(2)} (العدد: ${qty})</span></div>
-                        <div class="qty-control" style="padding: 2px 6px;">
+                        <div class="qty-control" style="padding: 1px 4px;">
                             <button class="qty-btn" onclick="changeQty('${item.replace(/'/g, "\\'")}', ${price}, -1, '${cart[item].hashId}')">-</button>
-                            <span class="qty-num" style="font-size:0.8rem;">${qty}</span>
+                            <span class="qty-num">${qty}</span>
                             <button class="qty-btn" onclick="changeQty('${item.replace(/'/g, "\\'")}', ${price}, 1, '${cart[item].hashId}')">+</button>
                         </div>
                     </div>`;
@@ -1088,7 +931,7 @@ if (file_exists($file)) {
 
             document.getElementById('cart-count').innerText = totalCount;
             document.getElementById('total-price').innerText = subtotal.toFixed(2);
-            document.getElementById('modal-items-list').innerHTML = modalListHtml || '<p style="text-align:center; color:var(--text-muted); padding:20px;">السلة فارغة حالياً</p>';
+            document.getElementById('modal-items-list').innerHTML = modalListHtml || '<p style="text-align:center; color:var(--text-muted); padding:15px;">السلة فارغة حالياً</p>';
             
             let cartBar = document.getElementById('cart-bar');
             if (totalCount > 0) cartBar.classList.add('show');
@@ -1111,11 +954,7 @@ if (file_exists($file)) {
             document.querySelectorAll('.product-card').forEach(card => card.style.display = 'flex');
             document.querySelectorAll('.category-section').forEach(sec => {
                 let secCat = sec.getAttribute('data-category');
-                if (category === 'all') {
-                    sec.style.display = 'block';
-                } else {
-                    sec.style.display = (secCat === category) ? 'block' : 'none';
-                }
+                sec.style.display = (category === 'all' || secCat === category) ? 'block' : 'none';
             });
         }
 
@@ -1156,7 +995,7 @@ if (file_exists($file)) {
             if (!address) { alert('الرجاء إدخال عنوان التوصيل!'); addressInput.focus(); return; }
 
             playSound('success');
-            saveLastOrderToLocalStorage(cart);
+            localStorage.setItem('mazaj_last_order', JSON.stringify(cart));
 
             let sendBtn = document.getElementById('send-order-btn');
             sendBtn.disabled = true;
@@ -1196,12 +1035,11 @@ if (file_exists($file)) {
                 message += `\n📞 *الهاتف:* ${phone}`;
                 message += `\n📍 *العنوان:* ${address}`;
 
-                summaryHtml += `<p style="margin-top:8px; border-top:1px solid rgba(255,255,255,0.1); pt:6px;">الإجمالي الكلي: <span>$${subtotal.toFixed(2)}</span></p>`;
-                summaryHtml += `<p>الاسم: <span>${name}</span></p>`;
-                summaryHtml += `<p>العنوان: <span>${address}</span></p>`;
+                summaryHtml += `<p style="margin-top:6px; border-top:1px solid rgba(255,255,255,0.1); pt:4px;">الإجمالي: <span>$${subtotal.toFixed(2)}</span></p>`;
+                summaryHtml += `<p>الاسم: <span>${name}</span> | العنوان: <span>${address}</span></p>`;
 
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(message).catch(err => console.log(err));
+                    navigator.clipboard.writeText(message).catch(err => {});
                 }
 
                 document.getElementById('cart-bar').classList.remove('show');
@@ -1215,9 +1053,8 @@ if (file_exists($file)) {
                 startCountdown(finalWaUrl);
 
             }).catch(err => {
-                console.error(err);
                 sendBtn.disabled = false;
-                sendBtn.innerHTML = "<span>إرسال الطلب</span> 💬";
+                sendBtn.innerHTML = "<span>إرسال</span> 💬";
                 alert('حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى.');
             });
         }
