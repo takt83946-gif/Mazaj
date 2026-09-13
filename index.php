@@ -113,9 +113,16 @@ if (file_exists($file)) {
 
         .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
 
-        .search-box-container {
+        /* شريط الأدوات العلوي (بحث + زر على مزاجك) */
+        .top-tools {
+            display: flex;
+            gap: 10px;
             margin: 20px 0 10px 0;
+            align-items: center;
+        }
+        .search-box-container {
             position: relative;
+            flex-grow: 1;
         }
         .search-input {
             width: 100%;
@@ -142,13 +149,62 @@ if (file_exists($file)) {
             pointer-events: none;
         }
 
+        /* 1. زر على مزاجك */
+        .mood-btn {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: #fff;
+            border: none;
+            padding: 0 16px;
+            height: 46px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            transition: 0.2s;
+        }
+        .mood-btn:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5); }
+
+        /* 2. بانر إعادة الطلب السابق */
+        .reorder-banner {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(20, 83, 45, 0.3));
+            border: 1px solid #22c55e;
+            padding: 12px 16px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.15);
+            display: none; /* يظهر فقط لو فيه طلب سابق */
+        }
+        .reorder-info h4 { color: #4ade80; font-size: 0.9rem; font-weight: 800; margin-bottom: 2px; }
+        .reorder-info p { color: var(--text-muted); font-size: 0.75rem; }
+        .reorder-action-btn {
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(34, 197, 94, 0.4);
+            transition: 0.2s;
+        }
+        .reorder-action-btn:hover { transform: scale(1.05); }
+
         .categories-nav {
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             gap: 10px;
             overflow-x: auto;
-            padding: 12px 0 8px 0;
+            padding: 6px 0 8px 0;
             scrollbar-width: none;
             direction: rtl;
         }
@@ -222,6 +278,24 @@ if (file_exists($file)) {
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 4px 20px rgba(0,0,0,0.25);
             position: relative;
+        }
+
+        /* تصميم خاص لبطاقات قسم الترند */
+        .card.trending-card {
+            border: 1px solid rgba(249, 115, 22, 0.6);
+            box-shadow: 0 4px 25px rgba(249, 115, 22, 0.2);
+        }
+        .trending-badge {
+            position: absolute;
+            top: 8px; right: 8px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 6px;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .card:hover {
@@ -619,9 +693,23 @@ if (file_exists($file)) {
     </header>
 
     <div class="container">
-        <div class="search-box-container">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك المفضلة..." oninput="filterProducts()">
+        
+        <!-- بانر ميزة 2: إعادة الطلب السابق -->
+        <div class="reorder-banner" id="reorder-banner">
+            <div class="reorder-info">
+                <h4>🔄 طلبت مسبقاً؟</h4>
+                <p id="reorder-desc">اضغط لتكرار آخر طلب سريعاً</p>
+            </div>
+            <button class="reorder-action-btn" onclick="repeatLastOrder()">اطلبها الآن ⚡</button>
+        </div>
+
+        <!-- شريط البحث + زر ميزة 1: على مزاجك -->
+        <div class="top-tools">
+            <div class="search-box-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك المفضلة..." oninput="filterProducts()">
+            </div>
+            <button class="mood-btn" onclick="suggestRandomProduct()">🎲 على مزاجي</button>
         </div>
 
         <?php
@@ -631,6 +719,36 @@ if (file_exists($file)) {
             $categories = array_unique(array_column($products, 'category'));
             $total_products_count = count($products);
             
+            // ميزة 3: قسم الترند (أول 3 منتجات مثلاً أو الأحدث كعرض ترند)
+            $trending_products = array_slice($products, 0, 3);
+            if (!empty($trending_products)) {
+                echo '<div class="category-section" data-category="trending-section">';
+                echo '<h2 class="section-title">🔥 الأكثر طلباً (الترند)</h2>';
+                echo '<div class="menu-grid">';
+                foreach ($trending_products as $p) {
+                    $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
+                    $hash_id = 'trend_' . md5($p['name']);
+                    $item_price = $p['price'] ?? 0;
+                    $item_image = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : 'uploads/default.jpg'));
+
+                    echo '<div class="card product-card trending-card" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
+                    echo '  <div class="trending-badge">🔥 ترند نار</div>';
+                    echo '  <div class="card-img-container">';
+                    echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
+                    echo '  </div>';
+                    echo '  <div class="card-body">';
+                    echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
+                    echo '      <div class="card-footer">';
+                    echo '          <span class="price" id="price-' . $hash_id . '">$' . number_format($item_price, 2) . '</span>';
+                    echo '          <div id="btn-container-' . $hash_id . '"><button class="action-btn" onclick="changeQty(\'' . $safe_name . '\', ' . $item_price . ', 1, \'' . $hash_id . '\')">إضافة +</button></div>';
+                    echo '      </div>';
+                    echo '  </div>';
+                    echo '</div>';
+                }
+                echo '</div></div>';
+            }
+
+            // نافذة الفئات العادية
             echo '<div class="categories-nav">';
             echo '<div class="cat-chip active" onclick="filterCategory(\'all\', this)">';
             echo '<span class="cat-icon">⚡</span><span>الكل</span>';
@@ -658,16 +776,7 @@ if (file_exists($file)) {
                         $hash_id = md5($p['name']);
                         $item_price = $p['price'] ?? 0;
                         
-                        $item_image = '';
-                        if (!empty($p['image'])) {
-                            $item_image = $p['image'];
-                        } elseif (!empty($p['img'])) {
-                            $item_image = $p['img'];
-                        } elseif (!empty($p['photo'])) {
-                            $item_image = $p['photo'];
-                        } else {
-                            $item_image = 'uploads/default.jpg';
-                        }
+                        $item_image = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : 'uploads/default.jpg'));
                         
                         echo '<div class="card product-card" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
                         echo '  <div class="card-img-container">';
@@ -715,7 +824,6 @@ if (file_exists($file)) {
         <button class="send-btn" id="send-order-btn" onclick="sendOrder()"><span>إرسال الطلب</span> 💬</button>
     </div>
 
-    <!-- نافذة تفاصيل السلة -->
     <div class="cart-modal" id="cart-modal" onclick="if(event.target === this) toggleCartModal()">
         <div class="cart-modal-content">
             <div class="modal-header">
@@ -723,36 +831,21 @@ if (file_exists($file)) {
                 <button class="clear-cart-btn" onclick="clearCart()">🗑️ تفريغ السلة</button>
                 <button class="close-modal" onclick="toggleCartModal()">&times;</button>
             </div>
-            
             <div id="modal-items-list"></div>
         </div>
     </div>
 
-    <!-- شاشة تتبع الطلب الذكية والنهائية -->
     <div class="order-tracker-overlay" id="order-tracker">
         <div class="order-tracker-card">
             <div class="tracker-icon">🚀</div>
             <div class="tracker-title">تم حفظ طلبك بنجاح!</div>
             <div class="tracker-subtitle">الخطوة الأخيرة لاعتماد وجبتك فوراً</div>
-            
-            <div class="tracker-status-box" id="tracker-status-text">
-                حالة الطلب: بانتظار تأكيد الواتساب 🔥
-            </div>
-
-            <div class="tracker-details" id="tracker-order-summary">
-                <!-- تفاصيل الطلب -->
-            </div>
-
+            <div class="tracker-status-box" id="tracker-status-text">حالة الطلب: بانتظار تأكيد الواتساب 🔥</div>
+            <div class="tracker-details" id="tracker-order-summary"></div>
             <div class="urgency-box">
-                <p>
-                    ⚡ تم نسخ تفاصيل طلبك تلقائياً للحافظة!<br>
-                    اضغط الزر أدناه لتأكيد الطلب عبر الواتساب خلال (<span id="countdown-timer">15</span>ث)
-                </p>
+                <p>⚡ تم نسخ تفاصيل طلبك تلقائياً للحافظة!<br>اضغط الزر أدناه لتأكيد الطلب عبر الواتساب خلال (<span id="countdown-timer">15</span>ث)</p>
             </div>
-
-            <a href="#" id="tracker-wa-link" target="_blank" class="whatsapp-redirect-btn" onclick="handleWhatsAppClick()">
-                <span>تأكيد الطلب الآن عبر الواتساب</span> 💬
-            </a>
+            <a href="#" id="tracker-wa-link" target="_blank" class="whatsapp-redirect-btn" onclick="handleWhatsAppClick()"><span>تأكيد الطلب الآن عبر الواتساب</span> 💬</a>
             <button class="new-order-btn" onclick="location.reload()">طلب وجبة أخرى 🔄</button>
         </div>
     </div>
@@ -766,12 +859,78 @@ if (file_exists($file)) {
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
             if(localStorage.getItem('mazaj_address')) document.getElementById('cust-address').value = localStorage.getItem('mazaj_address');
+            
+            // فحص وجود طلب سابق لتفعيل ميزة 2
+            checkLastOrderBanner();
         });
 
         function saveCustomerData() {
             localStorage.setItem('mazaj_name', document.getElementById('cust-name').value);
             localStorage.setItem('mazaj_phone', document.getElementById('cust-phone').value);
             localStorage.setItem('mazaj_address', document.getElementById('cust-address').value);
+        }
+
+        // ميزة 1: زر على مزاجك (اقتراح عشوائي)
+        function suggestRandomProduct() {
+            let cards = document.querySelectorAll('.product-card');
+            if (cards.length === 0) return alert('لا توجد منتجات متاحة حالياً!');
+            
+            // تأثير بصري خفيف على الزر
+            let btn = document.querySelector('.mood-btn');
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 150);
+
+            let randomIndex = Math.floor(Math.random() * cards.length);
+            let selectedCard = cards[randomIndex];
+            
+            // تمرير الشاشة بسلاسة للمنتج المقترح وإعطائه ومضة تمييز
+            selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            selectedCard.style.transition = '0.5s';
+            selectedCard.style.borderColor = '#8b5cf6';
+            selectedCard.style.boxShadow = '0 0 30px rgba(139, 92, 246, 0.6)';
+            
+            setTimeout(() => {
+                selectedCard.style.borderColor = '';
+                selectedCard.style.boxShadow = '';
+            }, 2500);
+        }
+
+        // ميزة 2: حفظ آخر طلب وتكراره
+        function saveLastOrderToLocalStorage(orderCart) {
+            localStorage.setItem('mazaj_last_order', JSON.stringify(orderCart));
+        }
+
+        function checkLastOrderBanner() {
+            let lastOrder = localStorage.getItem('mazaj_last_order');
+            if (lastOrder) {
+                try {
+                    let parsed = JSON.parse(lastOrder);
+                    let names = Object.keys(parsed);
+                    if (names.length > 0) {
+                        document.getElementById('reorder-desc').innerText = `طلبك الأخير تضمن: ${names.join(', ')}`;
+                        document.getElementById('reorder-banner').style.display = 'flex';
+                    }
+                } catch(e) {}
+            }
+        }
+
+        function repeatLastOrder() {
+            let lastOrder = localStorage.getItem('mazaj_last_order');
+            if (!lastOrder) return;
+            try {
+                let parsed = JSON.parse(lastOrder);
+                cart = parsed;
+                // إعادة مزامنة الواجهة بالكامل
+                for (let itemName in cart) {
+                    updateUI(itemName, cart[itemName].hashId);
+                }
+                updateCartBar();
+                alert('تمت إضافة طلبك السابق إلى السلة بنجاح! 🚀');
+                // تمرير الشاشة للسلة
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            } catch(e) {
+                alert('حدث خطأ أثناء استرجاع الطلب السابق.');
+            }
         }
 
         function filterProducts() {
@@ -875,7 +1034,12 @@ if (file_exists($file)) {
 
             document.querySelectorAll('.product-card').forEach(card => card.style.display = 'flex');
             document.querySelectorAll('.category-section').forEach(sec => {
-                sec.style.display = (category === 'all' || sec.getAttribute('data-category') === category) ? 'block' : 'none';
+                let secCat = sec.getAttribute('data-category');
+                if (category === 'all') {
+                    sec.style.display = 'block';
+                } else {
+                    sec.style.display = (secCat === category || secCat === 'trending-section') ? 'block' : 'none';
+                }
             });
         }
 
@@ -914,6 +1078,9 @@ if (file_exists($file)) {
             if (!name) { alert('الرجاء إدخال اسمك الكريم!'); nameInput.focus(); return; }
             if (!phone) { alert('الرجاء إدخال رقم الهاتف (الواتساب)!'); phoneInput.focus(); return; }
             if (!address) { alert('الرجاء إدخال عنوان التوصيل!'); addressInput.focus(); return; }
+
+            // حفظ الطلب في ميزة 2 (آخر طلب) قبل الإرسال
+            saveLastOrderToLocalStorage(cart);
 
             let sendBtn = document.getElementById('send-order-btn');
             sendBtn.disabled = true;
