@@ -383,29 +383,6 @@ if (file_exists($file)) {
         }
         .qty-num { font-weight: 900; font-size: 0.75rem; color: var(--text-main); min-width: 12px; text-align: center; }
 
-        .checkout-section { 
-            background: var(--bg-card); 
-            border: 1px solid var(--border-color); 
-            padding: 16px; 
-            border-radius: 16px; 
-            margin-top: 24px; 
-            backdrop-filter: blur(10px);
-        }
-        .checkout-section h3 { color: var(--text-main); margin-bottom: 10px; font-size: 0.95rem; font-weight: 800; }
-        .input-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .input-group input { 
-            flex: 1; 
-            min-width: 160px; 
-            padding: 10px 12px; 
-            background: var(--input-bg); 
-            border: 1px solid var(--border-color); 
-            border-radius: 10px; 
-            color: var(--text-main); 
-            font-size: 0.85rem;
-            outline: none;
-        }
-        .input-group input:focus { border-color: var(--accent); }
-
         .developer-footer {
             text-align: center;
             margin-top: 24px;
@@ -471,7 +448,7 @@ if (file_exists($file)) {
         .cart-modal.open { opacity: 1; pointer-events: auto; }
         .cart-modal-content {
             background: var(--bg-card);
-            width: 100%; max-height: 75vh;
+            width: 100%; max-height: 85vh;
             border-radius: 20px 20px 0 0;
             padding: 18px;
             overflow-y: auto;
@@ -487,6 +464,38 @@ if (file_exists($file)) {
         .modal-item-info h4 { font-size: 0.85rem; font-weight: 700; }
         .modal-item-info span { color: var(--accent); font-size: 0.8rem; font-weight: 800; }
         .clear-cart-btn { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 3px 10px; border-radius: 6px; font-size: 0.7rem; cursor: pointer; }
+
+        .modal-checkout-section {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+        .modal-checkout-section h3 { color: var(--text-main); margin-bottom: 8px; font-size: 0.85rem; font-weight: 800; }
+        .modal-input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+        .modal-input-group input { 
+            width: 100%; 
+            padding: 10px 12px; 
+            background: var(--input-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 10px; 
+            color: var(--text-main); 
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .modal-input-group input:focus { border-color: var(--accent); }
+        .modal-send-btn {
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .modal-send-btn:hover { background: #16a34a; }
 
         .order-tracker-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
@@ -627,15 +636,6 @@ if (file_exists($file)) {
         }
         ?>
 
-        <div class="checkout-section">
-            <h3>📍 بيانات الاستلام والتوصيل</h3>
-            <div class="input-group">
-                <input type="text" id="cust-name" placeholder="اسمك الكريم" oninput="saveCustomerData()">
-                <input type="tel" id="cust-phone" placeholder="رقم الهاتف (واتساب)" oninput="saveCustomerData()">
-                <input type="text" id="cust-address" placeholder="عنوان التوصيل" oninput="saveCustomerData()">
-            </div>
-        </div>
-
         <div class="developer-footer">
             <p>تصميم وبرمجة: <span class="dev-name">علي حسين ناصر الدين</span></p>
             <p style="margin-top:3px;">للتواصل: <a href="https://wa.me/96181058043" target="_blank">96181058043+</a></p>
@@ -650,7 +650,7 @@ if (file_exists($file)) {
                 <span class="cart-total-val">$<span id="total-price">0.00</span></span>
             </div>
         </div>
-        <button class="send-btn" id="send-order-btn" onclick="sendOrder()"><span>إرسال</span> 💬</button>
+        <button class="send-btn" id="send-order-btn" onclick="toggleCartModal()"><span>إرسال الطلب</span> 💬</button>
     </div>
 
     <div class="cart-modal" id="cart-modal" onclick="if(event.target === this) toggleCartModal()">
@@ -661,6 +661,16 @@ if (file_exists($file)) {
                 <button class="close-modal" onclick="toggleCartModal()">&times;</button>
             </div>
             <div id="modal-items-list"></div>
+            
+            <div class="modal-checkout-section">
+                <h3>📍 بيانات الاستلام والتوصيل</h3>
+                <div class="modal-input-group">
+                    <input type="text" id="cust-name" placeholder="اسمك الكريم" oninput="saveCustomerData()">
+                    <input type="tel" id="cust-phone" placeholder="رقم الهاتف (واتساب)" oninput="saveCustomerData()">
+                    <input type="text" id="cust-address" placeholder="عنوان التوصيل" oninput="saveCustomerData()">
+                </div>
+                <button class="modal-send-btn" onclick="sendOrder()"><span>إرسال الطلب عبر الواتساب</span> 💬</button>
+            </div>
         </div>
     </div>
 
@@ -682,7 +692,6 @@ if (file_exists($file)) {
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        // تفعيل الصوت تلقائياً عند أول تفاعل للمستخدم على الصفحة لتجاوز حظر المتصفحات
         document.addEventListener('click', () => {
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
@@ -974,9 +983,9 @@ if (file_exists($file)) {
             let phone = document.getElementById('cust-phone').value.trim();
             let address = document.getElementById('cust-address').value.trim();
             
-            if (!name) return alert('الرجاء إدخال اسمك!');
-            if (!phone) return alert('الرجاء إدخال رقم الهاتف!');
-            if (!address) return alert('الرجاء إدخال العنوان!');
+            if (!name) return alert('الرجاء إدخال اسمك الكريم داخل السلة!');
+            if (!phone) return alert('الرجاء إدخال رقم الهاتف داخل السلة!');
+            if (!address) return alert('الرجاء إدخال عنوان التوصيل داخل السلة!');
 
             playSound('success');
             localStorage.setItem('mazaj_last_order', JSON.stringify(cart));
