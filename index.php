@@ -17,7 +17,7 @@ if (file_exists($file)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لفة Mazaj | المنيو الفاخر</title>
+    <title>لفة Mazaj | المنيو الفاخر المتطور</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         [data-theme="dark"] {
@@ -121,8 +121,9 @@ if (file_exists($file)) {
             gap: 10px;
             margin: 16px 0 12px 0;
             align-items: center;
+            flex-wrap: wrap;
         }
-        .search-box-container { position: relative; flex-grow: 1; }
+        .search-box-container { position: relative; flex-grow: 1; min-width: 180px; }
         .search-input {
             width: 100%;
             padding: 10px 40px 10px 16px;
@@ -143,6 +144,31 @@ if (file_exists($file)) {
             transform: translateY(-50%);
             color: var(--text-muted);
             font-size: 1rem;
+        }
+
+        /* زر تبديل نمط العرض (أقسام / شبكة موحدة) */
+        .view-switch-selector {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 4px;
+            gap: 3px;
+        }
+        .view-switch-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 14px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .view-switch-btn.active {
+            background: var(--accent);
+            color: #fff;
         }
 
         .mood-btn {
@@ -184,7 +210,7 @@ if (file_exists($file)) {
             cursor: pointer;
         }
 
-        /* الأقسام الأنيقة النظيفة (أكورديون فاخر) */
+        /* حاوية الأقسام (الوضع الأول) */
         .categories-container {
             display: flex;
             flex-direction: column;
@@ -250,6 +276,17 @@ if (file_exists($file)) {
             max-height: 2500px;
             padding: 4px 14px 16px 14px;
             transition: max-height 0.6s ease-in-out;
+        }
+
+        /* حاوية الشبكة الموحدة (الوضع الثاني) */
+        .unified-grid-container {
+            display: none;
+            margin-top: 12px;
+        }
+        .unified-grid-container.active {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
         }
 
         .menu-grid { 
@@ -490,6 +527,10 @@ if (file_exists($file)) {
                 <span class="search-icon">🔍</span>
                 <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك المفضلة..." oninput="filterProducts()">
             </div>
+            <div class="view-switch-selector">
+                <button class="view-switch-btn active" id="btn-mode-accordion" onclick="switchViewMode('accordion')">أقسام 📂</button>
+                <button class="view-switch-btn" id="btn-mode-grid" onclick="switchViewMode('grid')">الكل ⚡</button>
+            </div>
             <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
         </div>
 
@@ -497,8 +538,8 @@ if (file_exists($file)) {
         if (empty($products)) {
             echo '<p style="text-align:center; padding:40px; color:var(--text-muted);">لا توجد منتجات مضافة حالياً.</p>';
         } else {
+            // الوضع الأول: الأقسام (الأكورديون)
             echo '<div class="categories-container" id="categories-wrapper">';
-
             $categories = array_unique(array_column($products, 'category'));
             $index_cat = 0;
             foreach ($categories as $cat) {
@@ -545,6 +586,30 @@ if (file_exists($file)) {
                 echo '</div>';
 
                 $index_cat++;
+            }
+            echo '</div>';
+
+            // الوضع الثاني: شبكة موحدة لجميع المنتجات دفعة واحدة (Grid View)
+            echo '<div class="unified-grid-container" id="unified-grid-wrapper">';
+            foreach ($products as $p) {
+                $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
+                $hash_id = md5($p['name']);
+                $item_price = $p['price'] ?? 0;
+                $item_image = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : 'uploads/default.jpg'));
+                $cat_name = $p['category'] ?? 'عام';
+                
+                echo '<div class="card product-card-grid" data-category="' . htmlspecialchars($cat_name) . '" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
+                echo '  <div class="card-img-container">';
+                echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
+                echo '  </div>';
+                echo '  <div class="card-body">';
+                echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
+                echo '      <div class="card-footer">';
+                echo '          <span class="price" id="grid-price-' . $hash_id . '">$' . number_format($item_price, 2) . '</span>';
+                echo '          <div id="grid-btn-container-' . $hash_id . '"><button class="action-btn" onclick="changeQty(\'' . $safe_name . '\', ' . $item_price . ', 1, \'' . $hash_id . '\')">إضافة +</button></div>';
+                echo '      </div>';
+                echo '  </div>';
+                echo '</div>';
             }
             echo '</div>';
         }
@@ -629,6 +694,22 @@ if (file_exists($file)) {
             else { iconSpan.innerText = '☀️'; textSpan.innerText = 'مضيء'; }
         }
 
+        function switchViewMode(mode) {
+            document.getElementById('btn-mode-accordion').classList.toggle('active', mode === 'accordion');
+            document.getElementById('btn-mode-grid').classList.toggle('active', mode === 'grid');
+
+            let accordionWrapper = document.getElementById('categories-wrapper');
+            let gridWrapper = document.getElementById('unified-grid-wrapper');
+
+            if (mode === 'accordion') {
+                accordionWrapper.style.display = 'flex';
+                gridWrapper.classList.remove('active');
+            } else {
+                accordionWrapper.style.display = 'none';
+                gridWrapper.classList.add('active');
+            }
+        }
+
         function toggleCategory(headerElement) {
             let card = headerElement.parentElement;
             card.classList.toggle('open');
@@ -641,7 +722,7 @@ if (file_exists($file)) {
         }
 
         function suggestRandomProduct() {
-            let cards = document.querySelectorAll('.product-card');
+            let cards = document.querySelectorAll('.product-card, .product-card-grid');
             let visibleCards = Array.from(cards).filter(c => c.style.display !== 'none');
             if (visibleCards.length === 0) return alert('لا توجد منتجات متاحة!');
             let randomIndex = Math.floor(Math.random() * visibleCards.length);
@@ -686,12 +767,12 @@ if (file_exists($file)) {
 
         function filterProducts() {
             let query = document.getElementById('search-input').value.trim().toLowerCase();
+            
+            // تصفية الأقسام
             let catCards = document.querySelectorAll('.category-accordion-card');
-
             catCards.forEach(catCard => {
                 let cards = catCard.querySelectorAll('.product-card');
                 let hasMatch = false;
-
                 cards.forEach(card => {
                     let name = card.getAttribute('data-name');
                     let desc = card.getAttribute('data-desc');
@@ -699,13 +780,21 @@ if (file_exists($file)) {
                     card.style.display = match ? 'flex' : 'none';
                     if (match) hasMatch = true;
                 });
-
                 if (query !== '' && hasMatch) {
                     catCard.classList.add('open');
                     catCard.style.display = 'block';
                 } else if (query !== '' && !hasMatch) {
                     catCard.style.display = 'none';
                 }
+            });
+
+            // تصفية الشبكة الموحدة
+            let gridCards = document.querySelectorAll('.product-card-grid');
+            gridCards.forEach(card => {
+                let name = card.getAttribute('data-name');
+                let desc = card.getAttribute('data-desc');
+                let match = name.includes(query) || desc.includes(query);
+                card.style.display = match ? 'flex' : 'none';
             });
         }
 
@@ -726,27 +815,38 @@ if (file_exists($file)) {
         }
 
         function updateUI(name, hashId) {
-            let container = document.getElementById('btn-container-' + hashId);
-            let priceElement = document.getElementById('price-' + hashId);
-            if (!container || !priceElement) return;
+            // تحديث العرض في كلا المكانين (الأقسام والشبكة الموحدة إن وجدتا)
+            let containers = [
+                document.getElementById('btn-container-' + hashId),
+                document.getElementById('grid-btn-container-' + hashId)
+            ];
+            let priceElements = [
+                document.getElementById('price-' + hashId),
+                document.getElementById('grid-price-' + hashId)
+            ];
 
-            let unitPrice = cart[name] ? cart[name].price : parseFloat(priceElement.getAttribute('data-base-price') || priceElement.innerText.replace('$', ''));
-            if (!priceElement.hasAttribute('data-base-price')) priceElement.setAttribute('data-base-price', unitPrice);
+            containers.forEach((container, idx) => {
+                let priceElement = priceElements[idx];
+                if (!container || !priceElement) return;
 
-            if (cart[name] && cart[name].qty > 0) {
-                let qty = cart[name].qty;
-                priceElement.innerText = '$' + (unitPrice * qty).toFixed(2);
-                container.innerHTML = `
-                    <div class="qty-control">
-                        <button class="qty-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${unitPrice}, -1, '${hashId}')">-</button>
-                        <span class="qty-num">${qty}</span>
-                        <button class="qty-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${unitPrice}, 1, '${hashId}')">+</button>
-                    </div>`;
-            } else {
-                let basePrice = parseFloat(priceElement.getAttribute('data-base-price'));
-                priceElement.innerText = '$' + basePrice.toFixed(2);
-                container.innerHTML = `<button class="action-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${basePrice}, 1, '${hashId}')">إضافة +</button>`;
-            }
+                let unitPrice = cart[name] ? cart[name].price : parseFloat(priceElement.getAttribute('data-base-price') || priceElement.innerText.replace('$', ''));
+                if (!priceElement.hasAttribute('data-base-price')) priceElement.setAttribute('data-base-price', unitPrice);
+
+                if (cart[name] && cart[name].qty > 0) {
+                    let qty = cart[name].qty;
+                    priceElement.innerText = '$' + (unitPrice * qty).toFixed(2);
+                    container.innerHTML = `
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${unitPrice}, -1, '${hashId}')">-</button>
+                            <span class="qty-num">${qty}</span>
+                            <button class="qty-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${unitPrice}, 1, '${hashId}')">+</button>
+                        </div>`;
+                } else {
+                    let basePrice = parseFloat(priceElement.getAttribute('data-base-price'));
+                    priceElement.innerText = '$' + basePrice.toFixed(2);
+                    container.innerHTML = `<button class="action-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${basePrice}, 1, '${hashId}')">إضافة +</button>`;
+                }
+            });
         }
 
         function updateCartBar() {
