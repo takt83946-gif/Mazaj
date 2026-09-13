@@ -118,11 +118,11 @@ if (file_exists($file)) {
         .top-tools {
             display: flex;
             gap: 8px;
-            margin: 12px 0 16px 0;
+            margin: 12px 0 10px 0;
             align-items: center;
             flex-wrap: wrap;
         }
-        .search-box-container { position: relative; flex-grow: 1; min-width: 180px; }
+        .search-box-container { position: relative; flex-grow: 1; min-width: 160px; }
         .search-input {
             width: 100%;
             padding: 8px 34px 8px 12px;
@@ -148,13 +148,41 @@ if (file_exists($file)) {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: #fff;
             border: none;
-            padding: 0 14px;
+            padding: 0 12px;
             height: 36px;
             border-radius: 10px;
             font-weight: 800;
             font-size: 0.75rem;
             cursor: pointer;
             white-space: nowrap;
+        }
+
+        /* شريط تبديل أشكال الأقسام الثلاثة */
+        .category-switcher-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            background: var(--bg-card);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+        .style-switch-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: center;
+        }
+        .style-switch-btn.active {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
         }
 
         .reorder-banner {
@@ -181,19 +209,72 @@ if (file_exists($file)) {
             cursor: pointer;
         }
 
-        /* تصميم الأقسام ككتل متتالية بدون تبويبات علوية */
-        .categories-container {
+        /* ------------------------------------------------ */
+        /* الشكل الأول: الكبسولات العلوية المتحركة (Modern Chips) */
+        /* ------------------------------------------------ */
+        .categories-tabs-wrapper.style-1 {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-top: 10px;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            margin-bottom: 16px;
+            scrollbar-width: none;
+        }
+        .categories-tabs-wrapper.style-1::-webkit-scrollbar { display: none; }
+
+        .category-tab-btn {
+            background: var(--chip-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.2s ease;
+        }
+        .category-tab-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
         }
 
+        /* ------------------------------------------------ */
+        /* الشكل الثاني: شبكة بطاقات الأقسام (Grid Cards) */
+        /* ------------------------------------------------ */
+        .categories-grid-container.style-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .category-grid-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .category-grid-card:hover, .category-grid-card.active {
+            border-color: var(--accent);
+            background: rgba(249, 115, 22, 0.05);
+        }
+        .category-grid-card h4 { font-size: 0.75rem; font-weight: 800; color: var(--text-main); margin-top: 4px; }
+        .category-grid-card span { font-size: 0.6rem; color: var(--text-muted); }
+
+        /* ------------------------------------------------ */
+        /* الشكل الثالث: القائمة المنسدلة القابلة للطي (Accordion) */
+        /* ------------------------------------------------ */
         .category-section-block {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 14px;
             padding: 14px;
+            margin-bottom: 16px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
@@ -204,6 +285,7 @@ if (file_exists($file)) {
             border-bottom: 2px solid var(--accent);
             padding-bottom: 8px;
             margin-bottom: 12px;
+            cursor: pointer;
         }
 
         .category-header-title h2 {
@@ -214,6 +296,15 @@ if (file_exists($file)) {
             align-items: center;
             gap: 6px;
         }
+
+        .accordion-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+            color: var(--accent);
+        }
+        .category-section-block.collapsed .accordion-arrow { transform: rotate(-90deg); }
+        .category-section-block.collapsed .menu-grid { display: none; }
+        .category-section-block.collapsed .category-header-title { border-bottom-color: var(--border-color); margin-bottom: 0; padding-bottom: 0; }
 
         .category-badge-count {
             background: rgba(249, 115, 22, 0.15);
@@ -456,11 +547,37 @@ if (file_exists($file)) {
             <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
         </div>
 
+        <!-- شريط اختيار شكل الأقسام الثلاثة -->
+        <div class="category-switcher-bar">
+            <button class="style-switch-btn active" id="btn-style-1" onclick="switchCategoryStyle(1)">✨ كبسولات علوية</button>
+            <button class="style-switch-btn" id="btn-style-2" onclick="switchCategoryStyle(2)">🗂️ بطاقات شبكية</button>
+            <button class="style-switch-btn" id="btn-style-3" onclick="switchCategoryStyle(3)">📂 قوائم قابلة للطي</button>
+        </div>
+
         <?php
         if (empty($products)) {
             echo '<p style="text-align:center; padding:40px; color:var(--text-muted);">لا توجد منتجات مضافة حالياً.</p>';
         } else {
             $categories = array_unique(array_column($products, 'category'));
+            
+            // الشكل الأول: شريط التبويبات العلوية (Capsules)
+            echo '<div class="categories-tabs-wrapper style-1" id="categories-style-1">';
+            echo '  <button class="category-tab-btn active" onclick="filterByCategory(\'all\', this)">الكل 🔥</button>';
+            foreach ($categories as $cat) {
+                echo '  <button class="category-tab-btn" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', this)">' . htmlspecialchars($cat) . '</button>';
+            }
+            echo '</div>';
+
+            // الشكل الثاني: شبكة بطاقات الأقسام (Grid Cards)
+            echo '<div class="categories-grid-container style-2" id="categories-style-2" style="display:none;">';
+            echo '  <div class="category-grid-card active" onclick="filterByCategory(\'all\', this)"><h4>🔥 الكل</h4><span>عرض كافة الأصناف</span></div>';
+            foreach ($categories as $cat) {
+                $cat_items_count = count(array_filter($products, function($p) use ($cat) { return isset($p['category']) && $p['category'] === $cat; }));
+                echo '  <div class="category-grid-card" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', this)"><h4>🌯 ' . htmlspecialchars($cat) . '</h4><span>' . $cat_items_count . ' أصناف</span></div>';
+            }
+            echo '</div>';
+
+            // الحاوية الأساسية للأقسام
             echo '<div class="categories-container" id="categories-wrapper">';
 
             foreach ($categories as $cat) {
@@ -470,8 +587,8 @@ if (file_exists($file)) {
                 $cat_count = count($cat_products);
 
                 echo '<div class="category-section-block" data-category-name="' . htmlspecialchars($cat) . '">';
-                echo '  <div class="category-header-title">';
-                echo '      <h2>🌯 ' . htmlspecialchars($cat) . '</h2>';
+                echo '  <div class="category-header-title" onclick="toggleAccordion(this)">';
+                echo '      <h2>🌯 ' . htmlspecialchars($cat) . ' <span class="accordion-arrow">▼</span></h2>';
                 echo '      <span class="category-badge-count">' . $cat_count . ' أصناف</span>';
                 echo '  </div>';
                 
@@ -555,6 +672,7 @@ if (file_exists($file)) {
 
     <script>
         let cart = {};
+        let currentCategoryStyle = 1;
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
@@ -583,6 +701,43 @@ if (file_exists($file)) {
             else { iconSpan.innerText = '☀️'; textSpan.innerText = 'مضيء'; }
         }
 
+        // دالة تبديل أشكال الأقسام الثلاثة
+        function switchCategoryStyle(styleNum) {
+            currentCategoryStyle = styleNum;
+            document.querySelectorAll('.style-switch-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-style-' + styleNum).classList.add('active');
+
+            let style1El = document.getElementById('categories-style-1');
+            let style2El = document.getElementById('categories-style-2');
+            let blocks = document.querySelectorAll('.category-section-block');
+
+            // إعادة ضبط الإظهار العام عند تغيير الشكل
+            blocks.forEach(b => {
+                b.style.display = 'block';
+                b.classList.remove('collapsed');
+            });
+
+            if (styleNum === 1) {
+                if(style1El) style1El.style.display = 'flex';
+                if(style2El) style2El.style.display = 'none';
+            } else if (styleNum === 2) {
+                if(style1El) style1El.style.display = 'none';
+                if(style2El) style2El.style.display = 'grid';
+            } else if (styleNum === 3) {
+                if(style1El) style1El.style.display = 'none';
+                if(style2El) style2El.style.display = 'none';
+                // في الشكل الثالث نجعل الأقسام مطوية افتراضياً لترتيب المنيو الطويل
+                blocks.forEach(b => b.classList.add('collapsed'));
+            }
+        }
+
+        // تحكم بالقائمة المنسدلة للشكل الثالث
+        function toggleAccordion(headerEl) {
+            if (currentCategoryStyle === 3) {
+                headerEl.parentElement.classList.toggle('collapsed');
+            }
+        }
+
         function saveCustomerData() {
             localStorage.setItem('mazaj_name', document.getElementById('cust-name').value);
             localStorage.setItem('mazaj_phone', document.getElementById('cust-phone').value);
@@ -595,6 +750,10 @@ if (file_exists($file)) {
             if (visibleCards.length === 0) return alert('لا توجد منتجات متاحة!');
             let randomIndex = Math.floor(Math.random() * visibleCards.length);
             let selectedCard = visibleCards[randomIndex];
+
+            // إذا كان القسم مطوياً بالشكل الثالث، نقوم بفتحه أولاً
+            let parentBlock = selectedCard.closest('.category-section-block');
+            if (parentBlock) parentBlock.classList.remove('collapsed');
 
             selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             selectedCard.style.transition = '0.3s';
@@ -627,9 +786,36 @@ if (file_exists($file)) {
             } catch(e) {}
         }
 
+        function filterByCategory(categoryName, btnElement) {
+            // تحديث الأزرار النشطة للشكل 1 والشكل 2
+            if(currentCategoryStyle === 1) {
+                document.querySelectorAll('#categories-style-1 .category-tab-btn').forEach(btn => btn.classList.remove('active'));
+            } else if(currentCategoryStyle === 2) {
+                document.querySelectorAll('#categories-style-2 .category-grid-card').forEach(btn => btn.classList.remove('active'));
+            }
+            btnElement.classList.add('active');
+
+            let catSections = document.querySelectorAll('.category-section-block');
+            catSections.forEach(section => {
+                let sectionCat = section.getAttribute('data-category-name');
+                if (categoryName === 'all' || sectionCat === categoryName) {
+                    section.style.display = 'block';
+                    if(currentCategoryStyle === 3) section.classList.remove('collapsed');
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+            document.getElementById('search-input').value = '';
+        }
+
         function filterProducts() {
             let query = document.getElementById('search-input').value.trim().toLowerCase();
             let catSections = document.querySelectorAll('.category-section-block');
+
+            if (query !== '') {
+                if(currentCategoryStyle === 1) document.querySelectorAll('#categories-style-1 .category-tab-btn').forEach(btn => btn.classList.remove('active'));
+                if(currentCategoryStyle === 2) document.querySelectorAll('#categories-style-2 .category-grid-card').forEach(btn => btn.classList.remove('active'));
+            }
 
             catSections.forEach(section => {
                 let cards = section.querySelectorAll('.product-card');
@@ -644,6 +830,9 @@ if (file_exists($file)) {
                 });
 
                 section.style.display = (query === '' || hasMatch) ? 'block' : 'none';
+                if (query !== '' && hasMatch && currentCategoryStyle === 3) {
+                    section.classList.remove('collapsed');
+                }
             });
         }
 
