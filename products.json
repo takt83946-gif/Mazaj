@@ -67,42 +67,42 @@
     "price": "2.00",
     "desc_text": "فواكه مشكلة قطع - حجم صغير",
     "category": "🥤 العصائر",
-    "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&auto=format&fit=crop&q=60"
+    "image": "https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=500&auto=format&fit=crop&q=60"
   },
   {
     "name": "كوكتيل شقف (وسط)",
     "price": "2.50",
     "desc_text": "فواكه مشكلة قطع - حجم وسط",
     "category": "🥤 العصائر",
-    "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&auto=format&fit=crop&q=60"
+    "image": "https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=500&auto=format&fit=crop&q=60"
   },
   {
     "name": "كوكتيل شقف (كبير)",
     "price": "3.00",
     "desc_text": "فواكه مشكلة قطع - حجم كبير",
     "category": "🥤 العصائر",
-    "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&auto=format&fit=crop&q=60"
+    "image": "https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=500&auto=format&fit=crop&q=60"
   },
   {
     "name": "كوكتيل عصير (صغير)",
     "price": "2.00",
     "desc_text": "عصير كوكتيل - حجم صغير",
     "category": "🥤 العصائر",
-    "image": "https://images.unsplash.com/photo-1556881286-fc6915169721?w=500&auto=format&fit=crop&q=60"
+    "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&auto=format&fit=crop&q=60"
   },
   {
     "name": "كوكتيل عصير (وسط)",
     "price": "2.50",
     "desc_text": "عصير كوكتيل - حجم وسط",
     "category": "🥤 العصائر",
-    "image": "https://images.unsplash.com/photo-1556881286-fc6915169721?w=500&auto=format&fit=crop&q=60"
+    "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&auto=format&fit=crop&q=60"
   },
   {
     "name": "كوكتيل عصير (كبير)",
     "price": "3.00",
     "desc_text": "عصير كوكتيل - حجم كبير",
     "category": "🥤 العصائر",
-    "image": "https://images.unsplash.com/photo-1556881286-fc6915169721?w=500&auto=format&fit=crop&q=60"
+    "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&auto=format&fit=crop&q=60"
   },
   {
     "name": "أفوكا (صغير)",
@@ -172,21 +172,21 @@
     "price": "1.00",
     "desc_text": "عصير جزر - صغير",
     "category": "🥤 العصائر",
-    "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&auto=format&fit=crop&q=60"
+    "image": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500&auto=format&fit=crop&q=60"
   },
   {
     "name": "عصير جزر (وسط)",
     "price": "1.50",
     "desc_text": "عصير جزر - وسط",
     "category": "🥤 العصائر",
-    "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&auto=format&fit=crop&q=60"
+    "image": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500&auto=format&fit=crop&q=60"
   },
   {
     "name": "عصير جزر (كبير)",
     "price": "2.00",
     "desc_text": "عصير جزر - كبير",
     "category": "🥤 العصائر",
-    "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&auto=format&fit=crop&q=60"
+    "image": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500&auto=format&fit=crop&q=60"
   },
   {
     "name": "كعك جبنة",
