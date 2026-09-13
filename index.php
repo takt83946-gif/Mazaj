@@ -80,7 +80,7 @@ if (file_exists($file)) {
         .header-controls {
             position: absolute;
             top: 18px;
-            left: 18px;
+            right: 18px;
             display: flex;
             gap: 8px;
             z-index: 10;
@@ -673,7 +673,6 @@ if (file_exists($file)) {
         let cart = {};
         let soundEnabled = localStorage.getItem('mazaj_sound') !== 'off';
 
-        // محرك الألوان والأصوات التفاعلي (Web Audio API) لتجنب مشاكل روابط الملفات الخارجية
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         function playSound(type) {
@@ -699,8 +698,8 @@ if (file_exists($file)) {
                 osc.stop(now + 0.05);
             } else if (type === 'add') {
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(523.25, now); // C5
-                osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.08);
                 gainNode.gain.setValueAtTime(0.08, now);
                 gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
                 osc.start(now);
@@ -995,7 +994,7 @@ if (file_exists($file)) {
                 document.getElementById('cart-modal').classList.remove('open');
                 
                 let finalWaUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
-                document.getElementById('tracker-order-summary').innerHTML, summaryHtml;
+                document.getElementById('tracker-order-summary').innerHTML = summaryHtml;
                 document.getElementById('tracker-wa-link').href = finalWaUrl;
                 document.getElementById('order-tracker').style.display = 'flex';
             });
