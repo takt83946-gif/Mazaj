@@ -23,10 +23,11 @@ if (file_exists($file)) {
         :root {
             --accent: #f97316;
             --accent-hover: #ea580c;
-            --bg-card: rgba(17, 24, 39, 0.90);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --bg-card: rgba(17, 24, 39, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(249, 115, 22, 0.4);
             --text-main: #f3f4f6;
-            --text-muted: #d1d5db;
+            --text-muted: #9ca3af;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
@@ -202,35 +203,40 @@ if (file_exists($file)) {
             border-radius: 4px;
         }
 
+        /* تعديلات شكل المنتجات الجديدة كلياً (فاخرة وعصرية) */
         .menu-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
-            gap: 8px; 
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); 
+            gap: 12px; 
         }
         
         .card { 
             background: var(--bg-card); 
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border-color); 
-            border-radius: 10px; 
+            border-radius: 14px; 
             overflow: hidden; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
-            transition: all 0.25s ease;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            position: relative;
         }
 
         .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.18);
         }
 
         .card-img-container {
             width: 100%;
-            height: 90px;
+            height: 110px;
             overflow: hidden;
             background: #000;
+            position: relative;
         }
 
         .card-img {
@@ -238,66 +244,73 @@ if (file_exists($file)) {
             height: 100%;
             object-fit: cover;
             display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.08);
         }
         
         .card-body { 
-            padding: 8px 10px; 
+            padding: 10px 12px; 
             flex-grow: 1; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
         }
-        .card h3 { font-size: 0.8rem; margin-bottom: 2px; color: #fff; font-weight: 800; line-height: 1.3; }
-        .card p { color: var(--text-muted); font-size: 0.7rem; margin-bottom: 6px; line-height: 1.2; }
+        .card h3 { font-size: 0.85rem; margin-bottom: 3px; color: #fff; font-weight: 800; line-height: 1.3; }
+        .card p { color: var(--text-muted); font-size: 0.72rem; margin-bottom: 8px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: auto;
-            padding-top: 4px;
-            border-top: 1px solid var(--border-color);
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        .price { color: var(--accent); font-weight: 900; font-size: 0.9rem; }
+        .price { color: #fb923c; font-weight: 900; font-size: 0.95rem; text-shadow: 0 2px 10px rgba(249,115,22,0.3); }
 
         .action-btn { 
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
             color: #fff; 
             border: none; 
-            padding: 3px 10px; 
-            border-radius: 6px; 
+            padding: 5px 12px; 
+            border-radius: 8px; 
             cursor: pointer; 
             font-weight: 800; 
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             transition: all 0.25s ease;
-            box-shadow: 0 2px 6px rgba(249, 115, 22, 0.25);
+            box-shadow: 0 3px 10px rgba(249, 115, 22, 0.3);
         }
-        .action-btn:hover { background: var(--accent-hover); }
+        .action-btn:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(249, 115, 22, 0.5); }
         
         .qty-control {
             display: flex;
             align-items: center;
-            gap: 4px;
-            background: rgba(11, 15, 25, 0.8);
-            border-radius: 6px;
-            padding: 1px 4px;
-            border: 1px solid var(--border-color);
+            gap: 6px;
+            background: rgba(11, 15, 25, 0.9);
+            border-radius: 8px;
+            padding: 2px 6px;
+            border: 1px solid var(--border-hover);
         }
         .qty-btn {
             background: none;
             border: none;
             color: var(--accent);
-            font-size: 0.9rem;
+            font-size: 1rem;
             font-weight: 900;
             cursor: pointer;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: 0.2s;
         }
-        .qty-num { font-weight: 800; font-size: 0.75rem; color: #fff; min-width: 10px; text-align: center; }
+        .qty-btn:active { transform: scale(0.85); }
+        .qty-num { font-weight: 900; font-size: 0.8rem; color: #fff; min-width: 12px; text-align: center; }
 
         .checkout-section { 
             background: var(--bg-card); 
@@ -455,12 +468,12 @@ if (file_exists($file)) {
         }
         .clear-cart-btn:hover { background: #ef4444; color: #fff; }
 
-        /* شاشة تتبع الطلب بعد الإرسال */
+        /* شاشة تتبع الطلب الذكية */
         .order-tracker-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(11, 15, 25, 0.95);
-            backdrop-filter: blur(20px);
+            background: rgba(11, 15, 25, 0.96);
+            backdrop-filter: blur(25px);
             z-index: 500;
             display: flex;
             justify-content: center;
@@ -470,13 +483,13 @@ if (file_exists($file)) {
         }
         .order-tracker-card {
             background: var(--bg-card);
-            border: 2px solid var(--accent);
-            border-radius: 20px;
+            border: 2px solid #22c55e;
+            border-radius: 24px;
             width: 100%;
             max-width: 500px;
             padding: 25px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(249, 115, 22, 0.3);
+            box-shadow: 0 20px 60px rgba(34, 197, 94, 0.35);
             animation: popUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes popUp {
@@ -484,52 +497,80 @@ if (file_exists($file)) {
             100% { transform: scale(1); opacity: 1; }
         }
         .tracker-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
+            font-size: 3.2rem;
+            margin-bottom: 8px;
+            animation: bounceIcon 1s infinite alternate;
+        }
+        @keyframes bounceIcon {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
         }
         .tracker-title {
             color: #fff;
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             font-weight: 900;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         .tracker-subtitle {
-            color: var(--text-muted);
+            color: #4ade80;
             font-size: 0.85rem;
-            margin-bottom: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
         }
         .tracker-status-box {
-            background: rgba(249, 115, 22, 0.15);
-            border: 1px solid var(--accent);
-            color: var(--accent);
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid #22c55e;
+            color: #4ade80;
             padding: 10px;
             border-radius: 12px;
             font-weight: 900;
-            font-size: 1rem;
-            margin-bottom: 20px;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
         }
         .tracker-details {
             text-align: right;
-            background: rgba(0,0,0,0.3);
-            padding: 15px;
+            background: rgba(0,0,0,0.4);
+            padding: 12px 15px;
             border-radius: 12px;
             margin-bottom: 15px;
             font-size: 0.85rem;
-            max-height: 150px;
+            max-height: 140px;
             overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.05);
         }
         .tracker-details p { margin-bottom: 6px; color: var(--text-muted); }
         .tracker-details span { color: #fff; font-weight: 700; }
         
-        /* تأثير النبض والحركة لزر الواتساب لجذب انتباه الزبون */
+        .urgency-box {
+            background: rgba(249, 115, 22, 0.12);
+            border: 1px dashed var(--accent);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .urgency-box p {
+            color: #fdba74;
+            font-size: 0.8rem;
+            font-weight: 800;
+            line-height: 1.4;
+        }
+        .urgency-box span#countdown-timer {
+            color: #fff;
+            background: var(--accent);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 900;
+        }
+
         @keyframes whatsappPulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
-            70% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(34, 197, 94, 0); }
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(34, 197, 94, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
 
         .whatsapp-redirect-btn {
-            background: #22c55e;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
             color: #fff;
             border: none;
             width: 100%;
@@ -542,10 +583,10 @@ if (file_exists($file)) {
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.5);
-            margin-bottom: 12px;
+            box-shadow: 0 6px 25px rgba(34, 197, 94, 0.5);
+            margin-bottom: 10px;
             text-decoration: none;
-            animation: whatsappPulse 2s infinite ease-in-out;
+            animation: whatsappPulse 1.8s infinite ease-in-out;
         }
         .new-order-btn {
             background: transparent;
@@ -555,7 +596,7 @@ if (file_exists($file)) {
             padding: 10px;
             border-radius: 12px;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             cursor: pointer;
         }
         .new-order-btn:hover { color: #fff; border-color: #fff; }
@@ -686,31 +727,30 @@ if (file_exists($file)) {
         </div>
     </div>
 
-    <!-- شاشة تتبع الطلب وتأكيده للزبون بعد الإرسال -->
+    <!-- شاشة تتبع الطلب الذكية والنهائية -->
     <div class="order-tracker-overlay" id="order-tracker">
         <div class="order-tracker-card">
-            <div class="tracker-icon">🎉</div>
-            <div class="tracker-title">تم إرسال طلبك بنجاح!</div>
-            <div class="tracker-subtitle">شكراً لطلبك من لفة Mazaj 🌯</div>
+            <div class="tracker-icon">🚀</div>
+            <div class="tracker-title">تم حفظ طلبك بنجاح!</div>
+            <div class="tracker-subtitle">الخطوة الأخيرة لاعتماد وجبتك فوراً</div>
             
             <div class="tracker-status-box" id="tracker-status-text">
-                حالة الطلب: قيد التحضير 🔥
+                حالة الطلب: بانتظار تأكيد الواتساب 🔥
             </div>
 
             <div class="tracker-details" id="tracker-order-summary">
                 <!-- تفاصيل الطلب -->
             </div>
 
-            <!-- رسالة توضيحية للزبون -->
-            <div style="background: rgba(34, 197, 94, 0.1); border: 1px dashed #22c55e; padding: 10px; border-radius: 10px; margin-bottom: 15px; text-align: center;">
-                <p style="color: #4ade80; font-size: 0.78rem; font-weight: 700; line-height: 1.4;">
-                    ⚠️ تنبيه: يرجى الضغط على زر الواتساب أدناه لإرسال تفاصيل طلبك للمحل واعتماده بشكل نهائي!
+            <div class="urgency-box">
+                <p>
+                    ⚡ تم نسخ تفاصيل طلبك تلقائياً للحافظة!<br>
+                    اضغط الزر أدناه لتأكيد الطلب عبر الواتساب خلال (<span id="countdown-timer">15</span>ث)
                 </p>
             </div>
 
-            <!-- زر واتساب نابض وساطع ليلفت انتباه الزبون بقوة -->
-            <a href="#" id="tracker-wa-link" target="_blank" class="whatsapp-redirect-btn">
-                <span>تأكيد ومتابعة عبر الواتساب</span> 💬
+            <a href="#" id="tracker-wa-link" target="_blank" class="whatsapp-redirect-btn" onclick="handleWhatsAppClick()">
+                <span>تأكيد الطلب الآن عبر الواتساب</span> 💬
             </a>
             <button class="new-order-btn" onclick="location.reload()">طلب وجبة أخرى 🔄</button>
         </div>
@@ -719,6 +759,7 @@ if (file_exists($file)) {
     <script>
         let cart = {};
         let currentActiveCategory = 'all';
+        let countdownInterval = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
@@ -837,6 +878,25 @@ if (file_exists($file)) {
             });
         }
 
+        function startCountdown(waUrl) {
+            let timeLeft = 15;
+            let timerSpan = document.getElementById('countdown-timer');
+            if(countdownInterval) clearInterval(countdownInterval);
+
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                if(timerSpan) timerSpan.innerText = timeLeft;
+                if(timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    window.open(waUrl, '_blank');
+                }
+            }, 1000);
+        }
+
+        function handleWhatsAppClick() {
+            if(countdownInterval) clearInterval(countdownInterval);
+        }
+
         function sendOrder() {
             let totalCount = 0;
             for (let item in cart) totalCount += cart[item].qty;
@@ -856,7 +916,7 @@ if (file_exists($file)) {
 
             let sendBtn = document.getElementById('send-order-btn');
             sendBtn.disabled = true;
-            sendBtn.innerHTML = "<span>جاري الإرسال...</span> ⏳";
+            sendBtn.innerHTML = "<span>جاري المعالجة...</span> ⏳";
 
             let orderData = {
                 customer_name: name,
@@ -893,13 +953,19 @@ if (file_exists($file)) {
                 summaryHtml += `<p>الاسم: <span>${name}</span></p>`;
                 summaryHtml += `<p>العنوان: <span>${address}</span></p>`;
 
-                // إخفاء السلة وإظهار شاشة النجاح
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(message).catch(err => console.log(err));
+                }
+
                 document.getElementById('cart-bar').classList.remove('show');
                 document.getElementById('cart-modal').classList.remove('open');
                 
+                let finalWaUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
                 document.getElementById('tracker-order-summary').innerHTML = summaryHtml;
-                document.getElementById('tracker-wa-link').href = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
+                document.getElementById('tracker-wa-link').href = finalWaUrl;
                 document.getElementById('order-tracker').style.display = 'flex';
+
+                startCountdown(finalWaUrl);
 
             }).catch(err => {
                 console.error(err);
