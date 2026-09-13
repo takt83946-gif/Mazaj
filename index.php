@@ -77,10 +77,16 @@ if (file_exists($file)) {
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .theme-toggle-btn {
+        .header-controls {
             position: absolute;
             top: 18px;
             left: 18px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .control-btn {
             background: var(--chip-bg);
             border: 1px solid var(--border-color);
             color: var(--text-main);
@@ -92,9 +98,8 @@ if (file_exists($file)) {
             cursor: pointer;
             font-size: 0.7rem;
             font-weight: 800;
-            z-index: 10;
         }
-        .theme-toggle-btn:hover { border-color: var(--accent); }
+        .control-btn:hover { border-color: var(--accent); }
 
         .logo-badge {
             display: inline-flex;
@@ -146,7 +151,6 @@ if (file_exists($file)) {
             font-size: 1rem;
         }
 
-        /* زر تبديل نمط العرض (أقسام / شبكة موحدة) */
         .view-switch-selector {
             display: flex;
             background: var(--bg-card);
@@ -210,7 +214,6 @@ if (file_exists($file)) {
             cursor: pointer;
         }
 
-        /* حاوية الأقسام (الوضع الأول) */
         .categories-container {
             display: flex;
             flex-direction: column;
@@ -278,7 +281,6 @@ if (file_exists($file)) {
             transition: max-height 0.6s ease-in-out;
         }
 
-        /* حاوية الشبكة الموحدة (الوضع الثاني) */
         .unified-grid-container {
             display: none;
             margin-top: 12px;
@@ -504,9 +506,14 @@ if (file_exists($file)) {
 <body>
 
     <header>
-        <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()">
-            <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
-        </button>
+        <div class="header-controls">
+            <button class="control-btn" id="sound-toggle-btn" onclick="toggleSound()">
+                <span id="sound-icon">🔊</span>
+            </button>
+            <button class="control-btn" id="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
+            </button>
+        </div>
         <div class="logo-badge">🔥 نكهات استثنائية وعصرية</div>
         <h1>لفة <span>Mazaj</span> 🌯</h1>
         <p>تصفح أشهى الوجبات بتصميم راقٍ ونقي</p>
@@ -538,7 +545,6 @@ if (file_exists($file)) {
         if (empty($products)) {
             echo '<p style="text-align:center; padding:40px; color:var(--text-muted);">لا توجد منتجات مضافة حالياً.</p>';
         } else {
-            // الوضع الأول: الأقسام (الأكورديون)
             echo '<div class="categories-container" id="categories-wrapper">';
             $categories = array_unique(array_column($products, 'category'));
             $index_cat = 0;
@@ -589,7 +595,6 @@ if (file_exists($file)) {
             }
             echo '</div>';
 
-            // الوضع الثاني: شبكة موحدة لجميع المنتجات دفعة واحدة (Grid View)
             echo '<div class="unified-grid-container" id="unified-grid-wrapper">';
             foreach ($products as $p) {
                 $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
@@ -666,11 +671,69 @@ if (file_exists($file)) {
 
     <script>
         let cart = {};
+        let soundEnabled = localStorage.getItem('mazaj_sound') !== 'off';
+
+        // محرك الألوان والأصوات التفاعلي (Web Audio API) لتجنب مشاكل روابط الملفات الخارجية
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (!soundEnabled) return;
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            let now = audioCtx.currentTime;
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+                gainNode.gain.setValueAtTime(0.05, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.start(now);
+                osc.stop(now + 0.05);
+            } else if (type === 'add') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                gainNode.gain.setValueAtTime(0.08, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'success') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.setValueAtTime(554.37, now + 0.1);
+                osc.frequency.setValueAtTime(659.25, now + 0.2);
+                gainNode.gain.setValueAtTime(0.1, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            localStorage.setItem('mazaj_sound', soundEnabled ? 'on' : 'off');
+            updateSoundUI();
+            if (soundEnabled) playSound('click');
+        }
+
+        function updateSoundUI() {
+            let soundIcon = document.getElementById('sound-icon');
+            soundIcon.innerText = soundEnabled ? '🔊' : '🔇';
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeUI(savedTheme);
+            updateSoundUI();
 
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
@@ -680,6 +743,7 @@ if (file_exists($file)) {
         });
 
         function toggleTheme() {
+            playSound('click');
             let currentTheme = document.documentElement.getAttribute('data-theme');
             let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', newTheme);
@@ -695,6 +759,7 @@ if (file_exists($file)) {
         }
 
         function switchViewMode(mode) {
+            playSound('click');
             document.getElementById('btn-mode-accordion').classList.toggle('active', mode === 'accordion');
             document.getElementById('btn-mode-grid').classList.toggle('active', mode === 'grid');
 
@@ -711,6 +776,7 @@ if (file_exists($file)) {
         }
 
         function toggleCategory(headerElement) {
+            playSound('click');
             let card = headerElement.parentElement;
             card.classList.toggle('open');
         }
@@ -722,6 +788,7 @@ if (file_exists($file)) {
         }
 
         function suggestRandomProduct() {
+            playSound('click');
             let cards = document.querySelectorAll('.product-card, .product-card-grid');
             let visibleCards = Array.from(cards).filter(c => c.style.display !== 'none');
             if (visibleCards.length === 0) return alert('لا توجد منتجات متاحة!');
@@ -755,6 +822,7 @@ if (file_exists($file)) {
         }
 
         function repeatLastOrder() {
+            playSound('add');
             let lastOrder = localStorage.getItem('mazaj_last_order');
             if (!lastOrder) return;
             try {
@@ -768,7 +836,6 @@ if (file_exists($file)) {
         function filterProducts() {
             let query = document.getElementById('search-input').value.trim().toLowerCase();
             
-            // تصفية الأقسام
             let catCards = document.querySelectorAll('.category-accordion-card');
             catCards.forEach(catCard => {
                 let cards = catCard.querySelectorAll('.product-card');
@@ -788,7 +855,6 @@ if (file_exists($file)) {
                 }
             });
 
-            // تصفية الشبكة الموحدة
             let gridCards = document.querySelectorAll('.product-card-grid');
             gridCards.forEach(card => {
                 let name = card.getAttribute('data-name');
@@ -801,9 +867,15 @@ if (file_exists($file)) {
         function changeQty(name, price, change, hashId) {
             price = parseFloat(price);
             if (!cart[name]) {
-                if (change > 0) cart[name] = { price: price, qty: 1, hashId: hashId };
+                if (change > 0) {
+                    cart[name] = { price: price, qty: 1, hashId: hashId };
+                    playSound('add');
+                }
             } else {
                 cart[name].qty += change;
+                if (change > 0) playSound('add');
+                else playSound('click');
+                
                 if (cart[name].qty <= 0) delete cart[name];
             }
             updateUI(name, hashId);
@@ -811,11 +883,11 @@ if (file_exists($file)) {
         }
 
         function clearCart() {
+            playSound('click');
             if (confirm('تفريغ السلة؟')) { cart = {}; location.reload(); }
         }
 
         function updateUI(name, hashId) {
-            // تحديث العرض في كلا المكانين (الأقسام والشبكة الموحدة إن وجدتا)
             let containers = [
                 document.getElementById('btn-container-' + hashId),
                 document.getElementById('grid-btn-container-' + hashId)
@@ -875,7 +947,10 @@ if (file_exists($file)) {
             else { cartBar.classList.remove('show'); document.getElementById('cart-modal').classList.remove('open'); }
         }
 
-        function toggleCartModal() { document.getElementById('cart-modal').classList.toggle('open'); }
+        function toggleCartModal() {
+            playSound('click');
+            document.getElementById('cart-modal').classList.toggle('open');
+        }
 
         function sendOrder() {
             let totalCount = 0;
@@ -890,6 +965,7 @@ if (file_exists($file)) {
             if (!phone) return alert('الرجاء إدخال رقم الهاتف!');
             if (!address) return alert('الرجاء إدخال العنوان!');
 
+            playSound('success');
             localStorage.setItem('mazaj_last_order', JSON.stringify(cart));
             let subtotal = 0;
             for (let item in cart) subtotal += cart[item].price * cart[item].qty;
@@ -919,7 +995,7 @@ if (file_exists($file)) {
                 document.getElementById('cart-modal').classList.remove('open');
                 
                 let finalWaUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
-                document.getElementById('tracker-order-summary').innerHTML = summaryHtml;
+                document.getElementById('tracker-order-summary').innerHTML, summaryHtml;
                 document.getElementById('tracker-wa-link').href = finalWaUrl;
                 document.getElementById('order-tracker').style.display = 'flex';
             });
