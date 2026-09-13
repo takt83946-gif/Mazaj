@@ -682,6 +682,13 @@ if (file_exists($file)) {
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
+        // تفعيل الصوت تلقائياً عند أول تفاعل للمستخدم على الصفحة لتجاوز حظر المتصفحات
+        document.addEventListener('click', () => {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }, { once: true });
+
         function playSound(type) {
             if (!soundEnabled) return;
             if (audioCtx.state === 'suspended') {
