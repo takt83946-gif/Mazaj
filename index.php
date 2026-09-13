@@ -663,7 +663,7 @@ if (file_exists($file)) {
         let cart = {};
         let audioCtx = null;
 
-        // مولد صوت النقرة الاحترافي (بدون ملفات خارجية)
+        // مولد صوت النقرة الاحترافي
         function playClickSound() {
             try {
                 if (!audioCtx) {
@@ -927,9 +927,18 @@ if (file_exists($file)) {
             let phone = document.getElementById('cust-phone').value.trim();
             let address = document.getElementById('cust-address').value.trim();
             
-            if (!name) return alert('الرجاء إدخال اسمك!');
-            if (!phone) return alert('الرجاء إدخال رقم الهاتف!');
-            if (!address) return alert('الرجاء إدخال العنوان!');
+            // التحقق من تعبئة الحقول والنزول التلقائي وإغلاق نافذة السلة المعلقة إن كانت مفتوحة
+            if (!name || !phone || !address) {
+                document.getElementById('cart-modal').classList.remove('open');
+                document.getElementById('checkout-section-box').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // تحديد الحقل الناقص لإعطائه تركيزاً بصرياً
+                if (!name) document.getElementById('cust-name').focus();
+                else if (!phone) document.getElementById('cust-phone').focus();
+                else if (!address) document.getElementById('cust-address').focus();
+
+                return alert('الرجاء إكمال تعبئة بيانات الاستلام (الاسم، الهاتف، والعنوان)!');
+            }
 
             localStorage.setItem('mazaj_last_order', JSON.stringify(cart));
             let subtotal = 0;
