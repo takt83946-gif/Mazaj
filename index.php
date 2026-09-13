@@ -172,7 +172,6 @@ if (file_exists($file)) {
             border-radius: 4px;
         }
 
-        /* تصغير الشبكة لتعرض بطاقات أصغر وأكثر تناسقاً */
         .menu-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
@@ -197,7 +196,6 @@ if (file_exists($file)) {
             box-shadow: 0 6px 15px rgba(0,0,0,0.3);
         }
 
-        /* تصغير ارتفاع وعرض الصورة لتتناسب مع حجم البطاقة الصغير */
         .card-img-container {
             width: 100%;
             height: 90px;
@@ -411,9 +409,41 @@ if (file_exists($file)) {
         }
         .modal-item-info h4 { font-size: 0.9rem; color: #fff; margin-bottom: 2px; font-weight: 700; }
         .modal-item-info span { color: var(--accent); font-weight: 800; font-size: 0.85rem; }
+
+        .clear-cart-btn {
+            background: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .clear-cart-btn:hover { background: #ef4444; color: #fff; }
+
+        /* نافذة نجاح الطلب */
+        .success-toast {
+            position: fixed;
+            top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #22c55e;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 900;
+            box-shadow: 0 10px 30px rgba(34,197,94,0.4);
+            z-index: 300;
+            transition: transform 0.3s ease;
+            font-size: 0.95rem;
+        }
+        .success-toast.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
+
+    <div id="success-toast" class="success-toast">✅ تم إرسال طلبك بنجاح وجاري تحويلك للواتساب...</div>
 
     <header>
         <div class="fairy-lights">
@@ -526,6 +556,7 @@ if (file_exists($file)) {
         <div class="cart-modal-content">
             <div class="modal-header">
                 <h2>مراجعة سلة طلباتك 🛍️</h2>
+                <button class="clear-cart-btn" onclick="clearCart()">🗑️ تفريغ السلة</button>
                 <button class="close-modal" onclick="toggleCartModal()">&times;</button>
             </div>
             <div id="modal-items-list"></div>
@@ -545,6 +576,15 @@ if (file_exists($file)) {
             }
             updateUI(name, hashId);
             updateCartBar();
+        }
+
+        // زر تفريغ السلة بالكامل
+        function clearCart() {
+            if (confirm('هل أنت متأكد من تفريغ السلة؟')) {
+                cart = {};
+                // إعادة ضبط أزرار المنتجات في الصفحة
+                location.reload(); 
+            }
         }
 
         function updateUI(name, hashId) {
@@ -607,6 +647,7 @@ if (file_exists($file)) {
             });
         }
 
+        // إرسال الطلب مع رسالة نجاح وتأكيد
         function sendOrder() {
             let totalCount = 0;
             for (let item in cart) totalCount += cart[item].qty;
@@ -636,6 +677,10 @@ if (file_exists($file)) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
             }).then(response => response.json()).then(data => {
+                // إظهار رسالة النجاح (Toast)
+                let toast = document.getElementById('success-toast');
+                toast.classList.add('show');
+
                 let adminPhone = "96181079589"; 
                 let message = "مرحباً *لفة Mazaj* 🌯، أريد طلب الآتي:\n\n";
                 let index = 1, totalPrice = 0;
@@ -651,10 +696,15 @@ if (file_exists($file)) {
                 message += `\n📞 *الهاتف:* ${phone}`;
                 message += `\n📍 *العنوان:* ${address}`;
 
-                window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`, '_blank');
+                // التوجيه للواتساب بعد ثانية ونصف لإتاحة قراءة رسالة التأكيد
+                setTimeout(() => {
+                    window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`, '_blank');
+                    location.reload();
+                }, 1500);
+
             }).catch(err => {
                 console.error(err);
-                window.open(`https://wa.me/96181079589?text=` + encodeURIComponent("طلب جديد من الموقع"), '_blank');
+                alert('حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى.');
             });
         }
     </script>
