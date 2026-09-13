@@ -183,26 +183,79 @@ if (file_exists($file)) {
             white-space: nowrap;
         }
 
-        /* شريط تحذير/تنبيه الزبون للأقسام (Category Notice Alert) */
-        .category-alert-banner {
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(139, 92, 246, 0.15));
-            border: 1px solid var(--border-hover);
-            padding: 8px 12px;
-            border-radius: 10px;
-            margin-bottom: 10px;
+        /* نافذة التنبيه المنبثقة للزبون (Popup Alert Modal) */
+        .category-alert-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 600;
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 8px;
-            animation: pulseAlert 2s infinite;
+            padding: 16px;
+            animation: fadeInOverlay 0.3s ease;
         }
-        @keyframes pulseAlert {
-            0% { border-color: rgba(249, 115, 22, 0.4); }
-            50% { border-color: rgba(249, 115, 22, 0.8); }
-            100% { border-color: rgba(249, 115, 22, 0.4); }
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
-        .cat-alert-icon { font-size: 1rem; }
-        .cat-alert-text h4 { color: var(--accent); font-size: 0.75rem; font-weight: 900; }
-        .cat-alert-text p { color: var(--text-muted); font-size: 0.65rem; }
+        .category-alert-box {
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            width: 100%;
+            max-width: 360px;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+            position: relative;
+            animation: scalePopup 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes scalePopup {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .category-alert-close {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+        .category-alert-close:hover { color: var(--accent); }
+        .cat-alert-icon-large {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+        .category-alert-box h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+        .category-alert-box p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .cat-alert-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 9px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .cat-alert-btn:hover { background: var(--accent-hover); }
 
         .reorder-banner {
             background: rgba(34, 197, 94, 0.15);
@@ -529,6 +582,17 @@ if (file_exists($file)) {
 </head>
 <body>
 
+    <!-- نافذة تنبيه الزبون المنبثقة (Popup Alert Modal) -->
+    <div class="category-alert-overlay" id="category-alert-modal">
+        <div class="category-alert-box">
+            <button class="category-alert-close" onclick="closeAlertModal()">&times;</button>
+            <div class="cat-alert-icon-large">⚠️</div>
+            <h3>تنبيه تصفح الأقسام الذكي</h3>
+            <p>يمكنك التبديل بين أنماط الأقسام (أكورديون، فلاتر، تبويبات) أو استخدام شريط البحث لتسهيل طلبك فوراً بكل راحة!</p>
+            <button class="cat-alert-btn" onclick="closeAlertModal()">حسناً، فهمت 🌯</button>
+        </div>
+    </div>
+
     <header>
         <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()">
             <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
@@ -539,15 +603,6 @@ if (file_exists($file)) {
     </header>
 
     <div class="container">
-        
-        <!-- شريط تنبيه الزبون للأقسام (Category Notice Alert) -->
-        <div class="category-alert-banner">
-            <div class="cat-alert-icon">⚠️</div>
-            <div class="cat-alert-text">
-                <h4>تنبيه تصفح الأقسام الذكي</h4>
-                <p>يمكنك التبديل بين أنماط الأقسام (أكورديون، فلاتر، تبويبات) أو استخدام شريط البحث لتسهيل طلبك فوراً!</p>
-            </div>
-        </div>
 
         <div class="reorder-banner" id="reorder-banner">
             <div class="reorder-info">
@@ -704,6 +759,12 @@ if (file_exists($file)) {
             checkLastOrderBanner();
         });
 
+        function closeAlertModal() {
+            let modal = document.getElementById('category-alert-modal');
+            modal.style.opacity = '0';
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+
         function toggleTheme() {
             let currentTheme = document.documentElement.getAttribute('data-theme');
             let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -744,7 +805,6 @@ if (file_exists($file)) {
                 });
             } else if (mode === 'single') {
                 filterBar.style.display = 'flex';
-                // تفعيل أول قسم وإخفاء الباقي تلقائياً بوضع التبويبات الفردية
                 if(catCards.length > 0) {
                     let firstCatName = catCards[0].getAttribute('data-category-name');
                     let firstChip = document.querySelector('.filter-tab-chip');
