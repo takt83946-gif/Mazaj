@@ -118,7 +118,7 @@ if (file_exists($file)) {
         .top-tools {
             display: flex;
             gap: 8px;
-            margin: 12px 0 8px 0;
+            margin: 12px 0 16px 0;
             align-items: center;
             flex-wrap: wrap;
         }
@@ -144,37 +144,11 @@ if (file_exists($file)) {
             font-size: 0.9rem;
         }
 
-        /* شريط التحكم بطرق عرض الأقسام الثلاثة للزبون */
-        .view-mode-selector {
-            display: flex;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 3px;
-            gap: 2px;
-            overflow-x: auto;
-        }
-        .view-mode-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 5px 10px;
-            font-size: 0.65rem;
-            font-weight: 800;
-            border-radius: 7px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .view-mode-btn.active {
-            background: var(--accent);
-            color: #fff;
-        }
-
         .mood-btn {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: #fff;
             border: none;
-            padding: 0 12px;
+            padding: 0 14px;
             height: 36px;
             border-radius: 10px;
             font-weight: 800;
@@ -182,42 +156,6 @@ if (file_exists($file)) {
             cursor: pointer;
             white-space: nowrap;
         }
-
-        /* شريط تنبيه الزبون للأقسام (Category Notice Alert) فوق الأقسام مباشرة */
-        .category-alert-banner {
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(139, 92, 246, 0.15));
-            border: 1px solid var(--border-hover);
-            padding: 10px 14px;
-            border-radius: 12px;
-            margin: 12px 0 10px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            animation: pulseAlert 2s infinite;
-        }
-        @keyframes pulseAlert {
-            0% { border-color: rgba(249, 115, 22, 0.4); }
-            50% { border-color: rgba(249, 115, 22, 0.8); }
-            100% { border-color: rgba(249, 115, 22, 0.4); }
-        }
-        .cat-alert-content {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .cat-alert-icon { font-size: 1.2rem; }
-        .cat-alert-text h4 { color: var(--accent); font-size: 0.8rem; font-weight: 900; margin-bottom: 2px; }
-        .cat-alert-text p { color: var(--text-muted); font-size: 0.68rem; }
-        .cat-alert-dismiss {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 2px 6px;
-        }
-        .cat-alert-dismiss:hover { color: var(--accent); }
 
         .reorder-banner {
             background: rgba(34, 197, 94, 0.15);
@@ -243,101 +181,48 @@ if (file_exists($file)) {
             cursor: pointer;
         }
 
-        /* أزرار الفلتر الأفقي السريع (وضع الـ Tabs) */
-        .filter-tabs-bar {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            padding: 4px 0 8px 0;
-            scrollbar-width: none;
-            display: none;
-        }
-        .filter-tabs-bar::-webkit-scrollbar { display: none; }
-        .filter-tab-chip {
-            background: var(--chip-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .filter-tab-chip.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
-        }
-
-        /* نظام الأقسام (أكورديون) الأساسي */
+        /* تصميم الأقسام ككتل متتالية بدون تبويبات علوية */
         .categories-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 20px;
             margin-top: 10px;
         }
 
-        .category-accordion-card {
+        .category-section-block {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
+            border-radius: 14px;
+            padding: 14px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        .category-header {
-            padding: 12px 16px;
+        .category-header-title {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            background: var(--bg-card);
-            user-select: none;
-            transition: background 0.2s;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
         }
-        .category-header:hover { background: rgba(249, 115, 22, 0.05); }
 
-        .category-title-area {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .category-title-area h2 {
-            font-size: 0.95rem;
+        .category-header-title h2 {
+            font-size: 1.05rem;
             font-weight: 900;
             color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
+
         .category-badge-count {
-            background: var(--accent);
-            color: #fff;
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 1px 6px;
-            border-radius: 6px;
-        }
-
-        .category-arrow {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            transition: transform 0.3s ease;
-        }
-        .category-accordion-card.open .category-arrow {
-            transform: rotate(180deg);
+            background: rgba(249, 115, 22, 0.15);
             color: var(--accent);
-        }
-
-        .category-content-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
-            padding: 0 12px;
-            background: rgba(0,0,0,0.02);
-        }
-        .category-accordion-card.open .category-content-body {
-            max-height: 2000px;
-            padding: 10px 12px 14px 12px;
-            transition: max-height 0.6s ease-in-out;
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(249, 115, 22, 0.3);
         }
 
         .menu-grid { 
@@ -550,7 +435,7 @@ if (file_exists($file)) {
         </button>
         <div class="logo-badge">🔥 نكهات استثنائية وعصرية</div>
         <h1>لفة <span>Mazaj</span> 🌯</h1>
-        <p>اختر نمط الأقسام المفضل لديك وتصفح المنيو بكل راحة</p>
+        <p>تصفح المنيو المفتوح بكل سهولة وراحة</p>
     </header>
 
     <div class="container">
@@ -568,64 +453,29 @@ if (file_exists($file)) {
                 <span class="search-icon">🔍</span>
                 <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك..." oninput="filterProducts()">
             </div>
-            <div class="view-mode-selector">
-                <button class="view-mode-btn active" id="mode-accordion" onclick="setViewMode('accordion')">أقسام 📂</button>
-                <button class="view-mode-btn" id="mode-tabs" onclick="setViewMode('tabs')">فلاتر ⚡</button>
-                <button class="view-mode-btn" id="mode-single" onclick="setViewMode('single')">تبويبات 🎯</button>
-            </div>
             <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
-        </div>
-
-        <!-- أزرار الفلتر الأفقي السريع -->
-        <div class="filter-tabs-bar" id="filter-tabs-bar">
-            <div class="filter-tab-chip active" onclick="filterByTab('all', this)">الكل 🔥</div>
-            <?php
-            if (!empty($products)) {
-                $categories = array_unique(array_column($products, 'category'));
-                foreach ($categories as $cat) {
-                    echo '<div class="filter-tab-chip" onclick="filterByTab(\'' . htmlspecialchars($cat) . '\', this)">' . htmlspecialchars($cat) . '</div>';
-                }
-            }
-            ?>
-        </div>
-
-        <!-- شريط تنبيه الزبون للأقسام (فوق الأقسام تماماً) -->
-        <div class="category-alert-banner" id="category-alert-banner">
-            <div class="cat-alert-content">
-                <div class="cat-alert-icon">⚠️</div>
-                <div class="cat-alert-text">
-                    <h4>تنبيه تصفح الأقسام الذكي</h4>
-                    <p>بإمكانك التبديل بين أنماط الأقسام (أكورديون، فلاتر، تبويبات) لتسهيل طلبك فوراً!</p>
-                </div>
-            </div>
-            <button class="cat-alert-dismiss" onclick="dismissCategoryAlert()">&times;</button>
         </div>
 
         <?php
         if (empty($products)) {
             echo '<p style="text-align:center; padding:40px; color:var(--text-muted);">لا توجد منتجات مضافة حالياً.</p>';
         } else {
+            $categories = array_unique(array_column($products, 'category'));
             echo '<div class="categories-container" id="categories-wrapper">';
 
-            $index_cat = 0;
             foreach ($categories as $cat) {
                 $cat_products = array_filter($products, function($p) use ($cat) {
                     return isset($p['category']) && $p['category'] === $cat;
                 });
                 $cat_count = count($cat_products);
-                $is_open_class = ($index_cat === 0) ? 'open' : '';
 
-                echo '<div class="category-accordion-card ' . $is_open_class . '" data-category-name="' . htmlspecialchars($cat) . '">';
-                echo '  <div class="category-header" onclick="toggleCategory(this)">';
-                echo '      <div class="category-title-area">';
-                echo '          <h2>🌯 ' . htmlspecialchars($cat) . '</h2>';
-                echo '          <span class="category-badge-count">' . $cat_count . '</span>';
-                echo '      </div>';
-                echo '      <span class="category-arrow">▼</span>';
+                echo '<div class="category-section-block" data-category-name="' . htmlspecialchars($cat) . '">';
+                echo '  <div class="category-header-title">';
+                echo '      <h2>🌯 ' . htmlspecialchars($cat) . '</h2>';
+                echo '      <span class="category-badge-count">' . $cat_count . ' أصناف</span>';
                 echo '  </div>';
                 
-                echo '  <div class="category-content-body">';
-                echo '      <div class="menu-grid">';
+                echo '  <div class="menu-grid">';
                 
                 foreach ($cat_products as $p) {
                     $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
@@ -647,11 +497,8 @@ if (file_exists($file)) {
                     echo '</div>';
                 }
                 
-                echo '      </div>';
                 echo '  </div>';
                 echo '</div>';
-
-                $index_cat++;
             }
             echo '</div>';
         }
@@ -708,7 +555,6 @@ if (file_exists($file)) {
 
     <script>
         let cart = {};
-        let currentViewMode = 'accordion';
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
@@ -721,13 +567,6 @@ if (file_exists($file)) {
             
             checkLastOrderBanner();
         });
-
-        function dismissCategoryAlert() {
-            let banner = document.getElementById('category-alert-banner');
-            banner.style.opacity = '0';
-            banner.style.transition = '0.3s';
-            setTimeout(() => banner.style.display = 'none', 300);
-        }
 
         function toggleTheme() {
             let currentTheme = document.documentElement.getAttribute('data-theme');
@@ -744,61 +583,6 @@ if (file_exists($file)) {
             else { iconSpan.innerText = '☀️'; textSpan.innerText = 'مضيء'; }
         }
 
-        function setViewMode(mode) {
-            currentViewMode = mode;
-            document.getElementById('mode-accordion').classList.toggle('active', mode === 'accordion');
-            document.getElementById('mode-tabs').classList.toggle('active', mode === 'tabs');
-            document.getElementById('mode-single').classList.toggle('active', mode === 'single');
-
-            let filterBar = document.getElementById('filter-tabs-bar');
-            let catCards = document.querySelectorAll('.category-accordion-card');
-
-            filterBar.style.display = 'none';
-
-            if (mode === 'accordion') {
-                catCards.forEach((card, index) => {
-                    card.style.display = 'block';
-                    if(index === 0) card.classList.add('open');
-                    else card.classList.remove('open');
-                });
-            } else if (mode === 'tabs') {
-                filterBar.style.display = 'flex';
-                catCards.forEach(card => {
-                    card.style.display = 'block';
-                    card.classList.add('open');
-                });
-            } else if (mode === 'single') {
-                filterBar.style.display = 'flex';
-                if(catCards.length > 0) {
-                    let firstCatName = catCards[0].getAttribute('data-category-name');
-                    let firstChip = document.querySelector('.filter-tab-chip');
-                    filterByTab(firstCatName, firstChip);
-                }
-            }
-        }
-
-        function filterByTab(categoryName, chipElement) {
-            document.querySelectorAll('.filter-tab-chip').forEach(c => c.classList.remove('active'));
-            if(chipElement) chipElement.classList.add('active');
-
-            let catCards = document.querySelectorAll('.category-accordion-card');
-            catCards.forEach(catCard => {
-                let catName = catCard.getAttribute('data-category-name');
-                if (categoryName === 'all' || catName === categoryName) {
-                    catCard.style.display = 'block';
-                    catCard.classList.add('open');
-                } else {
-                    catCard.style.display = 'none';
-                }
-            });
-        }
-
-        function toggleCategory(headerElement) {
-            if (currentViewMode === 'tabs' || currentViewMode === 'single') return;
-            let card = headerElement.parentElement;
-            card.classList.toggle('open');
-        }
-
         function saveCustomerData() {
             localStorage.setItem('mazaj_name', document.getElementById('cust-name').value);
             localStorage.setItem('mazaj_phone', document.getElementById('cust-phone').value);
@@ -811,12 +595,6 @@ if (file_exists($file)) {
             if (visibleCards.length === 0) return alert('لا توجد منتجات متاحة!');
             let randomIndex = Math.floor(Math.random() * visibleCards.length);
             let selectedCard = visibleCards[randomIndex];
-            
-            let parentCard = selectedCard.closest('.category-accordion-card');
-            if(parentCard) {
-                parentCard.style.display = 'block';
-                parentCard.classList.add('open');
-            }
 
             selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             selectedCard.style.transition = '0.3s';
@@ -851,10 +629,10 @@ if (file_exists($file)) {
 
         function filterProducts() {
             let query = document.getElementById('search-input').value.trim().toLowerCase();
-            let catCards = document.querySelectorAll('.category-accordion-card');
+            let catSections = document.querySelectorAll('.category-section-block');
 
-            catCards.forEach(catCard => {
-                let cards = catCard.querySelectorAll('.product-card');
+            catSections.forEach(section => {
+                let cards = section.querySelectorAll('.product-card');
                 let hasMatch = false;
 
                 cards.forEach(card => {
@@ -865,12 +643,7 @@ if (file_exists($file)) {
                     if (match) hasMatch = true;
                 });
 
-                if (query !== '' && hasMatch) {
-                    catCard.classList.add('open');
-                    catCard.style.display = 'block';
-                } else if (query !== '' && !hasMatch) {
-                    catCard.style.display = 'none';
-                }
+                section.style.display = (query === '' || hasMatch) ? 'block' : 'none';
             });
         }
 
