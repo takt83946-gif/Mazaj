@@ -123,7 +123,7 @@ if (file_exists($file)) {
             flex-wrap: wrap;
         }
 
-        /* زر التصنيفات الجامع الجديد */
+        /* الشكل الأول: زر التصنيفات الشامل الرئيسي */
         .categories-master-btn {
             background: linear-gradient(135deg, var(--accent), var(--accent-hover));
             color: #fff;
@@ -139,6 +139,44 @@ if (file_exists($file)) {
             gap: 6px;
             white-space: nowrap;
             box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        /* الشكل الثاني: شريط الأقسام الأفقية المتحركة (Scrollable Pills) */
+        .categories-scroll-wrapper {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 4px 0 10px 0;
+            margin-bottom: 12px;
+            scrollbar-width: none; /* إخفاء الشريط بالمتصفحات */
+        }
+        .categories-scroll-wrapper::-webkit-scrollbar { display: none; }
+
+        .cat-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 5px 12px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .cat-pill.active {
+            background: rgba(249, 115, 22, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .cat-pill-img {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
         }
 
         .search-box-container { position: relative; flex-grow: 1; min-width: 140px; }
@@ -176,31 +214,7 @@ if (file_exists($file)) {
             white-space: nowrap;
         }
 
-        .reorder-banner {
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid #22c55e;
-            padding: 8px 12px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            display: none;
-        }
-        .reorder-info h4 { color: #22c55e; font-size: 0.8rem; font-weight: 800; }
-        .reorder-info p { color: var(--text-muted); font-size: 0.65rem; }
-        .reorder-action-btn {
-            background: #22c55e;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-weight: 800;
-            font-size: 0.7rem;
-            cursor: pointer;
-        }
-
-        /* نافذة اختيار التصنيفات المنبثقة (Popup Modal) */
+        /* نافذة اختيار التصنيفات المنبثقة (التابعة للشكل الأول) */
         .categories-modal {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.65);
@@ -521,15 +535,8 @@ if (file_exists($file)) {
 
     <div class="container">
 
-        <div class="reorder-banner" id="reorder-banner">
-            <div class="reorder-info">
-                <h4>🔄 طلبت مسبقاً؟</h4>
-                <p id="reorder-desc">اضغط لتكرار آخر طلب سريعاً</p>
-            </div>
-            <button class="reorder-action-btn" onclick="repeatLastOrder()">اطلبها ⚡</button>
-        </div>
-
         <div class="top-tools">
+            <!-- الشكل الأول: زر رئيسي يفتح نافذة التصنيفات -->
             <button class="categories-master-btn" onclick="toggleCategoriesModal()">
                 <span>🗂️</span> اختر التصنيف
             </button>
@@ -546,7 +553,29 @@ if (file_exists($file)) {
         } else {
             $categories = array_unique(array_column($products, 'category'));
             
-            // حاوية الأقسام الرئيسية
+            // الشكل الثاني: شريط الأقسام الأفقية المتحركة فوق المنيو مباشرة
+            echo '<div class="categories-scroll-wrapper" id="scroll-pills-container">';
+            echo '  <div class="cat-pill active" onclick="filterByCategory(\'all\', null, this)">';
+            echo '      <img src="uploads/Ali.jpg" class="cat-pill-img" onerror="this.src=\'uploads/default.jpg\'">';
+            echo '      <span>الكل 🔥</span>';
+            echo '  </div>';
+            
+            foreach ($categories as $cat) {
+                $cat_first_img = 'uploads/default.jpg';
+                foreach ($products as $p) {
+                    if (isset($p['category']) && $p['category'] === $cat) {
+                        $img = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : ''));
+                        if (!empty($img)) { $cat_first_img = $img; break; }
+                    }
+                }
+                echo '  <div class="cat-pill" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', null, this)">';
+                echo '      <img src="' . htmlspecialchars($cat_first_img) . '" class="cat-pill-img" onerror="this.src=\'uploads/default.jpg\'">';
+                echo '      <span>' . htmlspecialchars($cat) . '</span>';
+                echo '  </div>';
+            }
+            echo '</div>';
+
+            // حاوية الأقسام الرئيسية والمنتجات
             echo '<div class="categories-container" id="categories-wrapper">';
 
             foreach ($categories as $cat) {
@@ -590,7 +619,7 @@ if (file_exists($file)) {
         }
         ?>
 
-        <!-- نافذة منبثقة تجمع كل التصنيفات ليختار الزبون منها -->
+        <!-- نافذة منبثقة (الشكل الأول) -->
         <div class="categories-modal" id="categories-modal" onclick="if(event.target === this) toggleCategoriesModal()">
             <div class="categories-modal-content">
                 <div class="cat-modal-header">
@@ -598,7 +627,7 @@ if (file_exists($file)) {
                     <button class="close-cat-modal" onclick="toggleCategoriesModal()">&times;</button>
                 </div>
                 <div class="cat-popup-grid">
-                    <div class="cat-popup-item active" onclick="filterByCategory('all', this)">
+                    <div class="cat-popup-item active" onclick="filterByCategory('all', this, null)">
                         <img src="uploads/Ali.jpg" class="cat-popup-img" onerror="this.src='uploads/default.jpg'">
                         <span class="cat-popup-name">الكل 🔥</span>
                     </div>
@@ -612,7 +641,7 @@ if (file_exists($file)) {
                                     if (!empty($img)) { $cat_first_img = $img; break; }
                                 }
                             }
-                            echo '<div class="cat-popup-item" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', this)">';
+                            echo '<div class="cat-popup-item" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', this, null)">';
                             echo '  <img src="' . htmlspecialchars($cat_first_img) . '" class="cat-popup-img" onerror="this.src=\'uploads/default.jpg\'">';
                             echo '  <span class="cat-popup-name">' . htmlspecialchars($cat) . '</span>';
                             echo '</div>';
@@ -683,8 +712,6 @@ if (file_exists($file)) {
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
             if(localStorage.getItem('mazaj_address')) document.getElementById('cust-address').value = localStorage.getItem('mazaj_address');
-            
-            checkLastOrderBanner();
         });
 
         function toggleTheme() {
@@ -725,34 +752,27 @@ if (file_exists($file)) {
             setTimeout(() => selectedCard.style.borderColor = '', 1500);
         }
 
-        function checkLastOrderBanner() {
-            let lastOrder = localStorage.getItem('mazaj_last_order');
-            if (lastOrder) {
-                try {
-                    let parsed = JSON.parse(lastOrder);
-                    let names = Object.keys(parsed);
-                    if (names.length > 0) {
-                        document.getElementById('reorder-desc').innerText = `تضمن: ${names.join(', ')}`;
-                        document.getElementById('reorder-banner').style.display = 'flex';
-                    }
-                } catch(e) {}
+        function filterByCategory(categoryName, popupElement, pillElement) {
+            // تحديث التحديد في النافذة المنبثقة والشريط الأفقي
+            if (popupElement) {
+                document.querySelectorAll('.cat-popup-item').forEach(el => el.classList.remove('active'));
+                popupElement.classList.add('active');
             }
-        }
-
-        function repeatLastOrder() {
-            let lastOrder = localStorage.getItem('mazaj_last_order');
-            if (!lastOrder) return;
-            try {
-                cart = JSON.parse(lastOrder);
-                for (let itemName in cart) updateUI(itemName, cart[itemName].hashId);
-                updateCartBar();
-                alert('تمت إضافة طلبك السابق للسلة! 🚀');
-            } catch(e) {}
-        }
-
-        function filterByCategory(categoryName, element) {
-            document.querySelectorAll('.cat-popup-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
+            if (pillElement) {
+                document.querySelectorAll('.cat-pill').forEach(el => el.classList.remove('active'));
+                pillElement.classList.add('active');
+            } else {
+                // مزامنة الشريط الأفقي إذا تم الاختيار من النافذة
+                document.querySelectorAll('.cat-pill').forEach(el => {
+                    if (categoryName === 'all' && el.innerText.includes('الكل')) {
+                        el.classList.add('active');
+                    } else if (el.innerText.includes(categoryName)) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                });
+            }
 
             let catSections = document.querySelectorAll('.category-section-block');
             catSections.forEach(section => {
@@ -764,16 +784,14 @@ if (file_exists($file)) {
                 }
             });
             document.getElementById('search-input').value = '';
-            toggleCategoriesModal(); // إغلاق النافذة تلقائياً بعد الاختيار
+            
+            // إغلاق النافذة المنبثقة في حال كانت مفتوحة
+            document.getElementById('categories-modal').classList.remove('open');
         }
 
         function filterProducts() {
             let query = document.getElementById('search-input').value.trim().toLowerCase();
             let catSections = document.querySelectorAll('.category-section-block');
-
-            if (query !== '') {
-                document.querySelectorAll('.cat-popup-item').forEach(el => el.classList.remove('active'));
-            }
 
             catSections.forEach(section => {
                 let cards = section.querySelectorAll('.product-card');
@@ -872,7 +890,6 @@ if (file_exists($file)) {
             if (!phone) return alert('رجاءً أدخل رقم الهاتف!');
             if (!address) return alert('رجاءً أدخل العنوان!');
 
-            localStorage.setItem('mazaj_last_order', JSON.stringify(cart));
             let subtotal = 0;
             for (let item in cart) subtotal += cart[item].price * cart[item].qty;
 
