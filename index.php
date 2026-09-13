@@ -77,7 +77,7 @@ if (file_exists($file)) {
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
         }
 
-        /* شريط الأդوات العلوي المنظم لمنع التداخل */
+        /* شريط الأدوات العلوي المنظم لمنع التداخل */
         .header-toolbar {
             display: flex;
             justify-content: space-between;
@@ -551,13 +551,10 @@ if (file_exists($file)) {
                 </button>
             </div>
 
-            <!-- مجموعة الأزرار اليمنى: الموسيقى، التخطي، والوضع الليلي -->
+            <!-- مجموعة الأزرار اليمنى: زر الموسيقى الموحد وزر الوضع الليلي -->
             <div class="header-group">
                 <button class="control-btn" id="music-toggle-btn" onclick="toggleMusic()" title="تشغيل / إيقاف الموسيقى">
                     <span id="music-icon">🎵</span> <span id="music-text">الموسيقى</span>
-                </button>
-                <button class="control-btn" onclick="nextSong()" title="أغنية أخرى">
-                    <span>⏭️</span>
                 </button>
                 <button class="control-btn" id="theme-toggle" onclick="toggleTheme()">
                     <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
@@ -815,24 +812,6 @@ if (file_exists($file)) {
                     console.log('Autoplay restricted by browser.');
                 });
             }
-        }
-
-        function nextSong() {
-            playSound('click');
-            currentSongIndex = (currentSongIndex + 1) % playlist.length;
-            let bgMusic = document.getElementById('bg-music');
-            bgMusic.src = playlist[currentSongIndex];
-            bgMusic.load();
-            
-            bgMusic.play().then(() => {
-                musicPlaying = true;
-                document.getElementById('music-icon').innerText = '⏸️';
-                document.getElementById('music-text').innerText = 'إيقاف';
-            }).catch(e => {
-                musicPlaying = false;
-                document.getElementById('music-icon').innerText = '🎵';
-                document.getElementById('music-text').innerText = 'الموسيقى';
-            });
         }
 
         window.addEventListener('DOMContentLoaded', () => {
