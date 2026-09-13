@@ -497,6 +497,24 @@ if (file_exists($file)) {
         }
         .modal-send-btn:hover { background: #16a34a; }
 
+        .modal-developer-credit {
+            text-align: center;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.72rem;
+        }
+        .modal-developer-credit span {
+            color: var(--text-main);
+            font-weight: 800;
+        }
+        .modal-developer-credit a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 800;
+        }
+
         .order-tracker-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(11, 15, 25, 0.96);
@@ -670,6 +688,11 @@ if (file_exists($file)) {
                     <input type="text" id="cust-address" placeholder="عنوان التوصيل" oninput="saveCustomerData()">
                 </div>
                 <button class="modal-send-btn" onclick="sendOrder()"><span>إرسال الطلب عبر الواتساب</span> 💬</button>
+                
+                <div class="modal-developer-credit">
+                    <p>تصميم وبرمجة: <span>علي حسين ناصر الدين</span></p>
+                    <p style="margin-top:2px;">للتواصل: <a href="https://wa.me/96181058043" target="_blank">96181058043+</a></p>
+                </div>
             </div>
         </div>
     </div>
