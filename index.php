@@ -144,7 +144,7 @@ if (file_exists($file)) {
             font-size: 0.9rem;
         }
 
-        /* شريط التحكم بطرق عرض الأقسام المتعددة للزبون */
+        /* شريط التحكم بطرق عرض الأقسام الثلاثة للزبون */
         .view-mode-selector {
             display: flex;
             background: var(--bg-card);
@@ -158,7 +158,7 @@ if (file_exists($file)) {
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 5px 8px;
+            padding: 5px 10px;
             font-size: 0.65rem;
             font-weight: 800;
             border-radius: 7px;
@@ -182,6 +182,27 @@ if (file_exists($file)) {
             cursor: pointer;
             white-space: nowrap;
         }
+
+        /* شريط تحذير/تنبيه الزبون للأقسام (Category Notice Alert) */
+        .category-alert-banner {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(139, 92, 246, 0.15));
+            border: 1px solid var(--border-hover);
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: pulseAlert 2s infinite;
+        }
+        @keyframes pulseAlert {
+            0% { border-color: rgba(249, 115, 22, 0.4); }
+            50% { border-color: rgba(249, 115, 22, 0.8); }
+            100% { border-color: rgba(249, 115, 22, 0.4); }
+        }
+        .cat-alert-icon { font-size: 1rem; }
+        .cat-alert-text h4 { color: var(--accent); font-size: 0.75rem; font-weight: 900; }
+        .cat-alert-text p { color: var(--text-muted); font-size: 0.65rem; }
 
         .reorder-banner {
             background: rgba(34, 197, 94, 0.15);
@@ -207,7 +228,7 @@ if (file_exists($file)) {
             cursor: pointer;
         }
 
-        /* 1. أزرار الفلتر الأفقي السريع (وضع الـ Tabs) */
+        /* أزرار الفلتر الأفقي السريع (وضع الـ Tabs) */
         .filter-tabs-bar {
             display: flex;
             gap: 6px;
@@ -232,43 +253,6 @@ if (file_exists($file)) {
             background: var(--accent);
             border-color: var(--accent);
             color: #fff;
-        }
-
-        /* 2. عرض شبكي للأقسام (Category Grid Cards) بأول الصفحة */
-        .category-grid-selector {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 8px;
-            margin-bottom: 12px;
-            display: none;
-        }
-        .cat-grid-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .cat-grid-card:hover { border-color: var(--accent); background: rgba(249,115,22,0.05); }
-        .cat-grid-card h3 { font-size: 0.8rem; font-weight: 900; color: var(--text-main); margin-bottom: 2px; }
-        .cat-grid-card span { font-size: 0.65rem; color: var(--text-muted); }
-
-        /* زر الرجوع لكل الأقسام عند اختيار قسم محدد في وضع الشبكة أو التبويبات */
-        .back-to-cats-btn {
-            background: var(--chip-bg);
-            border: 1px solid var(--border-hover);
-            color: var(--text-main);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            cursor: pointer;
-            margin-bottom: 10px;
-            display: none;
-            align-items: center;
-            gap: 5px;
         }
 
         /* نظام الأقسام (أكورديون) الأساسي */
@@ -556,6 +540,15 @@ if (file_exists($file)) {
 
     <div class="container">
         
+        <!-- شريط تنبيه الزبون للأقسام (Category Notice Alert) -->
+        <div class="category-alert-banner">
+            <div class="cat-alert-icon">⚠️</div>
+            <div class="cat-alert-text">
+                <h4>تنبيه تصفح الأقسام الذكي</h4>
+                <p>يمكنك التبديل بين أنماط الأقسام (أكورديون، فلاتر، تبويبات) أو استخدام شريط البحث لتسهيل طلبك فوراً!</p>
+            </div>
+        </div>
+
         <div class="reorder-banner" id="reorder-banner">
             <div class="reorder-info">
                 <h4>🔄 طلبت مسبقاً؟</h4>
@@ -572,7 +565,6 @@ if (file_exists($file)) {
             <div class="view-mode-selector">
                 <button class="view-mode-btn active" id="mode-accordion" onclick="setViewMode('accordion')">أقسام 📂</button>
                 <button class="view-mode-btn" id="mode-tabs" onclick="setViewMode('tabs')">فلاتر ⚡</button>
-                <button class="view-mode-btn" id="mode-grid" onclick="setViewMode('grid')">بطاقات 🗂️</button>
                 <button class="view-mode-btn" id="mode-single" onclick="setViewMode('single')">تبويبات 🎯</button>
             </div>
             <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
@@ -590,29 +582,6 @@ if (file_exists($file)) {
             }
             ?>
         </div>
-
-        <!-- زر الرجوع للقائمة الرئيسية في وضع الشبكة والتبويبات -->
-        <button class="back-to-cats-btn" id="back-to-cats-btn" onclick="resetToAllCategories()">
-            ⬅️ العودة لكل الأقسام
-        </button>
-
-        <!-- شبكة بطاقات الأقسام (تظهر في وضع الـ Grid) -->
-        <?php
-        if (!empty($products)) {
-            $categories = array_unique(array_column($products, 'category'));
-            echo '<div class="category-grid-selector" id="category-grid-selector">';
-            foreach ($categories as $cat) {
-                $cat_products = array_filter($products, function($p) use ($cat) {
-                    return isset($p['category']) && $p['category'] === $cat;
-                });
-                echo '<div class="cat-grid-card" onclick="selectGridCategory(\'' . htmlspecialchars($cat, ENT_QUOTES) . '\')">';
-                echo '  <h3>🌯 ' . htmlspecialchars($cat) . '</h3>';
-                echo '  <span>' . count($cat_products) . ' أصناف</span>';
-                echo '</div>';
-            }
-            echo '</div>';
-        }
-        ?>
 
         <?php
         if (empty($products)) {
@@ -754,18 +723,12 @@ if (file_exists($file)) {
             currentViewMode = mode;
             document.getElementById('mode-accordion').classList.toggle('active', mode === 'accordion');
             document.getElementById('mode-tabs').classList.toggle('active', mode === 'tabs');
-            document.getElementById('mode-grid').classList.toggle('active', mode === 'grid');
             document.getElementById('mode-single').classList.toggle('active', mode === 'single');
 
             let filterBar = document.getElementById('filter-tabs-bar');
-            let gridSelector = document.getElementById('category-grid-selector');
-            let backBtn = document.getElementById('back-to-cats-btn');
             let catCards = document.querySelectorAll('.category-accordion-card');
 
-            // إخفاء الكل افتراضياً وتفعيل المطلوب
             filterBar.style.display = 'none';
-            gridSelector.style.display = 'none';
-            backBtn.style.display = 'none';
 
             if (mode === 'accordion') {
                 catCards.forEach((card, index) => {
@@ -779,15 +742,14 @@ if (file_exists($file)) {
                     card.style.display = 'block';
                     card.classList.add('open');
                 });
-            } else if (mode === 'grid') {
-                gridSelector.style.display = 'grid';
-                catCards.forEach(card => {
-                    card.style.display = 'none';
-                });
             } else if (mode === 'single') {
-                // وضع التبويبات الكاملة: اعرض أول قسم فقط وافتح الباقي كفلاتر علوية أو أظهرها تباعاً
                 filterBar.style.display = 'flex';
-                selectGridCategory(catCards[0].getAttribute('data-category-name'));
+                // تفعيل أول قسم وإخفاء الباقي تلقائياً بوضع التبويبات الفردية
+                if(catCards.length > 0) {
+                    let firstCatName = catCards[0].getAttribute('data-category-name');
+                    let firstChip = document.querySelector('.filter-tab-chip');
+                    filterByTab(firstCatName, firstChip);
+                }
             }
         }
 
@@ -805,32 +767,6 @@ if (file_exists($file)) {
                     catCard.style.display = 'none';
                 }
             });
-        }
-
-        function selectGridCategory(categoryName) {
-            let catCards = document.querySelectorAll('.category-accordion-card');
-            document.getElementById('category-grid-selector').style.display = 'none';
-            document.getElementById('back-to-cats-btn').style.display = 'inline-flex';
-
-            catCards.forEach(catCard => {
-                let catName = catCard.getAttribute('data-category-name');
-                if (catName === categoryName) {
-                    catCard.style.display = 'block';
-                    catCard.classList.add('open');
-                } else {
-                    catCard.style.display = 'none';
-                }
-            });
-        }
-
-        function resetToAllCategories() {
-            if (currentViewMode === 'grid') {
-                document.getElementById('category-grid-selector').style.display = 'grid';
-                document.getElementById('back-to-cats-btn').style.display = 'none';
-                document.querySelectorAll('.category-accordion-card').forEach(card => card.style.display = 'none');
-            } else if (currentViewMode === 'single') {
-                setViewMode('single');
-            }
         }
 
         function toggleCategory(headerElement) {
