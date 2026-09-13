@@ -538,21 +538,15 @@ if (file_exists($file)) {
 </head>
 <body>
 
-    <!-- عنصر الصوت الموجه لملف uploads/music.mp3 -->
-    <audio id="bg-music" src="uploads/music.mp3" preload="auto" loop></audio>
-
     <header>
         <div class="header-toolbar">
             <div class="header-group">
-                <button class="control-btn" id="sound-toggle-btn" onclick="toggleSound()" title="تشغيل / إيقاف أصوات الإضافات">
+                <button class="control-btn" id="sound-toggle-btn" onclick="toggleSound()" title="تشغيل / إيقاف أصوات الأزرار">
                     <span id="sound-icon">🔊</span> <span>الأصوات</span>
                 </button>
             </div>
 
             <div class="header-group">
-                <button class="control-btn" id="music-toggle-btn" onclick="toggleMusic()" title="تشغيل / إيقاف الموسيقى">
-                    <span id="music-icon">🎵</span> <span id="music-text">الموسيقى</span>
-                </button>
                 <button class="control-btn" id="theme-toggle" onclick="toggleTheme()">
                     <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
                 </button>
@@ -723,7 +717,6 @@ if (file_exists($file)) {
     <script>
         let cart = {};
         let soundEnabled = localStorage.getItem('mazaj_sound') !== 'off';
-        let musicPlaying = false;
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -778,42 +771,6 @@ if (file_exists($file)) {
         function updateSoundUI() {
             let soundIcon = document.getElementById('sound-icon');
             soundIcon.innerText = soundEnabled ? '🔊' : '🔇';
-        }
-
-        function toggleMusic() {
-            let bgMusic = document.getElementById('bg-music');
-            let musicIcon = document.getElementById('music-icon');
-            let musicText = document.getElementById('music-text');
-
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
-            if (musicPlaying) {
-                bgMusic.pause();
-                musicPlaying = false;
-                musicIcon.innerText = '🎵';
-                musicText.innerText = 'الموسيقى';
-            } else {
-                bgMusic.currentTime = 0;
-                bgMusic.play().then(() => {
-                    musicPlaying = true;
-                    musicIcon.innerText = '⏸️';
-                    musicText.innerText = 'إيقاف';
-                    playSound('click');
-                }).catch(e => {
-                    console.log('فشل تشغيل الموسيقى:', e);
-                    let fallbackAudio = new Audio('uploads/music.mp3');
-                    fallbackAudio.loop = true;
-                    fallbackAudio.play().then(() => {
-                        musicPlaying = true;
-                        musicIcon.innerText = '⏸️';
-                        musicText.innerText = 'إيقاف';
-                    }).catch(err => {
-                        alert('متصفحك يحظر التشغيل التلقائي للموسيقى. يرجى النقر مرة أخرى على الزر.');
-                    });
-                });
-            }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
