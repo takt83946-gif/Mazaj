@@ -146,7 +146,6 @@ if (file_exists($file)) {
             font-size: 1rem;
         }
 
-        /* زر تبديل نمط العرض (أقسام / شبكة موحدة) */
         .view-switch-selector {
             display: flex;
             background: var(--bg-card);
@@ -210,7 +209,6 @@ if (file_exists($file)) {
             cursor: pointer;
         }
 
-        /* حاوية الأقسام (الوضع الأول) */
         .categories-container {
             display: flex;
             flex-direction: column;
@@ -278,7 +276,6 @@ if (file_exists($file)) {
             transition: max-height 0.6s ease-in-out;
         }
 
-        /* حاوية الشبكة الموحدة (الوضع الثاني) */
         .unified-grid-container {
             display: none;
             margin-top: 12px;
@@ -538,7 +535,6 @@ if (file_exists($file)) {
         if (empty($products)) {
             echo '<p style="text-align:center; padding:40px; color:var(--text-muted);">لا توجد منتجات مضافة حالياً.</p>';
         } else {
-            // الوضع الأول: الأقسام (الأكورديون)
             echo '<div class="categories-container" id="categories-wrapper">';
             $categories = array_unique(array_column($products, 'category'));
             $index_cat = 0;
@@ -589,7 +585,6 @@ if (file_exists($file)) {
             }
             echo '</div>';
 
-            // الوضع الثاني: شبكة موحدة لجميع المنتجات دفعة واحدة (Grid View)
             echo '<div class="unified-grid-container" id="unified-grid-wrapper">';
             foreach ($products as $p) {
                 $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
@@ -615,7 +610,7 @@ if (file_exists($file)) {
         }
         ?>
 
-        <div class="checkout-section">
+        <div class="checkout-section" id="checkout-section-box">
             <h3>📍 بيانات الاستلام والتوصيل</h3>
             <div class="input-group">
                 <input type="text" id="cust-name" placeholder="اسمك الكريم" oninput="saveCustomerData()">
@@ -666,6 +661,34 @@ if (file_exists($file)) {
 
     <script>
         let cart = {};
+        let audioCtx = null;
+
+        // مولد صوت النقرة الاحترافي (بدون ملفات خارجية)
+        function playClickSound() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(580, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.05);
+
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } catch(e) {}
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
@@ -680,6 +703,7 @@ if (file_exists($file)) {
         });
 
         function toggleTheme() {
+            playClickSound();
             let currentTheme = document.documentElement.getAttribute('data-theme');
             let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', newTheme);
@@ -695,6 +719,7 @@ if (file_exists($file)) {
         }
 
         function switchViewMode(mode) {
+            playClickSound();
             document.getElementById('btn-mode-accordion').classList.toggle('active', mode === 'accordion');
             document.getElementById('btn-mode-grid').classList.toggle('active', mode === 'grid');
 
@@ -711,6 +736,7 @@ if (file_exists($file)) {
         }
 
         function toggleCategory(headerElement) {
+            playClickSound();
             let card = headerElement.parentElement;
             card.classList.toggle('open');
         }
@@ -722,6 +748,7 @@ if (file_exists($file)) {
         }
 
         function suggestRandomProduct() {
+            playClickSound();
             let cards = document.querySelectorAll('.product-card, .product-card-grid');
             let visibleCards = Array.from(cards).filter(c => c.style.display !== 'none');
             if (visibleCards.length === 0) return alert('لا توجد منتجات متاحة!');
@@ -755,6 +782,7 @@ if (file_exists($file)) {
         }
 
         function repeatLastOrder() {
+            playClickSound();
             let lastOrder = localStorage.getItem('mazaj_last_order');
             if (!lastOrder) return;
             try {
@@ -768,7 +796,6 @@ if (file_exists($file)) {
         function filterProducts() {
             let query = document.getElementById('search-input').value.trim().toLowerCase();
             
-            // تصفية الأقسام
             let catCards = document.querySelectorAll('.category-accordion-card');
             catCards.forEach(catCard => {
                 let cards = catCard.querySelectorAll('.product-card');
@@ -788,7 +815,6 @@ if (file_exists($file)) {
                 }
             });
 
-            // تصفية الشبكة الموحدة
             let gridCards = document.querySelectorAll('.product-card-grid');
             gridCards.forEach(card => {
                 let name = card.getAttribute('data-name');
@@ -799,7 +825,10 @@ if (file_exists($file)) {
         }
 
         function changeQty(name, price, change, hashId) {
+            playClickSound();
             price = parseFloat(price);
+            let wasEmpty = Object.keys(cart).length === 0;
+
             if (!cart[name]) {
                 if (change > 0) cart[name] = { price: price, qty: 1, hashId: hashId };
             } else {
@@ -808,14 +837,22 @@ if (file_exists($file)) {
             }
             updateUI(name, hashId);
             updateCartBar();
+
+            // النزول التلقائي لخانة التعبئة عند إضافة أول منتج
+            let nowEmpty = Object.keys(cart).length === 0;
+            if (wasEmpty && !nowEmpty) {
+                setTimeout(() => {
+                    document.getElementById('checkout-section-box').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 200);
+            }
         }
 
         function clearCart() {
+            playClickSound();
             if (confirm('تفريغ السلة؟')) { cart = {}; location.reload(); }
         }
 
         function updateUI(name, hashId) {
-            // تحديث العرض في كلا المكانين (الأقسام والشبكة الموحدة إن وجدتا)
             let containers = [
                 document.getElementById('btn-container-' + hashId),
                 document.getElementById('grid-btn-container-' + hashId)
@@ -875,9 +912,13 @@ if (file_exists($file)) {
             else { cartBar.classList.remove('show'); document.getElementById('cart-modal').classList.remove('open'); }
         }
 
-        function toggleCartModal() { document.getElementById('cart-modal').classList.toggle('open'); }
+        function toggleCartModal() { 
+            playClickSound();
+            document.getElementById('cart-modal').classList.toggle('open'); 
+        }
 
         function sendOrder() {
+            playClickSound();
             let totalCount = 0;
             for (let item in cart) totalCount += cart[item].qty;
             if (totalCount === 0) return alert('السلة فارغة!');
