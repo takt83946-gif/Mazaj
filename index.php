@@ -384,6 +384,17 @@ if (file_exists($file)) {
         }
         .qty-num { font-weight: 900; font-size: 0.75rem; color: var(--text-main); min-width: 12px; text-align: center; }
 
+        /* Fly to Cart Animation Item */
+        .flying-img {
+            position: fixed;
+            z-index: 9999;
+            object-fit: cover;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 10px 20px rgba(249, 115, 22, 0.4);
+            transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
         .developer-footer {
             text-align: center;
             margin-top: 24px;
@@ -614,13 +625,13 @@ if (file_exists($file)) {
                     
                     echo '<div class="card product-card" data-category="' . htmlspecialchars($cat) . '" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
                     echo '  <div class="card-img-container">';
-                    echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
+                    echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" id="img-' . $hash_id . '" onerror="this.src=\'uploads/default.jpg\'">';
                     echo '  </div>';
                     echo '  <div class="card-body">';
                     echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
                     echo '      <div class="card-footer">';
                     echo '          <span class="price" id="price-' . $hash_id . '">$' . number_format($item_price, 2) . '</span>';
-                    echo '          <div id="btn-container-' . $hash_id . '"><button class="action-btn" onclick="changeQty(\'' . $safe_name . '\', ' . $item_price . ', 1, \'' . $hash_id . '\')">إضافة +</button></div>';
+                    echo '          <div id="btn-container-' . $hash_id . '"><button class="action-btn" onclick="addToCartFly(event, \'' . $safe_name . '\', ' . $item_price . ', \'' . $hash_id . '\')">إضافة +</button></div>';
                     echo '      </div>';
                     echo '  </div>';
                     echo '</div>';
@@ -644,13 +655,13 @@ if (file_exists($file)) {
                 
                 echo '<div class="card product-card-grid" data-category="' . htmlspecialchars($cat_name) . '" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
                 echo '  <div class="card-img-container">';
-                echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
+                echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" id="grid-img-' . $hash_id . '" onerror="this.src=\'uploads/default.jpg\'">';
                 echo '  </div>';
                 echo '  <div class="card-body">';
                 echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
                 echo '      <div class="card-footer">';
                 echo '          <span class="price" id="grid-price-' . $hash_id . '">$' . number_format($item_price, 2) . '</span>';
-                echo '          <div id="grid-btn-container-' . $hash_id . '"><button class="action-btn" onclick="changeQty(\'' . $safe_name . '\', ' . $item_price . ', 1, \'' . $hash_id . '\')">إضافة +</button></div>';
+                echo '          <div id="grid-btn-container-' . $hash_id . '"><button class="action-btn" onclick="addToCartFly(event, \'' . $safe_name . '\', ' . $item_price . ', \'' . $hash_id . '\')">إضافة +</button></div>';
                 echo '      </div>';
                 echo '  </div>';
                 echo '</div>';
@@ -667,7 +678,7 @@ if (file_exists($file)) {
 
     <div class="cart-bar" id="cart-bar">
         <div class="cart-info" onclick="toggleCartModal()">
-            <div class="cart-icon-box">🛒</div>
+            <div class="cart-icon-box" id="cart-icon-target">🛒</div>
             <div class="cart-details-text">
                 <span class="cart-title">إجمالي السلة (<span id="cart-count">0</span> أصناف)</span>
                 <span class="cart-total-val">$<span id="total-price">0.00</span></span>
@@ -908,6 +919,38 @@ if (file_exists($file)) {
             });
         }
 
+        // Fly to Cart Animation Function
+        function addToCartFly(event, name, price, hashId) {
+            let imgElement = document.getElementById('img-' + hashId) || document.getElementById('grid-img-' + hashId);
+            if (imgElement) {
+                let rect = imgElement.getBoundingClientRect();
+                let cartTarget = document.getElementById('cart-icon-target').getBoundingClientRect();
+
+                let flyer = document.createElement('img');
+                flyer.src = imgElement.src;
+                flyer.className = 'flying-img';
+                flyer.style.left = rect.left + 'px';
+                flyer.style.top = rect.top + 'px';
+                flyer.style.width = rect.width + 'px';
+                flyer.style.height = rect.height + 'px';
+                document.body.appendChild(flyer);
+
+                setTimeout(() => {
+                    flyer.style.left = (cartTarget.left + 10) + 'px';
+                    flyer.style.top = (cartTarget.top + 10) + 'px';
+                    flyer.style.width = '25px';
+                    flyer.style.height = '25px';
+                    flyer.style.opacity = '0.5';
+                }, 20);
+
+                setTimeout(() => {
+                    flyer.remove();
+                }, 720);
+            }
+
+            changeQty(name, price, 1, hashId);
+        }
+
         function changeQty(name, price, change, hashId) {
             price = parseFloat(price);
             if (!cart[name]) {
@@ -960,7 +1003,7 @@ if (file_exists($file)) {
                 } else {
                     let basePrice = parseFloat(priceElement.getAttribute('data-base-price'));
                     priceElement.innerText = '$' + basePrice.toFixed(2);
-                    container.innerHTML = `<button class="action-btn" onclick="changeQty('${name.replace(/'/g, "\\'")}', ${basePrice}, 1, '${hashId}')">إضافة +</button>`;
+                    container.innerHTML = `<button class="action-btn" onclick="addToCartFly(event, '${name.replace(/'/g, "\\'")}', ${basePrice}, '${hashId}')">إضافة +</button>`;
                 }
             });
         }
