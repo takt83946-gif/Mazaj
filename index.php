@@ -77,12 +77,17 @@ if (file_exists($file)) {
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .header-controls {
+        .header-control-right {
             position: absolute;
             top: 18px;
             right: 18px;
-            display: flex;
-            gap: 8px;
+            z-index: 10;
+        }
+
+        .header-control-left {
+            position: absolute;
+            top: 18px;
+            left: 18px;
             z-index: 10;
         }
 
@@ -506,10 +511,12 @@ if (file_exists($file)) {
 <body>
 
     <header>
-        <div class="header-controls">
+        <div class="header-control-left">
             <button class="control-btn" id="sound-toggle-btn" onclick="toggleSound()">
                 <span id="sound-icon">🔊</span>
             </button>
+        </div>
+        <div class="header-control-right">
             <button class="control-btn" id="theme-toggle" onclick="toggleTheme()">
                 <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
             </button>
