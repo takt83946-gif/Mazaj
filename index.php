@@ -144,6 +144,7 @@ if (file_exists($file)) {
             font-size: 0.9rem;
         }
 
+        /* شريط التحكم بطرق عرض الأقسام الثلاثة للزبون */
         .view-mode-selector {
             display: flex;
             background: var(--bg-card);
@@ -182,55 +183,79 @@ if (file_exists($file)) {
             white-space: nowrap;
         }
 
-        /* شريط تنبيه الزبون للأقسام (فوق الأقسام تماماً، قابل للإخفاء وبألوان أوضح) */
-        .category-alert-banner {
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(139, 92, 246, 0.2));
+        /* نافذة التنبيه المنبثقة للزبون (Popup Alert Modal) */
+        .category-alert-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            animation: fadeInOverlay 0.3s ease;
+        }
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .category-alert-box {
+            background: var(--bg-card);
             border: 2px solid var(--accent);
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin: 12px 0 10px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            box-shadow: 0 4px 20px rgba(249, 115, 22, 0.15);
-            transition: all 0.4s ease;
+            width: 100%;
+            max-width: 360px;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+            position: relative;
+            animation: scalePopup 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .category-alert-banner.fade-out {
-            opacity: 0;
-            transform: translateY(-10px);
-            max-height: 0;
-            padding-top: 0;
-            padding-bottom: 0;
-            margin: 0;
-            border-width: 0;
-            overflow: hidden;
+        @keyframes scalePopup {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
-        .cat-alert-content {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .cat-alert-icon { font-size: 1.5rem; animation: bounceIcon 1.5s infinite; }
-        @keyframes bounceIcon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
-        }
-        .cat-alert-text h4 { color: #fb923c; font-size: 0.85rem; font-weight: 900; margin-bottom: 3px; }
-        .cat-alert-text p { color: var(--text-main); font-size: 0.72rem; font-weight: 600; line-height: 1.4; }
-        .cat-alert-dismiss {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            font-size: 1rem;
+        .category-alert-close {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
             cursor: pointer;
-            width: 26px; height: 26px;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-            transition: 0.2s;
         }
-        .cat-alert-dismiss:hover { background: var(--accent); color: #fff; }
+        .category-alert-close:hover { color: var(--accent); }
+        .cat-alert-icon-large {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+        .category-alert-box h3 {
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+        .category-alert-box p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .cat-alert-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 9px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .cat-alert-btn:hover { background: var(--accent-hover); }
 
         .reorder-banner {
             background: rgba(34, 197, 94, 0.15);
@@ -256,6 +281,7 @@ if (file_exists($file)) {
             cursor: pointer;
         }
 
+        /* أزرار الفلتر الأفقي السريع (وضع الـ Tabs) */
         .filter-tabs-bar {
             display: flex;
             gap: 6px;
@@ -282,6 +308,7 @@ if (file_exists($file)) {
             color: #fff;
         }
 
+        /* نظام الأقسام (أكورديون) الأساسي */
         .categories-container {
             display: flex;
             flex-direction: column;
@@ -555,6 +582,17 @@ if (file_exists($file)) {
 </head>
 <body>
 
+    <!-- نافذة تنبيه الزبون المنبثقة (Popup Alert Modal) -->
+    <div class="category-alert-overlay" id="category-alert-modal">
+        <div class="category-alert-box">
+            <button class="category-alert-close" onclick="closeAlertModal()">&times;</button>
+            <div class="cat-alert-icon-large">⚠️</div>
+            <h3>تنبيه تصفح الأقسام الذكي</h3>
+            <p>يمكنك التبديل بين أنماط الأقسام (أكورديون، فلاتر، تبويبات) أو استخدام شريط البحث لتسهيل طلبك فوراً بكل راحة!</p>
+            <button class="cat-alert-btn" onclick="closeAlertModal()">حسناً، فهمت 🌯</button>
+        </div>
+    </div>
+
     <header>
         <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()">
             <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
@@ -587,6 +625,7 @@ if (file_exists($file)) {
             <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
         </div>
 
+        <!-- أزرار الفلتر الأفقي السريع -->
         <div class="filter-tabs-bar" id="filter-tabs-bar">
             <div class="filter-tab-chip active" onclick="filterByTab('all', this)">الكل 🔥</div>
             <?php
@@ -597,18 +636,6 @@ if (file_exists($file)) {
                 }
             }
             ?>
-        </div>
-
-        <!-- شريط التنبيه الواضح (يظهر فوق الأقسام مباشرة ويختفي بانيميشن سلس) -->
-        <div class="category-alert-banner" id="category-alert-banner">
-            <div class="cat-alert-content">
-                <div class="cat-alert-icon">💡</div>
-                <div class="cat-alert-text">
-                    <h4>دليل التصفح السريع للأقسام</h4>
-                    <p>بإمكانك التحكم بطريقة عرض الأقسام من الأعلى (أكورديون، فلاتر، أو تبويبات منفصلة) لتسهيل اختيار وجبتك!</p>
-                </div>
-            </div>
-            <button class="cat-alert-dismiss" onclick="dismissCategoryAlert()" title="إخفاء">&times;</button>
         </div>
 
         <?php
@@ -730,19 +757,12 @@ if (file_exists($file)) {
             if(localStorage.getItem('mazaj_address')) document.getElementById('cust-address').value = localStorage.getItem('mazaj_address');
             
             checkLastOrderBanner();
-
-            // إخفاء شريط التنبيه تلقائياً بعد 8 ثوانٍ إن لم يغلقه الزبون بنفسه
-            setTimeout(() => {
-                let banner = document.getElementById('category-alert-banner');
-                if (banner && !banner.classList.contains('fade-out')) {
-                    banner.classList.add('fade-out');
-                }
-            }, 8000);
         });
 
-        function dismissCategoryAlert() {
-            let banner = document.getElementById('category-alert-banner');
-            banner.classList.add('fade-out');
+        function closeAlertModal() {
+            let modal = document.getElementById('category-alert-modal');
+            modal.style.opacity = '0';
+            setTimeout(() => modal.style.display = 'none', 300);
         }
 
         function toggleTheme() {
