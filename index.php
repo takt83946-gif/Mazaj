@@ -26,7 +26,7 @@ if (file_exists($file)) {
             --accent-hover: #ea580c;
             --bg-body: #0b0f19;
             --bg-header: rgba(17, 24, 39, 0.95);
-            --bg-card: rgba(17, 24, 39, 0.75);
+            --bg-card: rgba(17, 24, 39, 0.85);
             --border-color: rgba(255, 255, 255, 0.08);
             --border-hover: rgba(249, 115, 22, 0.4);
             --text-main: #f3f4f6;
@@ -71,7 +71,7 @@ if (file_exists($file)) {
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             text-align: center; 
-            padding: 24px 20px 15px 20px; 
+            padding: 20px 20px 12px 20px; 
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
@@ -79,218 +79,200 @@ if (file_exists($file)) {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         }
 
-        /* زر تبديل الثيم */
         .theme-toggle-btn {
             position: absolute;
-            top: 18px;
-            left: 20px;
+            top: 15px;
+            left: 15px;
             background: var(--chip-bg);
             border: 1px solid var(--border-hover);
             color: var(--text-main);
-            padding: 6px 12px;
+            padding: 5px 10px;
             border-radius: 30px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 800;
             z-index: 10;
-            transition: all 0.25s ease;
-        }
-        .theme-toggle-btn:hover { 
-            transform: scale(1.05); 
-            background: var(--accent); 
-            color: #fff;
         }
 
         .logo-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             background: rgba(249, 115, 22, 0.1);
             color: #fb923c;
-            padding: 3px 12px;
+            padding: 2px 10px;
             border-radius: 30px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             border: 1px solid rgba(249, 115, 22, 0.2);
         }
 
-        header h1 { font-size: 1.6rem; color: var(--text-main); margin-bottom: 2px; font-weight: 900; }
+        header h1 { font-size: 1.4rem; color: var(--text-main); margin-bottom: 2px; font-weight: 900; }
         header h1 span { color: var(--accent); }
-        header p { color: var(--text-muted); font-size: 0.75rem; }
+        header p { color: var(--text-muted); font-size: 0.7rem; }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+        .container { max-width: 800px; margin: 0 auto; padding: 0 12px; }
 
         .top-tools {
             display: flex;
-            gap: 10px;
-            margin: 15px 0 10px 0;
+            gap: 8px;
+            margin: 12px 0 8px 0;
             align-items: center;
         }
-        .search-box-container {
-            position: relative;
-            flex-grow: 1;
-        }
+        .search-box-container { position: relative; flex-grow: 1; }
         .search-input {
             width: 100%;
-            padding: 10px 38px 10px 14px;
+            padding: 8px 34px 8px 12px;
             background: var(--bg-card);
-            backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 10px;
             color: var(--text-main);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             outline: none;
-            transition: all 0.2s ease;
         }
         .search-input::placeholder { color: var(--text-muted); }
-        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(249, 115, 22, 0.2); }
+        .search-input:focus { border-color: var(--accent); }
         .search-icon {
             position: absolute;
-            right: 12px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-size: 1rem;
-            pointer-events: none;
+            font-size: 0.9rem;
         }
 
         .mood-btn {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             color: #fff;
             border: none;
-            padding: 0 14px;
-            height: 40px;
-            border-radius: 12px;
+            padding: 0 12px;
+            height: 36px;
+            border-radius: 10px;
             font-weight: 800;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             cursor: pointer;
             white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-            transition: 0.2s;
         }
-        .mood-btn:hover { transform: scale(1.03); }
 
         .reorder-banner {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(20, 83, 45, 0.3));
+            background: rgba(34, 197, 94, 0.15);
             border: 1px solid #22c55e;
-            padding: 10px 14px;
-            border-radius: 12px;
-            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             display: none;
         }
-        .reorder-info h4 { color: #22c55e; font-size: 0.85rem; font-weight: 800; margin-bottom: 1px; }
-        .reorder-info p { color: var(--text-muted); font-size: 0.7rem; }
+        .reorder-info h4 { color: #22c55e; font-size: 0.8rem; font-weight: 800; }
+        .reorder-info p { color: var(--text-muted); font-size: 0.65rem; }
         .reorder-action-btn {
             background: #22c55e;
             color: #fff;
             border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 5px 10px;
+            border-radius: 6px;
             font-weight: 800;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             cursor: pointer;
         }
 
-        .categories-nav {
+        /* نظام الأقسام الجديد (Categories Accordion Cards) */
+        .categories-container {
             display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 4px 0 6px 0;
-            scrollbar-width: none;
-            direction: rtl;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
         }
-        .categories-nav::-webkit-scrollbar { display: none; }
-        
-        .cat-chip {
-            background: var(--chip-bg);
-            backdrop-filter: blur(10px);
+
+        .category-accordion-card {
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 6px 12px;
-            border-radius: 14px;
-            white-space: nowrap;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .category-header {
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 700;
-            transition: all 0.25s ease;
+            background: var(--bg-card);
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .category-header:hover { background: rgba(249, 115, 22, 0.05); }
+
+        .category-title-area {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
         }
-        .cat-chip .cat-count {
-            background: rgba(0, 0, 0, 0.08);
+        .category-title-area h2 {
+            font-size: 0.95rem;
+            font-weight: 900;
             color: var(--text-main);
-            padding: 1px 5px;
-            border-radius: 6px;
-            font-size: 0.65rem;
-            font-weight: 800;
         }
-        .cat-chip.active, .cat-chip:hover {
+        .category-badge-count {
             background: var(--accent);
             color: #fff;
-            border-color: var(--accent);
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
-        }
-        .cat-chip.active .cat-count { background: rgba(255,255,255,0.2); color: #fff; }
-
-        .section-title { 
-            color: var(--text-main); 
-            font-size: 1.05rem; 
-            margin: 20px 0 10px 0; 
+            font-size: 0.65rem;
             font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            padding: 1px 6px;
+            border-radius: 6px;
         }
-        .section-title::before {
-            content: '';
-            width: 4px; height: 14px;
-            background: var(--accent);
-            border-radius: 4px;
+
+        .category-arrow {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+        .category-accordion-card.open .category-arrow {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+
+        .category-content-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+            padding: 0 12px;
+            background: rgba(0,0,0,0.02);
+        }
+        .category-accordion-card.open .category-content-body {
+            max-height: 2000px; /* سعة كافية لفتح المنتجات */
+            padding: 10px 12px 14px 12px;
+            transition: max-height 0.6s ease-in-out;
         }
 
         .menu-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
-            gap: 10px; 
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+            gap: 8px; 
         }
         
         .card { 
-            background: var(--bg-card); 
-            backdrop-filter: blur(16px);
+            background: var(--bg-body); 
             border: 1px solid var(--border-color); 
-            border-radius: 12px; 
+            border-radius: 10px; 
             overflow: hidden; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        .card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-2px);
         }
 
         .card-img-container {
             width: 100%;
-            height: 100px;
+            height: 90px;
             overflow: hidden;
             background: #000;
-            position: relative;
         }
 
         .card-img {
@@ -298,319 +280,189 @@ if (file_exists($file)) {
             height: 100%;
             object-fit: cover;
             display: block;
-            transition: transform 0.4s ease;
         }
-
-        .card:hover .card-img { transform: scale(1.05); }
         
         .card-body { 
-            padding: 8px 10px; 
+            padding: 6px 8px; 
             flex-grow: 1; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
         }
-        .card h3 { font-size: 0.8rem; margin-bottom: 2px; color: var(--text-main); font-weight: 800; line-height: 1.2; }
-        .card p { color: var(--text-muted); font-size: 0.7rem; margin-bottom: 6px; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card h3 { font-size: 0.75rem; margin-bottom: 2px; color: var(--text-main); font-weight: 800; }
+        .card p { color: var(--text-muted); font-size: 0.65rem; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: auto;
-            padding-top: 5px;
             border-top: 1px solid var(--border-color);
+            padding-top: 4px;
         }
         
-        .price { color: #fb923c; font-weight: 900; font-size: 0.9rem; }
+        .price { color: #fb923c; font-weight: 900; font-size: 0.8rem; }
 
         .action-btn { 
-            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            background: var(--accent);
             color: #fff; 
             border: none; 
-            padding: 4px 10px; 
-            border-radius: 6px; 
+            padding: 3px 8px; 
+            border-radius: 5px; 
             cursor: pointer; 
             font-weight: 800; 
-            font-size: 0.7rem;
-            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+            font-size: 0.65rem;
         }
         
         .qty-control {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             background: var(--input-bg);
-            border-radius: 6px;
-            padding: 1px 5px;
+            border-radius: 5px;
+            padding: 1px 4px;
             border: 1px solid var(--border-hover);
         }
         .qty-btn {
             background: none;
             border: none;
             color: var(--accent);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 900;
             cursor: pointer;
-            width: 16px;
-            height: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 14px; height: 14px;
+            display: flex; align-items: center; justify-content: center;
         }
-        .qty-num { font-weight: 900; font-size: 0.75rem; color: var(--text-main); min-width: 10px; text-align: center; }
+        .qty-num { font-weight: 900; font-size: 0.7rem; color: var(--text-main); min-width: 10px; text-align: center; }
 
-        /* منطقة تفاصيل التوصيل أصبحت مدمجة ومرتبة بشكل أنيق في الأسفل دون إطالة */
         .checkout-section { 
             background: var(--bg-card); 
-            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color); 
-            padding: 16px; 
-            border-radius: 14px; 
-            margin-top: 30px; 
-            box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+            padding: 12px; 
+            border-radius: 12px; 
+            margin-top: 20px; 
         }
-        .checkout-section h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; gap: 6px; font-weight: 800; }
-        
-        .input-group { display: flex; gap: 8px; flex-wrap: wrap; }
+        .checkout-section h3 { color: var(--text-main); margin-bottom: 8px; font-size: 0.9rem; font-weight: 800; }
+        .input-group { display: flex; gap: 6px; flex-wrap: wrap; }
         .input-group input { 
             flex: 1; 
-            min-width: 180px; 
-            padding: 10px 12px; 
+            min-width: 150px; 
+            padding: 8px 10px; 
             background: var(--input-bg); 
             border: 1px solid var(--border-color); 
-            border-radius: 8px; 
+            border-radius: 6px; 
             color: var(--text-main); 
-            outline: none; 
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            outline: none;
         }
-        .input-group input::placeholder { color: var(--text-muted); }
         .input-group input:focus { border-color: var(--accent); }
 
         .developer-footer {
             text-align: center;
-            margin-top: 30px;
-            padding: 15px;
+            margin-top: 20px;
+            padding: 10px;
             border-top: 1px solid var(--border-color);
             color: var(--text-muted);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             background: var(--bg-card);
-            border-radius: 14px 14px 0 0;
+            border-radius: 10px 10px 0 0;
         }
-        .developer-footer .dev-name { color: var(--text-main); font-weight: 800; font-size: 0.85rem; }
-        .developer-footer a { color: var(--accent); text-decoration: none; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; }
+        .developer-footer .dev-name { color: var(--text-main); font-weight: 800; font-size: 0.75rem; }
+        .developer-footer a { color: var(--accent); text-decoration: none; font-weight: 800; }
 
         .cart-bar { 
             position: fixed; 
-            bottom: 12px; left: 16px; right: 16px; 
-            max-width: 860px;
+            bottom: 10px; left: 12px; right: 12px; 
+            max-width: 780px;
             margin: 0 auto;
             background: var(--cart-bg); 
-            backdrop-filter: blur(20px);
             border: 2px solid var(--accent); 
-            border-radius: 14px;
-            padding: 10px 16px; 
+            border-radius: 12px;
+            padding: 8px 14px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            box-shadow: 0 8px 30px rgba(249, 115, 22, 0.25); 
+            box-shadow: 0 6px 25px rgba(249, 115, 22, 0.25); 
             z-index: 100; 
             transform: translateY(150%);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .cart-bar.show { transform: translateY(0); }
         
-        .cart-info { display: flex; align-items: center; gap: 10px; cursor: pointer; flex-grow: 1; }
-        .cart-icon-box {
-            background: var(--accent);
-            color: #fff;
-            width: 38px; height: 38px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
-        
+        .cart-info { display: flex; align-items: center; gap: 8px; cursor: pointer; flex-grow: 1; }
+        .cart-icon-box { background: var(--accent); color: #fff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
         .cart-details-text { display: flex; flex-direction: column; }
-        .cart-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
-        .cart-total-val { color: var(--text-main); font-weight: 900; font-size: 1.1rem; }
+        .cart-title { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; }
+        .cart-total-val { color: var(--text-main); font-weight: 900; font-size: 1rem; }
         .cart-total-val span { color: var(--accent); }
         
         .send-btn { 
-            background: linear-gradient(135deg, #22c55e, #16a34a); 
+            background: #22c55e; 
             color: white; 
             border: none; 
-            padding: 8px 16px; 
-            border-radius: 10px; 
+            padding: 7px 14px; 
+            border-radius: 8px; 
             font-weight: 900; 
             cursor: pointer; 
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+            font-size: 0.8rem;
+            display: flex; align-items: center; gap: 4px;
         }
-        .send-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
         .cart-modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(6px);
             z-index: 200;
-            display: flex;
-            align-items: flex-end;
-            opacity: 0;
-            pointer-events: none;
+            display: flex; align-items: flex-end;
+            opacity: 0; pointer-events: none;
             transition: opacity 0.25s ease;
         }
         .cart-modal.open { opacity: 1; pointer-events: auto; }
-        
         .cart-modal-content {
             background: var(--bg-card);
-            width: 100%;
-            max-height: 80vh;
-            border-radius: 20px 20px 0 0;
-            border-top: 1px solid var(--border-color);
-            padding: 16px;
+            width: 100%; max-height: 75vh;
+            border-radius: 16px 16px 0 0;
+            padding: 14px;
             overflow-y: auto;
             transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.3s ease;
         }
         .cart-modal.open .cart-modal-content { transform: translateY(0); }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 8px;
-        }
-        .modal-header h2 { font-size: 1rem; color: var(--text-main); font-weight: 800; }
-        .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
-        
-        .modal-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .modal-item-info h4 { font-size: 0.85rem; color: var(--text-main); margin-bottom: 1px; font-weight: 700; }
-        .modal-item-info span { color: var(--accent); font-weight: 800; font-size: 0.8rem; }
-
-        .clear-cart-btn {
-            background: transparent;
-            border: 1px solid #ef4444;
-            color: #ef4444;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+        .modal-header h2 { font-size: 0.9rem; font-weight: 800; }
+        .close-modal { background: none; border: none; color: var(--text-muted); font-size: 1.1rem; cursor: pointer; }
+        .modal-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border-color); }
+        .modal-item-info h4 { font-size: 0.8rem; font-weight: 700; }
+        .modal-item-info span { color: var(--accent); font-size: 0.75rem; font-weight: 800; }
+        .clear-cart-btn { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 2px 8px; border-radius: 5px; font-size: 0.65rem; cursor: pointer; }
 
         .order-tracker-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(11, 15, 25, 0.96);
-            backdrop-filter: blur(20px);
             z-index: 500;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 16px;
-            display: none;
+            display: flex; justify-content: center; align-items: center;
+            padding: 12px; display: none;
         }
         .order-tracker-card {
-            background: var(--bg-card);
-            border: 2px solid #22c55e;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 450px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 15px 40px rgba(34, 197, 94, 0.3);
+            background: var(--bg-card); border: 2px solid #22c55e;
+            border-radius: 16px; width: 100%; max-width: 400px; padding: 16px; text-align: center;
         }
-        .tracker-icon { font-size: 2.8rem; margin-bottom: 6px; }
-        .tracker-title { color: #fff; font-size: 1.2rem; font-weight: 900; margin-bottom: 2px; }
-        .tracker-subtitle { color: #4ade80; font-size: 0.8rem; font-weight: 700; margin-bottom: 12px; }
-        .tracker-status-box {
-            background: rgba(34, 197, 94, 0.15);
-            border: 1px solid #22c55e;
-            color: #4ade80;
-            padding: 8px;
-            border-radius: 10px;
-            font-weight: 900;
-            font-size: 0.85rem;
-            margin-bottom: 12px;
-        }
-        .tracker-details {
-            text-align: right;
-            background: rgba(0,0,0,0.4);
-            padding: 10px 12px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            font-size: 0.8rem;
-            max-height: 120px;
-            overflow-y: auto;
-        }
-        .tracker-details p { margin-bottom: 4px; color: #9ca3af; }
-        .tracker-details span { color: #fff; font-weight: 700; }
-        
-        .urgency-box {
-            background: rgba(249, 115, 22, 0.12);
-            border: 1px dashed var(--accent);
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-        .urgency-box p { color: #fdba74; font-size: 0.75rem; font-weight: 800; line-height: 1.3; }
-        .urgency-box span#countdown-timer { color: #fff; background: var(--accent); padding: 1px 5px; border-radius: 4px; font-weight: 900; }
-
-        .whatsapp-redirect-btn {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #fff;
-            border: none;
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 900;
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 8px;
-            text-decoration: none;
-        }
-        .new-order-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            width: 100%;
-            padding: 8px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.78rem;
-            cursor: pointer;
-        }
+        .tracker-icon { font-size: 2.2rem; margin-bottom: 4px; }
+        .tracker-title { color: #fff; font-size: 1.1rem; font-weight: 900; }
+        .tracker-subtitle { color: #4ade80; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; }
+        .tracker-status-box { background: rgba(34, 197, 94, 0.15); border: 1px solid #22c55e; color: #4ade80; padding: 6px; border-radius: 8px; font-weight: 900; font-size: 0.8rem; margin-bottom: 8px; }
+        .tracker-details { text-align: right; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 8px; margin-bottom: 8px; font-size: 0.75rem; max-height: 100px; overflow-y: auto; }
+        .whatsapp-redirect-btn { background: #22c55e; color: #fff; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: 900; font-size: 0.9rem; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: 6px; }
+        .new-order-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); width: 100%; padding: 6px; border-radius: 8px; font-size: 0.7rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <header>
-        <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()" title="تغيير المظهر">
-            <span id="theme-icon">☀️</span> <span id="theme-text">المضيء</span>
+        <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()">
+            <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
         </button>
-        
         <div class="logo-badge">🔥 نكهات استثنائية وعصرية</div>
         <h1>لفة <span>Mazaj</span> 🌯</h1>
-        <p>تصفح المنيو الأنيق واطلب وجبتك المفضلة بكل سهولة</p>
+        <p>اضغط على أي قسم لتفتحه وتختار وجبتك فوراً</p>
     </header>
 
     <div class="container">
@@ -620,84 +472,88 @@ if (file_exists($file)) {
                 <h4>🔄 طلبت مسبقاً؟</h4>
                 <p id="reorder-desc">اضغط لتكرار آخر طلب سريعاً</p>
             </div>
-            <button class="reorder-action-btn" onclick="repeatLastOrder()">اطلبها الآن ⚡</button>
+            <button class="reorder-action-btn" onclick="repeatLastOrder()">اطلبها ⚡</button>
         </div>
 
         <div class="top-tools">
             <div class="search-box-container">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك المفضلة..." oninput="filterProducts()">
+                <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك..." oninput="filterProducts()">
             </div>
             <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
         </div>
 
         <?php
         if (empty($products)) {
-            echo '<p style="text-align:center; padding:50px; color:var(--text-muted); font-weight:700;">لا توجد منتجات مضافة حالياً. أضف منتجاتك عبر لوحة التحكم admin.php</p>';
+            echo '<p style="text-align:center; padding:40px; color:var(--text-muted);">لا توجد منتجات مضافة حالياً.</p>';
         } else {
             $categories = array_unique(array_column($products, 'category'));
-            $total_products_count = count($products);
+            
+            echo '<div class="categories-container" id="categories-wrapper">';
 
-            echo '<div class="categories-nav">';
-            echo '<div class="cat-chip active" onclick="filterCategory(\'all\', this)">';
-            echo '<span>⚡ الكل</span>';
-            echo '<span class="cat-count">' . $total_products_count . '</span>';
-            echo '</div>';
-
+            $index_cat = 0;
             foreach ($categories as $cat) {
-                $cat_count = count(array_filter($products, function($p) use ($cat) {
+                $cat_products = array_filter($products, function($p) use ($cat) {
                     return isset($p['category']) && $p['category'] === $cat;
-                }));
-                echo '<div class="cat-chip" onclick="filterCategory(\'' . htmlspecialchars($cat) . '\', this)">';
-                echo '<span>🌯 ' . htmlspecialchars($cat) . '</span>';
-                echo '<span class="cat-count">' . $cat_count . '</span>';
+                });
+                $cat_count = count($cat_products);
+                // أول قسم يفتح تلقائياً لتسهيل الاستخدام
+                $is_open_class = ($index_cat === 0) ? 'open' : '';
+
+                echo '<div class="category-accordion-card ' . $is_open_class . '" data-category-name="' . htmlspecialchars($cat) . '">';
+                echo '  <div class="category-header" onclick="toggleCategory(this)">';
+                echo '      <div class="category-title-area">';
+                echo '          <h2>🌯 ' . htmlspecialchars($cat) . '</h2>';
+                echo '          <span class="category-badge-count">' . $cat_count . '</span>';
+                echo '      </div>';
+                echo '      <span class="category-arrow">▼</span>';
+                echo '  </div>';
+                
+                echo '  <div class="category-content-body">';
+                echo '      <div class="menu-grid">';
+                
+                foreach ($cat_products as $p) {
+                    $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
+                    $hash_id = md5($p['name']);
+                    $item_price = $p['price'] ?? 0;
+                    $item_image = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : 'uploads/default.jpg'));
+                    
+                    echo '<div class="card product-card" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
+                    echo '  <div class="card-img-container">';
+                    echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
+                    echo '  </div>';
+                    echo '  <div class="card-body">';
+                    echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
+                    echo '      <div class="card-footer">';
+                    echo '          <span class="price" id="price-' . $hash_id . '">$' . number_format($item_price, 2) . '</span>';
+                    echo '          <div id="btn-container-' . $hash_id . '"><button class="action-btn" onclick="changeQty(\'' . $safe_name . '\', ' . $item_price . ', 1, \'' . $hash_id . '\')">إضافة +</button></div>';
+                    echo '      </div>';
+                    echo '  </div>';
+                    echo '</div>';
+                }
+                
+                echo '      </div>';
+                echo '  </div>';
                 echo '</div>';
+
+                $index_cat++;
             }
             echo '</div>';
-
-            foreach ($categories as $cat) {
-                echo '<div class="category-section" data-category="' . htmlspecialchars($cat) . '">';
-                echo '<h2 class="section-title">' . htmlspecialchars($cat) . '</h2>';
-                echo '<div class="menu-grid">';
-                foreach ($products as $p) {
-                    if (isset($p['category']) && $p['category'] === $cat) {
-                        $safe_name = htmlspecialchars($p['name'], ENT_QUOTES);
-                        $hash_id = md5($p['name']);
-                        $item_price = $p['price'] ?? 0;
-                        $item_image = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : 'uploads/default.jpg'));
-                        
-                        echo '<div class="card product-card" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
-                        echo '  <div class="card-img-container">';
-                        echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
-                        echo '  </div>';
-                        echo '  <div class="card-body">';
-                        echo '      <div><h3>' . htmlspecialchars($p['name']) . '</h3><p>' . htmlspecialchars($p['desc_text'] ?? '') . '</p></div>';
-                        echo '      <div class="card-footer">';
-                        echo '          <span class="price" id="price-' . $hash_id . '">$' . number_format($item_price, 2) . '</span>';
-                        echo '          <div id="btn-container-' . $hash_id . '"><button class="action-btn" onclick="changeQty(\'' . $safe_name . '\', ' . $item_price . ', 1, \'' . $hash_id . '\')">إضافة +</button></div>';
-                        echo '      </div>';
-                        echo '  </div>';
-                        echo '</div>';
-                    }
-                }
-                echo '</div></div>';
-            }
         }
         ?>
 
         <div class="checkout-section">
-            <h3><span>📍</span> تفاصيل الاستلام والتوصيل</h3>
+            <h3>📍 بيانات الاستلام والتوصيل</h3>
             <div class="input-group">
                 <input type="text" id="cust-name" placeholder="اسمك الكريم" oninput="saveCustomerData()">
-                <input type="tel" id="cust-phone" placeholder="رقم الهاتف (الواتساب)" oninput="saveCustomerData()">
-                <input type="text" id="cust-address" placeholder="عنوان التوصيل (المنطقة، الشارع)" oninput="saveCustomerData()">
+                <input type="tel" id="cust-phone" placeholder="رقم الهاتف (واتساب)" oninput="saveCustomerData()">
+                <input type="text" id="cust-address" placeholder="عنوان التوصيل" oninput="saveCustomerData()">
             </div>
         </div>
 
         <div class="developer-footer">
-            <p>تصميم وبرمجة:</p>
-            <p class="dev-name">علي حسين ناصر الدين</p>
-            <p style="margin-top: 2px;">للتواصل: <a href="https://wa.me/96181058043" target="_blank">💬 96181058043+</a></p>
+            <p>تصميم وبرمجة: <span class="dev-name">علي حسين ناصر الدين</span></p>
+            <p style="margin-top:2px;">للتواصل: <a href="https://wa.me/96181058043" target="_blank">96181058043+</a></p>
         </div>
     </div>
 
@@ -727,56 +583,16 @@ if (file_exists($file)) {
         <div class="order-tracker-card">
             <div class="tracker-icon">🚀</div>
             <div class="tracker-title">تم حفظ طلبك بنجاح!</div>
-            <div class="tracker-subtitle">الخطوة الأخيرة لاعتماد وجبتك فوراً</div>
-            <div class="tracker-status-box" id="tracker-status-text">بانتظار تأكيد الواتساب 🔥</div>
+            <div class="tracker-subtitle">الخطوة الأخيرة لاعتماد وجبتك</div>
+            <div class="tracker-status-box">بانتظار تأكيد الواتساب 🔥</div>
             <div class="tracker-details" id="tracker-order-summary"></div>
-            <div class="urgency-box">
-                <p>⚡ تم نسخ تفاصيل طلبك تلقائياً للحافظة!<br>اضغط الزر أدناه لتأكيد الطلب خلال (<span id="countdown-timer">15</span>ث)</p>
-            </div>
-            <a href="#" id="tracker-wa-link" target="_blank" class="whatsapp-redirect-btn" onclick="handleWhatsAppClick()"><span>تأكيد الطلب عبر الواتساب</span> 💬</a>
+            <a href="#" id="tracker-wa-link" target="_blank" class="whatsapp-redirect-btn"><span>تأكيد الطلب عبر الواتساب</span> 💬</a>
             <button class="new-order-btn" onclick="location.reload()">طلب وجبة أخرى 🔄</button>
         </div>
     </div>
 
     <script>
         let cart = {};
-        let currentActiveCategory = 'all';
-        let countdownInterval = null;
-
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(type) {
-            try {
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                if (type === 'add') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
-                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-                } else if (type === 'remove') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(500, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(250, audioCtx.currentTime + 0.1);
-                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-                } else if (type === 'success') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
-                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                    osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-                }
-            } catch(e) {}
-        }
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
@@ -796,7 +612,6 @@ if (file_exists($file)) {
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('mazaj_theme', newTheme);
             updateThemeUI(newTheme);
-            playSound('add');
         }
 
         function updateThemeUI(theme) {
@@ -804,6 +619,11 @@ if (file_exists($file)) {
             let textSpan = document.getElementById('theme-text');
             if (theme === 'dark') { iconSpan.innerText = '🌙'; textSpan.innerText = 'ليلي'; }
             else { iconSpan.innerText = '☀️'; textSpan.innerText = 'مضيء'; }
+        }
+
+        function toggleCategory(headerElement) {
+            let card = headerElement.parentElement;
+            card.classList.toggle('open');
         }
 
         function saveCustomerData() {
@@ -814,14 +634,20 @@ if (file_exists($file)) {
 
         function suggestRandomProduct() {
             let cards = document.querySelectorAll('.product-card');
-            if (cards.length === 0) return alert('لا توجد منتجات متاحة حالياً!');
-            playSound('add');
+            if (cards.length === 0) return alert('لا توجد منتجات!');
             let randomIndex = Math.floor(Math.random() * cards.length);
             let selectedCard = cards[randomIndex];
+            
+            // فتح القسم الذي ينتمي له المنتج العشوائي تلقائياً
+            let parentCard = selectedCard.closest('.category-accordion-card');
+            if(parentCard && !parentCard.classList.contains('open')) {
+                parentCard.classList.add('open');
+            }
+
             selectedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            selectedCard.style.transition = '0.5s';
+            selectedCard.style.transition = '0.3s';
             selectedCard.style.borderColor = '#8b5cf6';
-            setTimeout(() => selectedCard.style.borderColor = '', 2000);
+            setTimeout(() => selectedCard.style.borderColor = '', 1500);
         }
 
         function checkLastOrderBanner() {
@@ -831,7 +657,7 @@ if (file_exists($file)) {
                     let parsed = JSON.parse(lastOrder);
                     let names = Object.keys(parsed);
                     if (names.length > 0) {
-                        document.getElementById('reorder-desc').innerText = `طلبك الأخير تضمن: ${names.join(', ')}`;
+                        document.getElementById('reorder-desc').innerText = `تضمن: ${names.join(', ')}`;
                         document.getElementById('reorder-banner').style.display = 'flex';
                     }
                 } catch(e) {}
@@ -845,35 +671,43 @@ if (file_exists($file)) {
                 cart = JSON.parse(lastOrder);
                 for (let itemName in cart) updateUI(itemName, cart[itemName].hashId);
                 updateCartBar();
-                playSound('success');
-                alert('تمت إضافة طلبك السابق إلى السلة بنجاح! 🚀');
+                alert('تمت إضافة طلبك السابق للسلة! 🚀');
             } catch(e) {}
         }
 
         function filterProducts() {
             let query = document.getElementById('search-input').value.trim().toLowerCase();
-            let cards = document.querySelectorAll('.product-card');
-            let sections = document.querySelectorAll('.category-section');
+            let catCards = document.querySelectorAll('.category-accordion-card');
 
-            if (query !== '') {
-                sections.forEach(sec => sec.style.display = 'block');
+            catCards.forEach(catCard => {
+                let cards = catCard.querySelectorAll('.product-card');
+                let hasMatch = false;
+
                 cards.forEach(card => {
                     let name = card.getAttribute('data-name');
                     let desc = card.getAttribute('data-desc');
-                    card.style.display = (name.includes(query) || desc.includes(query)) ? 'flex' : 'none';
+                    let match = name.includes(query) || desc.includes(query);
+                    card.style.display = match ? 'flex' : 'none';
+                    if (match) hasMatch = true;
                 });
-            } else {
-                filterCategory(currentActiveCategory, document.querySelector('.cat-chip.active'));
-            }
+
+                if (query !== '' && hasMatch) {
+                    catCard.classList.add('open');
+                    catCard.style.display = 'block';
+                } else if (query !== '' && !hasMatch) {
+                    catCard.style.display = 'none';
+                } else {
+                    catCard.style.display = 'block';
+                }
+            });
         }
 
         function changeQty(name, price, change, hashId) {
             price = parseFloat(price);
             if (!cart[name]) {
-                if (change > 0) { cart[name] = { price: price, qty: 1, hashId: hashId }; playSound('add'); }
+                if (change > 0) cart[name] = { price: price, qty: 1, hashId: hashId };
             } else {
                 cart[name].qty += change;
-                if (change > 0) playSound('add'); else playSound('remove');
                 if (cart[name].qty <= 0) delete cart[name];
             }
             updateUI(name, hashId);
@@ -881,11 +715,7 @@ if (file_exists($file)) {
         }
 
         function clearCart() {
-            if (confirm('هل أنت متأكد من تفريغ السلة؟')) {
-                playSound('remove');
-                cart = {};
-                location.reload(); 
-            }
+            if (confirm('تفريغ السلة؟')) { cart = {}; location.reload(); }
         }
 
         function updateUI(name, hashId) {
@@ -920,7 +750,7 @@ if (file_exists($file)) {
                 subtotal += itemTotal;
                 modalListHtml += `
                     <div class="modal-item">
-                        <div class="modal-item-info"><h4>${item}</h4><span>$${itemTotal.toFixed(2)} (العدد: ${qty})</span></div>
+                        <div class="modal-item-info"><h4>${item}</h4><span>$${itemTotal.toFixed(2)} (×${qty})</span></div>
                         <div class="qty-control" style="padding: 1px 4px;">
                             <button class="qty-btn" onclick="changeQty('${item.replace(/'/g, "\\'")}', ${price}, -1, '${cart[item].hashId}')">-</button>
                             <span class="qty-num">${qty}</span>
@@ -931,116 +761,52 @@ if (file_exists($file)) {
 
             document.getElementById('cart-count').innerText = totalCount;
             document.getElementById('total-price').innerText = subtotal.toFixed(2);
-            document.getElementById('modal-items-list').innerHTML = modalListHtml || '<p style="text-align:center; color:var(--text-muted); padding:15px;">السلة فارغة حالياً</p>';
+            document.getElementById('modal-items-list').innerHTML = modalListHtml || '<p style="text-align:center; color:var(--text-muted); padding:10px;">السلة فارغة</p>';
             
             let cartBar = document.getElementById('cart-bar');
             if (totalCount > 0) cartBar.classList.add('show');
             else { cartBar.classList.remove('show'); document.getElementById('cart-modal').classList.remove('open'); }
         }
 
-        function toggleCartModal() { 
-            playSound('add');
-            document.getElementById('cart-modal').classList.toggle('open'); 
-        }
-
-        function filterCategory(category, element) {
-            playSound('add');
-            currentActiveCategory = category;
-            document.getElementById('search-input').value = '';
-            
-            document.querySelectorAll('.cat-chip').forEach(chip => chip.classList.remove('active'));
-            if(element) element.classList.add('active');
-
-            document.querySelectorAll('.product-card').forEach(card => card.style.display = 'flex');
-            document.querySelectorAll('.category-section').forEach(sec => {
-                let secCat = sec.getAttribute('data-category');
-                sec.style.display = (category === 'all' || secCat === category) ? 'block' : 'none';
-            });
-        }
-
-        function startCountdown(waUrl) {
-            let timeLeft = 15;
-            let timerSpan = document.getElementById('countdown-timer');
-            if(countdownInterval) clearInterval(countdownInterval);
-
-            countdownInterval = setInterval(() => {
-                timeLeft--;
-                if(timerSpan) timerSpan.innerText = timeLeft;
-                if(timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    window.open(waUrl, '_blank');
-                }
-            }, 1000);
-        }
-
-        function handleWhatsAppClick() {
-            if(countdownInterval) clearInterval(countdownInterval);
-        }
+        function toggleCartModal() { document.getElementById('cart-modal').classList.toggle('open'); }
 
         function sendOrder() {
             let totalCount = 0;
             for (let item in cart) totalCount += cart[item].qty;
             if (totalCount === 0) return alert('السلة فارغة!');
 
-            let nameInput = document.getElementById('cust-name');
-            let phoneInput = document.getElementById('cust-phone');
-            let addressInput = document.getElementById('cust-address');
-
-            let name = nameInput.value.trim();
-            let phone = phoneInput.value.trim();
-            let address = addressInput.value.trim();
+            let name = document.getElementById('cust-name').value.trim();
+            let phone = document.getElementById('cust-phone').value.trim();
+            let address = document.getElementById('cust-address').value.trim();
             
-            if (!name) { alert('الرجاء إدخال اسمك الكريم!'); nameInput.focus(); return; }
-            if (!phone) { alert('الرجاء إدخال رقم الهاتف (الواتساب)!'); phoneInput.focus(); return; }
-            if (!address) { alert('الرجاء إدخال عنوان التوصيل!'); addressInput.focus(); return; }
+            if (!name) return alert('الرجاء إدخال اسمك!');
+            if (!phone) return alert('الرجاء إدخال رقم الهاتف!');
+            if (!address) return alert('الرجاء إدخال العنوان!');
 
-            playSound('success');
             localStorage.setItem('mazaj_last_order', JSON.stringify(cart));
-
-            let sendBtn = document.getElementById('send-order-btn');
-            sendBtn.disabled = true;
-            sendBtn.innerHTML = "<span>جاري المعالجة...</span> ⏳";
-
             let subtotal = 0;
             for (let item in cart) subtotal += cart[item].price * cart[item].qty;
 
-            let orderData = {
-                customer_name: name,
-                customer_phone: phone,
-                customer_address: address,
-                items: cart,
-                total: '$' + subtotal.toFixed(2),
-                status: 'قيد التحضير 🔥',
-                time: new Date().toLocaleString()
-            };
+            let orderData = { customer_name: name, customer_phone: phone, customer_address: address, items: cart, total: '$' + subtotal.toFixed(2), status: 'قيد التحضير', time: new Date().toLocaleString() };
 
             fetch('save_order.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
-            }).then(response => response.json()).then(data => {
+            }).then(res => res.json()).then(data => {
                 let adminPhone = "96181079589"; 
                 let message = "مرحباً *لفة Mazaj* 🌯، أريد طلب الآتي:\n\n";
                 let index = 1, summaryHtml = '';
 
                 for (let item in cart) {
                     let qty = cart[item].qty, itemTotal = cart[item].price * qty;
-                    message += `${index}. *${item}* (العدد: ${qty}) - $${itemTotal.toFixed(2)}\n`;
+                    message += `${index}. *${item}* (×${qty}) - $${itemTotal.toFixed(2)}\n`;
                     summaryHtml += `<p>• ${item} (×${qty}) - <span>$${itemTotal.toFixed(2)}</span></p>`;
                     index++;
                 }
+                message += `\n*الإجمالي:* $${subtotal.toFixed(2)}\n👤 الاسم: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${address}`;
 
-                message += `\n*الإجمالي النهائي:* $${subtotal.toFixed(2)}\n`;
-                message += `\n👤 *الاسم:* ${name}`;
-                message += `\n📞 *الهاتف:* ${phone}`;
-                message += `\n📍 *العنوان:* ${address}`;
-
-                summaryHtml += `<p style="margin-top:6px; border-top:1px solid rgba(255,255,255,0.1); pt:4px;">الإجمالي: <span>$${subtotal.toFixed(2)}</span></p>`;
-                summaryHtml += `<p>الاسم: <span>${name}</span> | العنوان: <span>${address}</span></p>`;
-
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(message).catch(err => {});
-                }
+                summaryHtml += `<p style="margin-top:4px; border-top:1px solid rgba(255,255,255,0.1)">الإجمالي: <span>$${subtotal.toFixed(2)}</span></p>`;
 
                 document.getElementById('cart-bar').classList.remove('show');
                 document.getElementById('cart-modal').classList.remove('open');
@@ -1049,13 +815,6 @@ if (file_exists($file)) {
                 document.getElementById('tracker-order-summary').innerHTML = summaryHtml;
                 document.getElementById('tracker-wa-link').href = finalWaUrl;
                 document.getElementById('order-tracker').style.display = 'flex';
-
-                startCountdown(finalWaUrl);
-
-            }).catch(err => {
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = "<span>إرسال</span> 💬";
-                alert('حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى.');
             });
         }
     </script>
