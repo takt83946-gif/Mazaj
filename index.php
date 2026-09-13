@@ -276,8 +276,14 @@ if (file_exists($file)) {
 
         .menu-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+            grid-template-columns: repeat(3, 1fr); 
             gap: 8px; 
+        }
+
+        @media (max-width: 600px) {
+            .menu-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
         
         .card { 
@@ -732,6 +738,7 @@ if (file_exists($file)) {
                 let cards = section.querySelectorAll('.product-card');
                 let hasMatch = false;
 
+                cards.items = cards; // standard node list
                 cards.forEach(card => {
                     let name = card.getAttribute('data-name');
                     let desc = card.getAttribute('data-desc');
@@ -834,7 +841,7 @@ if (file_exists($file)) {
             fetch('save_order.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.json_encode ? JSON.stringify(orderData) : JSON.stringify(orderData)
+                body: JSON.stringify(orderData)
             }).then(res => res.json()).then(data => {
                 let adminPhone = "96181079589"; 
                 let message = "مرحباً *لفة Mazaj* 🌯، أريد طلب الآتي:\n\n";
