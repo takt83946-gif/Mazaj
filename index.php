@@ -182,57 +182,60 @@ if (file_exists($file)) {
         }
 
         /* ------------------------------------------------ */
-        /* تصميم الدوائر الأفقية (Categories Circles) */
+        /* شبكة أزرار التصنيفات البارزة (Category Buttons Grid) */
         /* ------------------------------------------------ */
-        .categories-circles-wrapper {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 10px;
+        .category-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
             margin-bottom: 16px;
-            scrollbar-width: none;
         }
-        .categories-circles-wrapper::-webkit-scrollbar { display: none; }
 
-        .category-circle-item {
+        .cat-selection-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            cursor: pointer;
-            flex-shrink: 0;
-            text-align: center;
-            width: 75px;
-        }
-
-        .category-circle-img {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border-color);
-            background: var(--bg-card);
-            padding: 2px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             transition: 0.2s ease;
         }
 
-        .category-circle-item.active .category-circle-img {
+        .cat-selection-card:hover, .cat-selection-card.active {
             border-color: var(--accent);
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.4);
-            transform: scale(1.05);
+            background: rgba(249, 115, 22, 0.05);
+            transform: translateY(-2px);
         }
 
-        .category-circle-name {
-            font-size: 0.68rem;
-            font-weight: 800;
-            color: var(--text-muted);
+        .cat-selection-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+        }
+
+        .cat-selection-card.active .cat-selection-img {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.4);
+        }
+
+        .cat-selection-name {
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--text-main);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             width: 100%;
         }
 
-        .category-circle-item.active .category-circle-name {
+        .cat-selection-card.active .cat-selection-name {
             color: var(--accent);
         }
 
@@ -511,15 +514,14 @@ if (file_exists($file)) {
         } else {
             $categories = array_unique(array_column($products, 'category'));
             
-            // شريط الدوائر الأفقية للأقسام (Categories Circles) مع جلب صورة من أول منتج في كل قسم
-            echo '<div class="categories-circles-wrapper" id="categories-circles">';
-            echo '  <div class="category-circle-item active" onclick="filterByCategory(\'all\', this)">';
-            echo '      <img src="uploads/Ali.jpg" class="category-circle-img" onerror="this.src=\'uploads/default.jpg\'">';
-            echo '      <span class="category-circle-name">الكل 🔥</span>';
+            // شبكة أزرار التصنيفات البارزة ليختر الزبون منها
+            echo '<div class="category-buttons-grid" id="category-buttons">';
+            echo '  <div class="cat-selection-card active" onclick="filterByCategory(\'all\', this)">';
+            echo '      <img src="uploads/Ali.jpg" class="cat-selection-img" onerror="this.src=\'uploads/default.jpg\'">';
+            echo '      <span class="cat-selection-name">الكل 🔥</span>';
             echo '  </div>';
 
             foreach ($categories as $cat) {
-                // البحث عن أول صورة متوفرة لهذا القسم
                 $cat_first_img = 'uploads/default.jpg';
                 foreach ($products as $p) {
                     if (isset($p['category']) && $p['category'] === $cat) {
@@ -531,9 +533,9 @@ if (file_exists($file)) {
                     }
                 }
 
-                echo '  <div class="category-circle-item" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', this)">';
-                echo '      <img src="' . htmlspecialchars($cat_first_img) . '" class="category-circle-img" onerror="this.src=\'uploads/default.jpg\'">';
-                echo '      <span class="category-circle-name">' . htmlspecialchars($cat) . '</span>';
+                echo '  <div class="cat-selection-card" onclick="filterByCategory(\'' . htmlspecialchars($cat) . '\', this)">';
+                echo '      <img src="' . htmlspecialchars($cat_first_img) . '" class="cat-selection-img" onerror="this.src=\'uploads/default.jpg\'">';
+                echo '      <span class="cat-selection-name">' . htmlspecialchars($cat) . '</span>';
                 echo '  </div>';
             }
             echo '</div>';
@@ -705,7 +707,7 @@ if (file_exists($file)) {
         }
 
         function filterByCategory(categoryName, element) {
-            document.querySelectorAll('.category-circle-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.cat-selection-card').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
 
             let catSections = document.querySelectorAll('.category-section-block');
@@ -725,7 +727,7 @@ if (file_exists($file)) {
             let catSections = document.querySelectorAll('.category-section-block');
 
             if (query !== '') {
-                document.querySelectorAll('.category-circle-item').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.cat-selection-card').forEach(el => el.classList.remove('active'));
             }
 
             catSections.forEach(section => {
@@ -862,4 +864,3 @@ if (file_exists($file)) {
     </script>
 </body>
 </html>
-
