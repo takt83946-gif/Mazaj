@@ -77,10 +77,12 @@ if (file_exists($file)) {
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .header-control-right {
+        .header-controls-group {
             position: absolute;
             top: 18px;
             right: 18px;
+            display: flex;
+            gap: 6px;
             z-index: 10;
         }
 
@@ -88,6 +90,8 @@ if (file_exists($file)) {
             position: absolute;
             top: 18px;
             left: 18px;
+            display: flex;
+            gap: 4px;
             z-index: 10;
         }
 
@@ -95,11 +99,11 @@ if (file_exists($file)) {
             background: var(--chip-bg);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 6px 12px;
+            padding: 6px 10px;
             border-radius: 30px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             cursor: pointer;
             font-size: 0.7rem;
             font-weight: 800;
@@ -537,13 +541,22 @@ if (file_exists($file)) {
 </head>
 <body>
 
+    <!-- مشغل الموسيقى الخلفية -->
+    <audio id="bg-music" loop></audio>
+
     <header>
         <div class="header-control-left">
             <button class="control-btn" id="sound-toggle-btn" onclick="toggleSound()">
                 <span id="sound-icon">🔊</span>
             </button>
         </div>
-        <div class="header-control-right">
+        <div class="header-controls-group">
+            <button class="control-btn" id="music-toggle-btn" onclick="toggleMusic()">
+                <span id="music-icon">🎵</span> <span id="music-text">الموسيقى</span>
+            </button>
+            <button class="control-btn" onclick="nextSong()" title="أغنية أخرى">
+                <span>⏭️</span>
+            </button>
             <button class="control-btn" id="theme-toggle" onclick="toggleTheme()">
                 <span id="theme-icon">🌙</span> <span id="theme-text">ليلي</span>
             </button>
@@ -712,6 +725,16 @@ if (file_exists($file)) {
     <script>
         let cart = {};
         let soundEnabled = localStorage.getItem('mazaj_sound') !== 'off';
+        let musicPlaying = false;
+
+        // قائمة الأغاني المتاحة للتبديل
+        const playlist = [
+            "https://www.bensound.com/bensound-music/bensound-thejazzpiano.mp3",
+            "https://www.bensound.com/bensound-music/bensound-tenderness.mp3",
+            "https://www.bensound.com/bensound-music/bensound-anewbeginning.mp3",
+            "https://www.bensound.com/bensound-music/bensound-creativeminds.mp3"
+        ];
+        let currentSongIndex = 0;
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
@@ -774,11 +797,56 @@ if (file_exists($file)) {
             soundIcon.innerText = soundEnabled ? '🔊' : '🔇';
         }
 
+        function toggleMusic() {
+            playSound('click');
+            let bgMusic = document.getElementById('bg-music');
+            let musicIcon = document.getElementById('music-icon');
+            let musicText = document.getElementById('music-text');
+
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicPlaying = false;
+                musicIcon.innerText = '🎵';
+                musicText.innerText = 'الموسيقى';
+            } else {
+                if (!bgMusic.src || bgMusic.src === window.location.href) {
+                    bgMusic.src = playlist[currentSongIndex];
+                }
+                bgMusic.play().then(() => {
+                    musicPlaying = true;
+                    musicIcon.innerText = '⏸️';
+                    musicText.innerText = 'إيقاف';
+                }).catch(e => {
+                    alert('تعذر تشغيل الموسيقى تلقائياً، يرجى النقر أولاً في الصفحة.');
+                });
+            }
+        }
+
+        function nextSong() {
+            playSound('click');
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            let bgMusic = document.getElementById('bg-music');
+            bgMusic.src = playlist[currentSongIndex];
+            
+            if (musicPlaying) {
+                bgMusic.play().catch(e => {});
+            } else {
+                // إذا كانت الموسيقى متوقفة، نقوم بتشغيل الأغنية الجديدة مباشرة وتحديث زر الحالة
+                bgMusic.play().then(() => {
+                    musicPlaying = true;
+                    document.getElementById('music-icon').innerText = '⏸️';
+                    document.getElementById('music-text').innerText = 'إيقاف';
+                }).catch(e => {});
+            }
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeUI(savedTheme);
             updateSoundUI();
+
+            document.getElementById('bg-music').src = playlist[0];
 
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
