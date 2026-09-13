@@ -77,7 +77,6 @@ if (file_exists($file)) {
             box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
         }
 
-        /* شريط الأدوات العلوي المنظم لمنع التداخل */
         .header-toolbar {
             display: flex;
             justify-content: space-between;
@@ -539,19 +538,16 @@ if (file_exists($file)) {
 </head>
 <body>
 
-    <!-- مشغل الموسيقى الخلفية -->
     <audio id="bg-music" loop></audio>
 
     <header>
         <div class="header-toolbar">
-            <!-- مجموعة الأزرار اليسرى: أصوات الإضافات -->
             <div class="header-group">
                 <button class="control-btn" id="sound-toggle-btn" onclick="toggleSound()" title="تشغيل / إيقاف أصوات الإضافات">
                     <span id="sound-icon">🔊</span> <span>الأصوات</span>
                 </button>
             </div>
 
-            <!-- مجموعة الأزرار اليمنى: زر الموسيقى الموحد وزر الوضع الليلي -->
             <div class="header-group">
                 <button class="control-btn" id="music-toggle-btn" onclick="toggleMusic()" title="تشغيل / إيقاف الموسيقى">
                     <span id="music-icon">🎵</span> <span id="music-text">الموسيقى</span>
@@ -728,10 +724,11 @@ if (file_exists($file)) {
         let soundEnabled = localStorage.getItem('mazaj_sound') !== 'off';
         let musicPlaying = false;
 
+        // روابط مستقرة ومجربة لأغاني خلفية Lofi
         const playlist = [
+            "https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg",
             "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3",
-            "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=chill-abstract-intention-12099.mp3",
-            "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c3a6427d.mp3?filename=it-s-going-be-okay-10356.mp3"
+            "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=chill-abstract-intention-12099.mp3"
         ];
         let currentSongIndex = 0;
 
@@ -795,6 +792,10 @@ if (file_exists($file)) {
             let musicIcon = document.getElementById('music-icon');
             let musicText = document.getElementById('music-text');
 
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
             if (musicPlaying) {
                 bgMusic.pause();
                 musicPlaying = false;
@@ -809,7 +810,8 @@ if (file_exists($file)) {
                     musicIcon.innerText = '⏸️';
                     musicText.innerText = 'إيقاف';
                 }).catch(e => {
-                    console.log('Autoplay restricted by browser.');
+                    console.log('Autoplay error:', e);
+                    alert('يرجى النقر في أي مكان بالساشة أولاً لتفعيل تشغيل الصوت من المتصفح.');
                 });
             }
         }
@@ -822,29 +824,6 @@ if (file_exists($file)) {
 
             let bgMusic = document.getElementById('bg-music');
             bgMusic.src = playlist[0];
-
-            bgMusic.play().then(() => {
-                musicPlaying = true;
-                document.getElementById('music-icon').innerText = '⏸️';
-                document.getElementById('music-text').innerText = 'إيقاف';
-            }).catch(e => {
-                const startAudioOnInteract = () => {
-                    if (!musicPlaying) {
-                        bgMusic.play().then(() => {
-                            musicPlaying = true;
-                            document.getElementById('music-icon').innerText = '⏸️';
-                            document.getElementById('music-text').innerText = 'إيقاف';
-                        }).catch(err => {});
-                    }
-                    if (audioCtx.state === 'suspended') {
-                        audioCtx.resume();
-                    }
-                    window.removeEventListener('click', startAudioOnInteract);
-                    window.removeEventListener('touchstart', startAudioOnInteract);
-                };
-                window.addEventListener('click', startAudioOnInteract);
-                window.addEventListener('touchstart', startAudioOnInteract);
-            });
 
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
