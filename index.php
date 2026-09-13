@@ -84,19 +84,26 @@ if (file_exists($file)) {
             top: 20px;
             left: 20px;
             background: var(--chip-bg);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--border-hover);
             color: var(--text-main);
-            width: 40px; height: 40px;
-            border-radius: 12px;
+            padding: 8px 14px;
+            border-radius: 30px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 6px;
             cursor: pointer;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            font-size: 0.8rem;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             z-index: 10;
+            transition: all 0.25s ease;
         }
-        .theme-toggle-btn:hover { transform: scale(1.05); }
+        .theme-toggle-btn:hover { 
+            transform: scale(1.05); 
+            background: var(--accent); 
+            color: #fff;
+            border-color: var(--accent);
+        }
 
         .fairy-lights {
             position: absolute;
@@ -699,7 +706,9 @@ if (file_exists($file)) {
 <body>
 
     <header>
-        <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">🌙</button>
+        <button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()" title="تغيير المظهر">
+            <span id="theme-icon">☀️</span> <span id="theme-text">الوضع المضيء</span>
+        </button>
         
         <div class="fairy-lights">
             <div class="light-bulb"></div><div class="light-bulb"></div><div class="light-bulb"></div>
@@ -846,11 +855,55 @@ if (file_exists($file)) {
         let currentActiveCategory = 'all';
         let countdownInterval = null;
 
+        // نظام التأثيرات الصوتية التفاعلية (Sound FX) بدون ملفات خارجية
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'add') {
+                    // صوت بوب (Pop) خفيف عند الإضافة
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'remove') {
+                    // صوت هابط عند النقصان
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(250, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'success') {
+                    // نغمة نجاح عند إرسال الطلب
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                }
+            } catch(e) {}
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
-            // تحميل الثيم المحفوظ
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon(savedTheme);
+            updateThemeUI(savedTheme);
 
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
@@ -864,12 +917,20 @@ if (file_exists($file)) {
             let newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('mazaj_theme', newTheme);
-            updateThemeIcon(newTheme);
+            updateThemeUI(newTheme);
+            playSound('add');
         }
 
-        function updateThemeIcon(theme) {
-            let btn = document.getElementById('theme-toggle');
-            btn.innerText = theme === 'dark' ? '🌙' : '☀️';
+        function updateThemeUI(theme) {
+            let iconSpan = document.getElementById('theme-icon');
+            let textSpan = document.getElementById('theme-text');
+            if (theme === 'dark') {
+                iconSpan.innerText = '🌙';
+                textSpan.innerText = 'الوضع الليلي';
+            } else {
+                iconSpan.innerText = '☀️';
+                textSpan.innerText = 'الوضع المضيء';
+            }
         }
 
         function saveCustomerData() {
@@ -882,6 +943,7 @@ if (file_exists($file)) {
             let cards = document.querySelectorAll('.product-card');
             if (cards.length === 0) return alert('لا توجد منتجات متاحة حالياً!');
             
+            playSound('add');
             let btn = document.querySelector('.mood-btn');
             btn.style.transform = 'scale(0.95)';
             setTimeout(() => btn.style.transform = 'scale(1)', 150);
@@ -928,6 +990,7 @@ if (file_exists($file)) {
                     updateUI(itemName, cart[itemName].hashId);
                 }
                 updateCartBar();
+                playSound('success');
                 alert('تمت إضافة طلبك السابق إلى السلة بنجاح! 🚀');
                 window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             } catch(e) {
@@ -959,9 +1022,15 @@ if (file_exists($file)) {
         function changeQty(name, price, change, hashId) {
             price = parseFloat(price);
             if (!cart[name]) {
-                if (change > 0) cart[name] = { price: price, qty: 1, hashId: hashId };
+                if (change > 0) {
+                    cart[name] = { price: price, qty: 1, hashId: hashId };
+                    playSound('add');
+                }
             } else {
                 cart[name].qty += change;
+                if (change > 0) playSound('add');
+                else playSound('remove');
+
                 if (cart[name].qty <= 0) delete cart[name];
             }
             updateUI(name, hashId);
@@ -970,6 +1039,7 @@ if (file_exists($file)) {
 
         function clearCart() {
             if (confirm('هل أنت متأكد من تفريغ السلة؟')) {
+                playSound('remove');
                 cart = {};
                 location.reload(); 
             }
@@ -1025,9 +1095,13 @@ if (file_exists($file)) {
             else { cartBar.classList.remove('show'); document.getElementById('cart-modal').classList.remove('open'); }
         }
 
-        function toggleCartModal() { document.getElementById('cart-modal').classList.toggle('open'); }
+        function toggleCartModal() { 
+            playSound('add');
+            document.getElementById('cart-modal').classList.toggle('open'); 
+        }
 
         function filterCategory(category, element) {
+            playSound('add');
             currentActiveCategory = category;
             document.getElementById('search-input').value = '';
             
@@ -1081,6 +1155,7 @@ if (file_exists($file)) {
             if (!phone) { alert('الرجاء إدخال رقم الهاتف (الواتساب)!'); phoneInput.focus(); return; }
             if (!address) { alert('الرجاء إدخال عنوان التوصيل!'); addressInput.focus(); return; }
 
+            playSound('success');
             saveLastOrderToLocalStorage(cart);
 
             let sendBtn = document.getElementById('send-order-btn');
