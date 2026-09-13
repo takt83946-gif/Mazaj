@@ -122,8 +122,9 @@ if (file_exists($file)) {
             gap: 8px;
             margin: 12px 0 8px 0;
             align-items: center;
+            flex-wrap: wrap;
         }
-        .search-box-container { position: relative; flex-grow: 1; }
+        .search-box-container { position: relative; flex-grow: 1; min-width: 180px; }
         .search-input {
             width: 100%;
             padding: 8px 34px 8px 12px;
@@ -143,6 +144,31 @@ if (file_exists($file)) {
             transform: translateY(-50%);
             color: var(--text-muted);
             font-size: 0.9rem;
+        }
+
+        /* شريط اختيار نمط العرض للزبون */
+        .view-mode-selector {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 3px;
+            gap: 3px;
+        }
+        .view-mode-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border-radius: 7px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .view-mode-btn.active {
+            background: var(--accent);
+            color: #fff;
         }
 
         .mood-btn {
@@ -182,7 +208,34 @@ if (file_exists($file)) {
             cursor: pointer;
         }
 
-        /* نظام الأقسام الجديد (Categories Accordion Cards) */
+        /* أزرار الفلتر الأفقي السريع (وضع الفلاتر) */
+        .filter-tabs-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 4px 0 8px 0;
+            scrollbar-width: none;
+            display: none; /* تظهر فقط حسب النمط المحدد */
+        }
+        .filter-tabs-bar::-webkit-scrollbar { display: none; }
+        .filter-tab-chip {
+            background: var(--chip-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .filter-tab-chip.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        /* نظام الأقسام (أكورديون) */
         .categories-container {
             display: flex;
             flex-direction: column;
@@ -247,7 +300,7 @@ if (file_exists($file)) {
             background: rgba(0,0,0,0.02);
         }
         .category-accordion-card.open .category-content-body {
-            max-height: 2000px; /* سعة كافية لفتح المنتجات */
+            max-height: 2000px;
             padding: 10px 12px 14px 12px;
             transition: max-height 0.6s ease-in-out;
         }
@@ -462,7 +515,7 @@ if (file_exists($file)) {
         </button>
         <div class="logo-badge">🔥 نكهات استثنائية وعصرية</div>
         <h1>لفة <span>Mazaj</span> 🌯</h1>
-        <p>اضغط على أي قسم لتفتحه وتختار وجبتك فوراً</p>
+        <p>اختر طريقة العرض المناسبة لك وتصفح المنيو فوراً</p>
     </header>
 
     <div class="container">
@@ -480,7 +533,24 @@ if (file_exists($file)) {
                 <span class="search-icon">🔍</span>
                 <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك..." oninput="filterProducts()">
             </div>
+            <div class="view-mode-selector">
+                <button class="view-mode-btn active" id="mode-accordion" onclick="setViewMode('accordion')">أقسام 📂</button>
+                <button class="view-mode-btn" id="mode-tabs" onclick="setViewMode('tabs')">فلاتر ⚡</button>
+            </div>
             <button class="mood-btn" onclick="suggestRandomProduct()">🎲 عشوائي</button>
+        </div>
+
+        <!-- أزرار الفلاتر السريعة (تظهر عند اختيار وضع الـ Tabs) -->
+        <div class="filter-tabs-bar" id="filter-tabs-bar">
+            <div class="filter-tab-chip active" onclick="filterByTab('all', this)">الكل 🔥</div>
+            <?php
+            if (!empty($products)) {
+                $categories = array_unique(array_column($products, 'category'));
+                foreach ($categories as $cat) {
+                    echo '<div class="filter-tab-chip" onclick="filterByTab(\'' . htmlspecialchars($cat) . '\', this)">' . htmlspecialchars($cat) . '</div>';
+                }
+            }
+            ?>
         </div>
 
         <?php
@@ -497,7 +567,6 @@ if (file_exists($file)) {
                     return isset($p['category']) && $p['category'] === $cat;
                 });
                 $cat_count = count($cat_products);
-                // أول قسم يفتح تلقائياً لتسهيل الاستخدام
                 $is_open_class = ($index_cat === 0) ? 'open' : '';
 
                 echo '<div class="category-accordion-card ' . $is_open_class . '" data-category-name="' . htmlspecialchars($cat) . '">';
@@ -518,7 +587,7 @@ if (file_exists($file)) {
                     $item_price = $p['price'] ?? 0;
                     $item_image = !empty($p['image']) ? $p['image'] : (!empty($p['img']) ? $p['img'] : (!empty($p['photo']) ? $p['photo'] : 'uploads/default.jpg'));
                     
-                    echo '<div class="card product-card" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
+                    echo '<div class="card product-card" data-category="' . htmlspecialchars($cat) . '" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
                     echo '  <div class="card-img-container">';
                     echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
                     echo '  </div>';
@@ -593,6 +662,7 @@ if (file_exists($file)) {
 
     <script>
         let cart = {};
+        let currentViewMode = 'accordion';
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
@@ -621,7 +691,46 @@ if (file_exists($file)) {
             else { iconSpan.innerText = '☀️'; textSpan.innerText = 'مضيء'; }
         }
 
+        function setViewMode(mode) {
+            currentViewMode = mode;
+            document.getElementById('mode-accordion').classList.toggle('active', mode === 'accordion');
+            document.getElementById('mode-tabs').classList.toggle('active', mode === 'tabs');
+
+            let filterBar = document.getElementById('filter-tabs-bar');
+            let catCards = document.querySelectorAll('.category-accordion-card');
+
+            if (mode === 'tabs') {
+                filterBar.style.display = 'flex';
+                // في وضع التبويبات، افتح كل الأقسام تلقائياً ودع الفلتر يتحكم بالمنتجات
+                catCards.forEach(card => card.classList.add('open'));
+            } else {
+                filterBar.style.display = 'none';
+                // إعادة الضبط للوضع العادي
+                catCards.forEach((card, index) => {
+                    if (index === 0) card.classList.add('open');
+                    else card.classList.remove('open');
+                });
+                filterByTab('all', document.querySelector('.filter-tab-chip'));
+            }
+        }
+
+        function filterByTab(categoryName, chipElement) {
+            document.querySelectorAll('.filter-tab-chip').forEach(c => c.classList.remove('active'));
+            chipElement.classList.add('active');
+
+            let catCards = document.querySelectorAll('.category-accordion-card');
+            catCards.forEach(catCard => {
+                let catName = catCard.getAttribute('data-category-name');
+                if (categoryName === 'all' || catName === categoryName) {
+                    catCard.style.display = 'block';
+                } else {
+                    catCard.style.display = 'none';
+                }
+            });
+        }
+
         function toggleCategory(headerElement) {
+            if (currentViewMode === 'tabs') return; // في وضع الفلاتر الأقسام مفتوحة دائماً
             let card = headerElement.parentElement;
             card.classList.toggle('open');
         }
@@ -634,11 +743,11 @@ if (file_exists($file)) {
 
         function suggestRandomProduct() {
             let cards = document.querySelectorAll('.product-card');
-            if (cards.length === 0) return alert('لا توجد منتجات!');
-            let randomIndex = Math.floor(Math.random() * cards.length);
-            let selectedCard = cards[randomIndex];
+            let visibleCards = Array.from(cards).filter(c => c.style.display !== 'none');
+            if (visibleCards.length === 0) return alert('لا توجد منتجات متاحة!');
+            let randomIndex = Math.floor(Math.random() * visibleCards.length);
+            let selectedCard = visibleCards[randomIndex];
             
-            // فتح القسم الذي ينتمي له المنتج العشوائي تلقائياً
             let parentCard = selectedCard.closest('.category-accordion-card');
             if(parentCard && !parentCard.classList.contains('open')) {
                 parentCard.classList.add('open');
@@ -697,7 +806,9 @@ if (file_exists($file)) {
                 } else if (query !== '' && !hasMatch) {
                     catCard.style.display = 'none';
                 } else {
-                    catCard.style.display = 'block';
+                    if (currentViewMode === 'accordion') {
+                        catCard.style.display = 'block';
+                    }
                 }
             });
         }
