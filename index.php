@@ -276,14 +276,8 @@ if (file_exists($file)) {
 
         .menu-grid { 
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
             gap: 8px; 
-        }
-
-        @media (max-width: 600px) {
-            .menu-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
         }
         
         .card { 
@@ -738,7 +732,6 @@ if (file_exists($file)) {
                 let cards = section.querySelectorAll('.product-card');
                 let hasMatch = false;
 
-                cards.items = cards; // standard node list
                 cards.forEach(card => {
                     let name = card.getAttribute('data-name');
                     let desc = card.getAttribute('data-desc');
@@ -828,9 +821,9 @@ if (file_exists($file)) {
             let phone = document.getElementById('cust-phone').value.trim();
             let address = document.getElementById('cust-address').value.trim();
             
-            if (!name) return alert('الرجاء إدخال اسمك!');
-            if (!phone) return alert('الرجاء إدخال رقم الهاتف!');
-            if (!address) return alert('الرجاء إدخال العنوان!');
+            if (!name) return alert('رجاءً أدخل اسمك!');
+            if (!phone) return alert('رجاءً أدخل رقم الهاتف!');
+            if (!address) return alert('رجاءً أدخل العنوان!');
 
             localStorage.setItem('mazaj_last_order', JSON.stringify(cart));
             let subtotal = 0;
@@ -869,3 +862,4 @@ if (file_exists($file)) {
     </script>
 </body>
 </html>
+
