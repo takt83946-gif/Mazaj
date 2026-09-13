@@ -112,13 +112,43 @@ if (file_exists($file)) {
 
         .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
 
+        /* صندوق البحث السريع */
+        .search-box-container {
+            margin: 20px 0 10px 0;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 42px 12px 16px;
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .search-input::placeholder { color: var(--text-muted); }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(249, 115, 22, 0.2); }
+        .search-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
         .categories-nav {
             display: flex;
             flex-direction: row-reverse;
             justify-content: flex-start;
             gap: 10px;
             overflow-x: auto;
-            padding: 18px 0 8px 0;
+            padding: 12px 0 8px 0;
             scrollbar-width: none;
         }
         .categories-nav::-webkit-scrollbar { display: none; }
@@ -360,7 +390,9 @@ if (file_exists($file)) {
             align-items: center;
             gap: 6px;
             box-shadow: 0 4px 20px rgba(34, 197, 94, 0.45);
+            transition: 0.2s;
         }
+        .send-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
         .cart-modal {
             position: fixed;
@@ -423,7 +455,6 @@ if (file_exists($file)) {
         }
         .clear-cart-btn:hover { background: #ef4444; color: #fff; }
 
-        /* نافذة نجاح الطلب */
         .success-toast {
             position: fixed;
             top: 20px; left: 50%;
@@ -461,6 +492,12 @@ if (file_exists($file)) {
     </header>
 
     <div class="container">
+        <!-- شريط البحث السريع -->
+        <div class="search-box-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك المفضلة..." oninput="filterProducts()">
+        </div>
+
         <?php
         if (empty($products)) {
             echo '<p style="text-align:center; padding:70px; color:var(--text-muted); font-weight:700;">لا توجد منتجات مضافة حالياً. أضف منتجاتك عبر لوحة التحكم admin.php</p>';
@@ -506,7 +543,7 @@ if (file_exists($file)) {
                             $item_image = 'uploads/default.jpg';
                         }
                         
-                        echo '<div class="card">';
+                        echo '<div class="card product-card" data-name="' . mb_strtolower($p['name']) . '" data-desc="' . mb_strtolower($p['desc_text'] ?? '') . '">';
                         echo '  <div class="card-img-container">';
                         echo '      <img src="' . htmlspecialchars($item_image) . '" alt="' . $safe_name . '" class="card-img" onerror="this.src=\'uploads/default.jpg\'">';
                         echo '  </div>';
@@ -528,9 +565,9 @@ if (file_exists($file)) {
         <div class="checkout-section">
             <h3><span>📍</span> تفاصيل الاستلام والتوصيل</h3>
             <div class="input-group">
-                <input type="text" id="cust-name" placeholder="اسمك الكريم">
-                <input type="tel" id="cust-phone" placeholder="رقم الهاتف (الواتساب)">
-                <input type="text" id="cust-address" placeholder="عنوان التوصيل (المنطقة، الشارع، البناية)">
+                <input type="text" id="cust-name" placeholder="اسمك الكريم" oninput="saveCustomerData()">
+                <input type="tel" id="cust-phone" placeholder="رقم الهاتف (الواتساب)" oninput="saveCustomerData()">
+                <input type="text" id="cust-address" placeholder="عنوان التوصيل (المنطقة، الشارع، البناية)" oninput="saveCustomerData()">
             </div>
         </div>
 
@@ -549,7 +586,7 @@ if (file_exists($file)) {
                 <span class="cart-total-val">$<span id="total-price">0.00</span></span>
             </div>
         </div>
-        <button class="send-btn" onclick="sendOrder()"><span>إرسال الطلب</span> 💬</button>
+        <button class="send-btn" id="send-order-btn" onclick="sendOrder()"><span>إرسال الطلب</span> 💬</button>
     </div>
 
     <div class="cart-modal" id="cart-modal" onclick="if(event.target === this) toggleCartModal()">
@@ -565,6 +602,44 @@ if (file_exists($file)) {
 
     <script>
         let cart = {};
+        let currentActiveCategory = 'all';
+
+        // استرجاع بيانات الزبون المحفوظة مسبقاً في المتصفح
+        window.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
+            if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
+            if(localStorage.getItem('mazaj_address')) document.getElementById('cust-address').value = localStorage.getItem('mazaj_address');
+        });
+
+        function saveCustomerData() {
+            localStorage.setItem('mazaj_name', document.getElementById('cust-name').value);
+            localStorage.setItem('mazaj_phone', document.getElementById('cust-phone').value);
+            localStorage.setItem('mazaj_address', document.getElementById('cust-address').value);
+        }
+
+        // دالة البحث الفوري عن المنتجات
+        function filterProducts() {
+            let query = document.getElementById('search-input').value.trim().toLowerCase();
+            let cards = document.querySelectorAll('.product-card');
+            let sections = document.querySelectorAll('.category-section');
+
+            if (query !== '') {
+                // إذا كان هناك نص بحث، نتجاهل الفئات المؤقتة ونبحث في كل البطاقات
+                sections.forEach(sec => sec.style.display = 'block');
+                cards.forEach(card => {
+                    let name = card.getAttribute('data-name');
+                    let desc = card.getAttribute('data-desc');
+                    if (name.includes(query) || desc.includes(query)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            } else {
+                // إرجاع العرض بحسب الفئة النشطة حالياً
+                filterCategory(currentActiveCategory, document.querySelector('.cat-chip.active'));
+            }
+        }
 
         function changeQty(name, price, change, hashId) {
             price = parseFloat(price);
@@ -578,11 +653,9 @@ if (file_exists($file)) {
             updateCartBar();
         }
 
-        // زر تفريغ السلة بالكامل
         function clearCart() {
             if (confirm('هل أنت متأكد من تفريغ السلة؟')) {
                 cart = {};
-                // إعادة ضبط أزرار المنتجات في الصفحة
                 location.reload(); 
             }
         }
@@ -640,27 +713,39 @@ if (file_exists($file)) {
         function toggleCartModal() { document.getElementById('cart-modal').classList.toggle('open'); }
 
         function filterCategory(category, element) {
+            currentActiveCategory = category;
+            // تفريغ حقل البحث عند اختيار الفئات لتجنب تداخل النتائج
+            document.getElementById('search-input').value = '';
+            
             document.querySelectorAll('.cat-chip').forEach(chip => chip.classList.remove('active'));
-            element.classList.add('active');
+            if(element) element.classList.add('active');
+
+            document.querySelectorAll('.product-card').forEach(card => card.style.display = 'flex');
             document.querySelectorAll('.category-section').forEach(sec => {
                 sec.style.display = (category === 'all' || sec.getAttribute('data-category') === category) ? 'block' : 'none';
             });
         }
 
-        // إرسال الطلب مع رسالة نجاح وتأكيد
         function sendOrder() {
             let totalCount = 0;
             for (let item in cart) totalCount += cart[item].qty;
             if (totalCount === 0) return alert('السلة فارغة!');
 
-            let name = document.getElementById('cust-name').value.trim();
-            let phone = document.getElementById('cust-phone').value.trim();
-            let address = document.getElementById('cust-address').value.trim();
+            let nameInput = document.getElementById('cust-name');
+            let phoneInput = document.getElementById('cust-phone');
+            let addressInput = document.getElementById('cust-address');
+
+            let name = nameInput.value.trim();
+            let phone = phoneInput.value.trim();
+            let address = addressInput.value.trim();
             
-            if (!name || !phone || !address) {
-                alert('الرجاء إدخال الاسم، رقم الهاتف، وعنوان التوصيل!');
-                return;
-            }
+            if (!name) { alert('الرجاء إدخال اسمك الكريم!'); nameInput.focus(); return; }
+            if (!phone) { alert('الرجاء إدخال رقم الهاتف (الواتساب)!'); phoneInput.focus(); return; }
+            if (!address) { alert('الرجاء إدخال عنوان التوصيل!'); addressInput.focus(); return; }
+
+            let sendBtn = document.getElementById('send-order-btn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = "<span>جاري الإرسال...</span> ⏳";
 
             let orderData = {
                 customer_name: name,
@@ -677,7 +762,6 @@ if (file_exists($file)) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
             }).then(response => response.json()).then(data => {
-                // إظهار رسالة النجاح (Toast)
                 let toast = document.getElementById('success-toast');
                 toast.classList.add('show');
 
@@ -696,7 +780,6 @@ if (file_exists($file)) {
                 message += `\n📞 *الهاتف:* ${phone}`;
                 message += `\n📍 *العنوان:* ${address}`;
 
-                // التوجيه للواتساب بعد ثانية ونصف لإتاحة قراءة رسالة التأكيد
                 setTimeout(() => {
                     window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`, '_blank');
                     location.reload();
@@ -704,6 +787,8 @@ if (file_exists($file)) {
 
             }).catch(err => {
                 console.error(err);
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = "<span>إرسال الطلب</span> 💬";
                 alert('حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى.');
             });
         }
