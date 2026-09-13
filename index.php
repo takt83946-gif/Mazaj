@@ -810,11 +810,27 @@ if (file_exists($file)) {
                     musicIcon.innerText = '⏸️';
                     musicText.innerText = 'إيقاف';
                 }).catch(e => {
-                    console.log('Autoplay error:', e);
-                    alert('يرجى النقر في أي مكان بالشاشة أولاً لتفعيل تشغيل الصوت من المتصفح.');
+                    console.log('Autoplay blocked:', e);
                 });
             }
         }
+
+        // تفعيل الصوت أوتوماتيكياً عند أول تفاعل للمستخدم على الشاشة لمنع ظهور رسائل خطأ المتصفح
+        function unlockAudioOnFirstInteraction() {
+            let bgMusic = document.getElementById('bg-music');
+            if (bgMusic && (!bgMusic.src || bgMusic.src === window.location.href)) {
+                bgMusic.src = playlist[0];
+            }
+            
+            // إزالة المستمعين بمجرد تفاعل المستخدم لأول مرة
+            document.removeEventListener('click', unlockAudioOnFirstInteraction);
+            document.removeEventListener('touchstart', unlockAudioOnFirstInteraction);
+            document.removeEventListener('keydown', unlockAudioOnFirstInteraction);
+        }
+
+        document.addEventListener('click', unlockAudioOnFirstInteraction);
+        document.addEventListener('touchstart', unlockAudioOnFirstInteraction);
+        document.addEventListener('keydown', unlockAudioOnFirstInteraction);
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
@@ -857,11 +873,11 @@ if (file_exists($file)) {
             let gridWrapper = document.getElementById('unified-grid-wrapper');
 
             if (mode === 'accordion') {
-                accordionWrapper.style.display = 'flex';
-                gridWrapper.classList.remove('active');
+                if(accordionWrapper) accordionWrapper.style.display = 'flex';
+                if(gridWrapper) gridWrapper.classList.remove('active');
             } else {
-                accordionWrapper.style.display = 'none';
-                gridWrapper.classList.add('active');
+                if(accordionWrapper) accordionWrapper.style.display = 'none';
+                if(gridWrapper) gridWrapper.classList.add('active');
             }
         }
 
