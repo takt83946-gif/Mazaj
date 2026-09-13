@@ -546,12 +546,14 @@ if (file_exists($file)) {
 
     <header>
         <div class="header-control-left">
-            <button class="control-btn" id="sound-toggle-btn" onclick="toggleSound()">
-                <span id="sound-icon">🔊</span>
+            <!-- زر التحكم المستقل بأصوات الإضافات والنقرات -->
+            <button class="control-btn" id="sound-toggle-btn" onclick="toggleSound()" title="تشغيل / إيقاف أصوات الإضافات">
+                <span id="sound-icon">🔊</span> <span style="font-size:0.65rem;">الأصوات</span>
             </button>
         </div>
         <div class="header-controls-group">
-            <button class="control-btn" id="music-toggle-btn" onclick="toggleMusic()">
+            <!-- زر التحكم المستقل بموسيقى الخلفية -->
+            <button class="control-btn" id="music-toggle-btn" onclick="toggleMusic()" title="تشغيل / إيقاف موسيقى الخلفية">
                 <span id="music-icon">🎵</span> <span id="music-text">الموسيقى</span>
             </button>
             <button class="control-btn" onclick="nextSong()" title="أغنية أخرى">
@@ -736,12 +738,6 @@ if (file_exists($file)) {
         let currentSongIndex = 0;
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        document.addEventListener('click', () => {
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }, { once: true });
 
         function playSound(type) {
             if (!soundEnabled) return;
@@ -797,7 +793,6 @@ if (file_exists($file)) {
         }
 
         function toggleMusic() {
-            playSound('click');
             let bgMusic = document.getElementById('bg-music');
             let musicIcon = document.getElementById('music-icon');
             let musicText = document.getElementById('music-text');
@@ -816,7 +811,7 @@ if (file_exists($file)) {
                     musicIcon.innerText = '⏸️';
                     musicText.innerText = 'إيقاف';
                 }).catch(e => {
-                    alert('تعذر تشغيل الموسيقى، تأكد من النقر أولاً في الصفحة.');
+                    console.log('Autoplay restricted by browser.');
                 });
             }
         }
@@ -847,6 +842,31 @@ if (file_exists($file)) {
 
             let bgMusic = document.getElementById('bg-music');
             bgMusic.src = playlist[0];
+
+            // محاولة التشغيل التلقائي فوراً عند تحميل الصفحة
+            bgMusic.play().then(() => {
+                musicPlaying = true;
+                document.getElementById('music-icon').innerText = '⏸️';
+                document.getElementById('music-text').innerText = 'إيقاف';
+            }).catch(e => {
+                // في حال حظر المتصفح التشغيل التلقائي الصامت، سيعمل تلقائياً مع أول تفاعل (نقر) من المستخدم على الصفحة
+                const startAudioOnInteract = () => {
+                    if (!musicPlaying) {
+                        bgMusic.play().then(() => {
+                            musicPlaying = true;
+                            document.getElementById('music-icon').innerText = '⏸️';
+                            document.getElementById('music-text').innerText = 'إيقاف';
+                        }).catch(err => {});
+                    }
+                    if (audioCtx.state === 'suspended') {
+                        audioCtx.resume();
+                    }
+                    window.removeEventListener('click', startAudioOnInteract);
+                    window.removeEventListener('touchstart', startAudioOnInteract);
+                };
+                window.addEventListener('click', startAudioOnInteract);
+                window.addEventListener('touchstart', startAudioOnInteract);
+            });
 
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
