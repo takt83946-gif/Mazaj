@@ -724,11 +724,11 @@ if (file_exists($file)) {
         let soundEnabled = localStorage.getItem('mazaj_sound') !== 'off';
         let musicPlaying = false;
 
-        // روابط مستقرة ومجربة لأغاني خلفية Lofi
+        // روابط ألحان جميلة ومستقرة (Lofi و Chill)
         const playlist = [
-            "https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg",
             "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3",
-            "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=chill-abstract-intention-12099.mp3"
+            "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=chill-abstract-intention-12099.mp3",
+            "https://cdn.pixabay.com/download/audio/2022/05/16/audio_db6835d070.mp3?filename=lofi-chill-10803.mp3"
         ];
         let currentSongIndex = 0;
 
@@ -811,7 +811,7 @@ if (file_exists($file)) {
                     musicText.innerText = 'إيقاف';
                 }).catch(e => {
                     console.log('Autoplay error:', e);
-                    alert('يرجى النقر في أي مكان بالساشة أولاً لتفعيل تشغيل الصوت من المتصفح.');
+                    alert('يرجى النقر في أي مكان بالشاشة أولاً لتفعيل تشغيل الصوت من المتصفح.');
                 });
             }
         }
