@@ -395,6 +395,108 @@ if (file_exists($file)) {
             transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
+        /* Reviews Section Styles */
+        .reviews-section {
+            margin-top: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+        }
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .reviews-header h3 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .add-review-trigger {
+            background: var(--chip-bg);
+            border: 1px solid var(--border-color);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .reviews-slider {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+        }
+        .reviews-slider::-webkit-scrollbar { display: none; }
+        .review-card {
+            min-width: 220px;
+            max-width: 220px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px;
+            flex-shrink: 0;
+        }
+        .review-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .review-author {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .review-stars {
+            color: #fbbf24;
+            font-size: 0.7rem;
+        }
+        .review-text {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Modal for Adding Review */
+        .review-modal {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 300;
+            display: flex; align-items: center; justify-content: center;
+            padding: 16px;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.25s ease;
+            backdrop-filter: blur(5px);
+        }
+        .review-modal.open { opacity: 1; pointer-events: auto; }
+        .review-modal-box {
+            background: var(--bg-card);
+            width: 100%; max-width: 350px;
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid var(--border-color);
+        }
+        .stars-select {
+            display: flex;
+            gap: 6px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
         .developer-footer {
             text-align: center;
             margin-top: 24px;
@@ -670,9 +772,65 @@ if (file_exists($file)) {
         }
         ?>
 
+        <?php
+        $reviews_file = 'reviews.json';
+        $reviews_list = [];
+        if (file_exists($reviews_file)) {
+            $rev_data = file_get_contents($reviews_file);
+            $reviews_list = json_decode($rev_data, true);
+            if (!is_array($reviews_list)) $reviews_list = [];
+        }
+        ?>
+        <div class="reviews-section">
+            <div class="reviews-header">
+                <h3>⭐ آراء وتقييمات الزبائن</h3>
+                <button class="add-review-trigger" onclick="toggleReviewModal()">أضف تقييمك ✍️</button>
+            </div>
+            <div class="reviews-slider">
+                <?php
+                if (empty($reviews_list)) {
+                    echo '<p style="font-size:0.75rem; color:var(--text-muted); text-align:center; width:100%; padding:10px;">كن أول من يقيّم منيو لفة Mazaj! ✨</p>';
+                } else {
+                    foreach ($reviews_list as $rev) {
+                        $stars_str = str_repeat('⭐', intval($rev['rating'] ?? 5));
+                        echo '<div class="review-card">';
+                        echo '  <div class="review-card-top">';
+                        echo '      <span class="review-author">' . htmlspecialchars($rev['name']) . '</span>';
+                        echo '      <span class="review-stars">' . $stars_str . '</span>';
+                        echo '  </div>';
+                        echo '  <p class="review-text">' . htmlspecialchars($rev['comment']) . '</p>';
+                        echo '</div>';
+                    }
+                }
+                ?>
+            </div>
+        </div>
+
         <div class="developer-footer">
             <p>تصميم وبرمجة: <span class="dev-name">علي حسين ناصر الدين</span></p>
             <p style="margin-top:3px;">للتواصل: <a href="https://wa.me/96181058043" target="_blank">96181058043+</a></p>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة تقييم -->
+    <div class="review-modal" id="review-modal" onclick="if(event.target === this) toggleReviewModal()">
+        <div class="review-modal-box">
+            <div class="modal-header" style="margin-bottom:10px;">
+                <h2 style="font-size:0.9rem;">أضف رأيك بالمنيو 💬</h2>
+                <button class="close-modal" onclick="toggleReviewModal()">&times;</button>
+            </div>
+            <div class="stars-select" id="rating-stars">
+                <span onclick="setRating(1)" data-val="1">⭐</span>
+                <span onclick="setRating(2)" data-val="2">⭐</span>
+                <span onclick="setRating(3)" data-val="3">⭐</span>
+                <span onclick="setRating(4)" data-val="4">⭐</span>
+                <span onclick="setRating(5)" data-val="5" style="transform:scale(1.1)">⭐</span>
+            </div>
+            <div class="modal-input-group">
+                <input type="text" id="rev-name" placeholder="اسمك الكريم">
+                <input type="text" id="rev-comment" placeholder="اكتب رأيك باختصار (مثلاً: الأكل سخن وطيب جداً)">
+            </div>
+            <button class="modal-send-btn" onclick="submitReview()">إرسال التقييم 🚀</button>
         </div>
     </div>
 
@@ -728,6 +886,7 @@ if (file_exists($file)) {
     <script>
         let cart = {};
         let soundEnabled = localStorage.getItem('mazaj_sound') !== 'off';
+        let currentRating = 5;
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -916,6 +1075,41 @@ if (file_exists($file)) {
                 let desc = card.getAttribute('data-desc');
                 let match = name.includes(query) || desc.includes(query);
                 card.style.display = match ? 'flex' : 'none';
+            });
+        }
+
+        function toggleReviewModal() {
+            playSound('click');
+            document.getElementById('review-modal').classList.toggle('open');
+        }
+
+        function setRating(val) {
+            playSound('click');
+            currentRating = val;
+            let stars = document.querySelectorAll('#rating-stars span');
+            stars.forEach((s, idx) => {
+                if (idx < val) s.style.opacity = '1';
+                else s.style.opacity = '0.3';
+            });
+        }
+
+        function submitReview() {
+            let name = document.getElementById('rev-name').value.trim();
+            let comment = document.getElementById('rev-comment').value.trim();
+
+            if (!name) return alert('الرجاء إدخال اسمك الكريم!');
+            if (!comment) return alert('الرجاء كتابة تعليق قصير!');
+
+            playSound('success');
+            fetch('save_review.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, rating: currentRating, comment: comment })
+            }).then(res => res.json()).then(data => {
+                alert('شكراً لك! تم إضافة تقييمك بنجاح ⭐');
+                location.reload();
+            }).catch(err => {
+                alert('حدث خطأ أثناء إرسال التقييم.');
             });
         }
 
