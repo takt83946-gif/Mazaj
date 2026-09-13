@@ -112,7 +112,6 @@ if (file_exists($file)) {
 
         .container { max-width: 900px; margin: 0 auto; padding: 0 16px; }
 
-        /* صندوق البحث السريع */
         .search-box-container {
             margin: 20px 0 10px 0;
             position: relative;
@@ -144,12 +143,13 @@ if (file_exists($file)) {
 
         .categories-nav {
             display: flex;
-            flex-direction: row-reverse;
+            flex-direction: row;
             justify-content: flex-start;
             gap: 10px;
             overflow-x: auto;
             padding: 12px 0 8px 0;
             scrollbar-width: none;
+            direction: rtl;
         }
         .categories-nav::-webkit-scrollbar { display: none; }
         
@@ -247,7 +247,7 @@ if (file_exists($file)) {
             flex-direction: column; 
             justify-content: space-between; 
         }
-        .card h3 { font-size: 0.85rem; margin-bottom: 2px; color: #fff; font-weight: 800; }
+        .card h3 { font-size: 0.8rem; margin-bottom: 2px; color: #fff; font-weight: 800; line-height: 1.3; }
         .card p { color: var(--text-muted); font-size: 0.7rem; margin-bottom: 6px; line-height: 1.2; }
         
         .card-footer {
@@ -455,26 +455,105 @@ if (file_exists($file)) {
         }
         .clear-cart-btn:hover { background: #ef4444; color: #fff; }
 
-        .success-toast {
+        /* شاشة تتبع الطلب بعد الإرسال */
+        .order-tracker-overlay {
             position: fixed;
-            top: 20px; left: 50%;
-            transform: translateX(-50%) translateY(-100px);
-            background: #22c55e;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(11, 15, 25, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            display: none;
+        }
+        .order-tracker-card {
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(249, 115, 22, 0.3);
+            animation: popUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes popUp {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .tracker-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        .tracker-title {
             color: #fff;
-            padding: 12px 24px;
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        .tracker-subtitle {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+        .tracker-status-box {
+            background: rgba(249, 115, 22, 0.15);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px;
             border-radius: 12px;
             font-weight: 900;
-            box-shadow: 0 10px 30px rgba(34,197,94,0.4);
-            z-index: 300;
-            transition: transform 0.3s ease;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            margin-bottom: 20px;
         }
-        .success-toast.show { transform: translateX(-50%) translateY(0); }
+        .tracker-details {
+            text-align: right;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .tracker-details p { margin-bottom: 6px; color: var(--text-muted); }
+        .tracker-details span { color: #fff; font-weight: 700; }
+        
+        .whatsapp-redirect-btn {
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+            margin-bottom: 10px;
+            text-decoration: none;
+        }
+        .new-order-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .new-order-btn:hover { color: #fff; border-color: #fff; }
     </style>
 </head>
 <body>
-
-    <div id="success-toast" class="success-toast">✅ تم إرسال طلبك بنجاح وجاري تحويلك للواتساب...</div>
 
     <header>
         <div class="fairy-lights">
@@ -492,7 +571,6 @@ if (file_exists($file)) {
     </header>
 
     <div class="container">
-        <!-- شريط البحث السريع -->
         <div class="search-box-container">
             <span class="search-icon">🔍</span>
             <input type="text" id="search-input" class="search-input" placeholder="ابحث عن وجبتك المفضلة..." oninput="filterProducts()">
@@ -600,11 +678,32 @@ if (file_exists($file)) {
         </div>
     </div>
 
+    <!-- شاشة تتبع الطلب وتأكيده للزبون بعد الإرسال -->
+    <div class="order-tracker-overlay" id="order-tracker">
+        <div class="order-tracker-card">
+            <div class="tracker-icon">🎉</div>
+            <div class="tracker-title">تم إرسال طلبك بنجاح!</div>
+            <div class="tracker-subtitle">شكراً لطلبك من لفة Mazaj 🌯</div>
+            
+            <div class="tracker-status-box" id="tracker-status-text">
+                حالة الطلب: قيد التحضير 🔥
+            </div>
+
+            <div class="tracker-details" id="tracker-order-summary">
+                <!-- تفاصيل الطلب تظهر هنا ديناميكياً -->
+            </div>
+
+            <a href="#" id="tracker-wa-link" target="_blank" class="whatsapp-redirect-btn">
+                <span>تأكيد ومتابعة عبر الواتساب</span> 💬
+            </a>
+            <button class="new-order-btn" onclick="location.reload()">طلب وجبة أخرى 🔄</button>
+        </div>
+    </div>
+
     <script>
         let cart = {};
         let currentActiveCategory = 'all';
 
-        // استرجاع بيانات الزبون المحفوظة مسبقاً في المتصفح
         window.addEventListener('DOMContentLoaded', () => {
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
@@ -617,14 +716,12 @@ if (file_exists($file)) {
             localStorage.setItem('mazaj_address', document.getElementById('cust-address').value);
         }
 
-        // دالة البحث الفوري عن المنتجات
         function filterProducts() {
             let query = document.getElementById('search-input').value.trim().toLowerCase();
             let cards = document.querySelectorAll('.product-card');
             let sections = document.querySelectorAll('.category-section');
 
             if (query !== '') {
-                // إذا كان هناك نص بحث، نتجاهل الفئات المؤقتة ونبحث في كل البطاقات
                 sections.forEach(sec => sec.style.display = 'block');
                 cards.forEach(card => {
                     let name = card.getAttribute('data-name');
@@ -636,7 +733,6 @@ if (file_exists($file)) {
                     }
                 });
             } else {
-                // إرجاع العرض بحسب الفئة النشطة حالياً
                 filterCategory(currentActiveCategory, document.querySelector('.cat-chip.active'));
             }
         }
@@ -714,7 +810,6 @@ if (file_exists($file)) {
 
         function filterCategory(category, element) {
             currentActiveCategory = category;
-            // تفريغ حقل البحث عند اختيار الفئات لتجنب تداخل النتائج
             document.getElementById('search-input').value = '';
             
             document.querySelectorAll('.cat-chip').forEach(chip => chip.classList.remove('active'));
@@ -762,17 +857,15 @@ if (file_exists($file)) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
             }).then(response => response.json()).then(data => {
-                let toast = document.getElementById('success-toast');
-                toast.classList.add('show');
-
                 let adminPhone = "96181079589"; 
                 let message = "مرحباً *لفة Mazaj* 🌯، أريد طلب الآتي:\n\n";
-                let index = 1, totalPrice = 0;
+                let index = 1, totalPrice = 0, summaryHtml = '';
 
                 for (let item in cart) {
                     let qty = cart[item].qty, itemTotal = cart[item].price * qty;
                     totalPrice += itemTotal;
                     message += `${index}. *${item}* (العدد: ${qty}) - $${itemTotal.toFixed(2)}\n`;
+                    summaryHtml += `<p>• ${item} (×${qty}) - <span>$${itemTotal.toFixed(2)}</span></p>`;
                     index++;
                 }
                 message += `\n*الإجمالي النهائي:* $${totalPrice.toFixed(2)}\n`;
@@ -780,10 +873,17 @@ if (file_exists($file)) {
                 message += `\n📞 *الهاتف:* ${phone}`;
                 message += `\n📍 *العنوان:* ${address}`;
 
-                setTimeout(() => {
-                    window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`, '_blank');
-                    location.reload();
-                }, 1500);
+                summaryHtml += `<p style="margin-top:8px; border-top:1px solid rgba(255,255,255,0.1); pt:6px;">الإجمالي الكلي: <span>$${totalPrice.toFixed(2)}</span></p>`;
+                summaryHtml += `<p>الاسم: <span>${name}</span></p>`;
+                summaryHtml += `<p>العنوان: <span>${address}</span></p>`;
+
+                // إخفاء سلة الشراء وإظهار شاشة تتبع الطلب فوراً
+                document.getElementById('cart-bar').classList.remove('show');
+                document.getElementById('cart-modal').classList.remove('open');
+                
+                document.getElementById('tracker-order-summary').innerHTML = summaryHtml;
+                document.getElementById('tracker-wa-link').href = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
+                document.getElementById('order-tracker').style.display = 'flex';
 
             }).catch(err => {
                 console.error(err);
