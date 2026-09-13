@@ -827,7 +827,6 @@ if (file_exists($file)) {
         function changeQty(name, price, change, hashId) {
             playClickSound();
             price = parseFloat(price);
-            let wasEmpty = Object.keys(cart).length === 0;
 
             if (!cart[name]) {
                 if (change > 0) cart[name] = { price: price, qty: 1, hashId: hashId };
@@ -837,14 +836,6 @@ if (file_exists($file)) {
             }
             updateUI(name, hashId);
             updateCartBar();
-
-            // النزول التلقائي لخانة التعبئة عند إضافة أول منتج
-            let nowEmpty = Object.keys(cart).length === 0;
-            if (wasEmpty && !nowEmpty) {
-                setTimeout(() => {
-                    document.getElementById('checkout-section-box').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 200);
-            }
         }
 
         function clearCart() {
