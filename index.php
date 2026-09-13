@@ -538,7 +538,8 @@ if (file_exists($file)) {
 </head>
 <body>
 
-    <audio id="bg-music" loop></audio>
+    <!-- عنصر الصوت الموجه لملف uploads/music.mp3 -->
+    <audio id="bg-music" src="uploads/music.mp3" preload="auto" loop></audio>
 
     <header>
         <div class="header-toolbar">
@@ -724,14 +725,6 @@ if (file_exists($file)) {
         let soundEnabled = localStorage.getItem('mazaj_sound') !== 'off';
         let musicPlaying = false;
 
-        // روابط ألحان جميلة ومستقرة (Lofi و Chill)
-        const playlist = [
-            "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf756.mp3?filename=lofi-study-112191.mp3",
-            "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=chill-abstract-intention-12099.mp3",
-            "https://cdn.pixabay.com/download/audio/2022/05/16/audio_db6835d070.mp3?filename=lofi-chill-10803.mp3"
-        ];
-        let currentSongIndex = 0;
-
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
@@ -802,44 +795,32 @@ if (file_exists($file)) {
                 musicIcon.innerText = '🎵';
                 musicText.innerText = 'الموسيقى';
             } else {
-                if (!bgMusic.src || bgMusic.src === window.location.href || bgMusic.src === "") {
-                    bgMusic.src = playlist[currentSongIndex];
-                }
+                bgMusic.currentTime = 0;
                 bgMusic.play().then(() => {
                     musicPlaying = true;
                     musicIcon.innerText = '⏸️';
                     musicText.innerText = 'إيقاف';
+                    playSound('click');
                 }).catch(e => {
-                    console.log('Autoplay blocked:', e);
+                    console.log('فشل تشغيل الموسيقى:', e);
+                    let fallbackAudio = new Audio('uploads/music.mp3');
+                    fallbackAudio.loop = true;
+                    fallbackAudio.play().then(() => {
+                        musicPlaying = true;
+                        musicIcon.innerText = '⏸️';
+                        musicText.innerText = 'إيقاف';
+                    }).catch(err => {
+                        alert('متصفحك يحظر التشغيل التلقائي للموسيقى. يرجى النقر مرة أخرى على الزر.');
+                    });
                 });
             }
         }
-
-        // تفعيل الصوت أوتوماتيكياً عند أول تفاعل للمستخدم على الشاشة لمنع ظهور رسائل خطأ المتصفح
-        function unlockAudioOnFirstInteraction() {
-            let bgMusic = document.getElementById('bg-music');
-            if (bgMusic && (!bgMusic.src || bgMusic.src === window.location.href)) {
-                bgMusic.src = playlist[0];
-            }
-            
-            // إزالة المستمعين بمجرد تفاعل المستخدم لأول مرة
-            document.removeEventListener('click', unlockAudioOnFirstInteraction);
-            document.removeEventListener('touchstart', unlockAudioOnFirstInteraction);
-            document.removeEventListener('keydown', unlockAudioOnFirstInteraction);
-        }
-
-        document.addEventListener('click', unlockAudioOnFirstInteraction);
-        document.addEventListener('touchstart', unlockAudioOnFirstInteraction);
-        document.addEventListener('keydown', unlockAudioOnFirstInteraction);
 
         window.addEventListener('DOMContentLoaded', () => {
             let savedTheme = localStorage.getItem('mazaj_theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeUI(savedTheme);
             updateSoundUI();
-
-            let bgMusic = document.getElementById('bg-music');
-            bgMusic.src = playlist[0];
 
             if(localStorage.getItem('mazaj_name')) document.getElementById('cust-name').value = localStorage.getItem('mazaj_name');
             if(localStorage.getItem('mazaj_phone')) document.getElementById('cust-phone').value = localStorage.getItem('mazaj_phone');
